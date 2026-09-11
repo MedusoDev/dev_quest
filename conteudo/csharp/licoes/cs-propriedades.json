@@ -1,0 +1,191 @@
+{
+  "id": "cs-propriedades",
+  "linguagem": "csharp",
+  "trilha": "cs-oo",
+  "titulo": "Propriedades",
+  "resumo": "get, set, auto-property e propriedade só de leitura.",
+  "conceito": {
+    "texto": [
+      "Um campo público (`public int Vida;`) deixa qualquer código de fora ler e escrever nele sem controle nenhum. Uma propriedade parece um campo por fora, mas por dentro passa por um `get` (ler) e um `set` (escrever) — e você decide o que cada um faz.",
+      "A forma mais comum é a auto-property: `public int Vida { get; set; }`. C# gera um campo escondido sozinho; você só escreve o comportamento quando precisa de algo diferente do padrão.",
+      "Uma propriedade sem `set`, só com `get`, não pode ser alterada de fora depois de criada — é a versão de propriedade do `readonly` que já vimos em campos: `public string Nome { get; }`.",
+      "Dá pra colocar lógica dentro do `set`: validar um valor antes de aceitar, por exemplo, recusando uma `Vida` negativa. É isso que um campo público nunca consegue fazer sozinho.",
+      "Uma propriedade também pode ter o `set` marcado como `private`: qualquer código lê de fora, mas só a própria classe escreve."
+    ],
+    "exemplo": [
+      "public class Jogador",
+      "{",
+      "    public string Nome { get; }",
+      "    public int Vida { get; private set; } = 100;",
+      "",
+      "    public Jogador(string nome)",
+      "    {",
+      "        Nome = nome;",
+      "    }",
+      "",
+      "    public void ReceberDano(int quantidade)",
+      "    {",
+      "        Vida -= quantidade;",
+      "        if (Vida < 0) Vida = 0;",
+      "    }",
+      "}",
+      "",
+      "// jogador.Nome = \"Outro\"; não compila: Nome só tem get.",
+      "// jogador.Vida = 999; não compila fora da classe: o set é private."
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "propriedade",
+      "definicao": "Parece um campo por fora, mas passa por `get`/`set` por dentro — dá controle sobre leitura e escrita.",
+      "exemplo": "public int Vida { get; set; }"
+    },
+    {
+      "termo": "auto-property",
+      "definicao": "Propriedade sem corpo escrito para `get`/`set`; C# guarda o valor num campo escondido sozinho.",
+      "exemplo": "public int Vida { get; set; }"
+    },
+    {
+      "termo": "propriedade só de leitura",
+      "definicao": "Uma propriedade com `get` e sem `set` — só pode receber valor no construtor, e nunca mais depois.",
+      "exemplo": "public string Nome { get; }"
+    },
+    {
+      "termo": "set privado",
+      "definicao": "`private set` deixa ler de qualquer lugar, mas só a própria classe pode escrever.",
+      "exemplo": "public int Vida { get; private set; }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-prop-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que esta propriedade permite de fora da classe?",
+      "codigo": ["public string Nome { get; }"],
+      "alternativas": [
+        "Ler `Nome`, mas nunca escrever nele de fora.",
+        "Ler e escrever `Nome` livremente.",
+        "Só escrever `Nome`, nunca ler.",
+        "Nada — a propriedade é privada."
+      ],
+      "correta": 0,
+      "explicacao": "Sem `set`, não existe forma de atribuir um valor a `Nome` fora da classe. Só sobra o `get`, pra leitura."
+    },
+    {
+      "id": "cs-prop-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Qual é a diferença prática entre um campo público comum e uma auto-property `{ get; set; }`?",
+      "codigo": ["public int VidaCampo;", "public int VidaPropriedade { get; set; }"],
+      "alternativas": [
+        "Por fora, nenhuma no começo — mas a propriedade pode ganhar lógica de validação depois sem quebrar quem já usa.",
+        "A propriedade é sempre mais lenta e deve ser evitada.",
+        "O campo aceita qualquer valor; a propriedade só aceita números pares.",
+        "Só a propriedade pode ser lida; o campo só pode ser escrito."
+      ],
+      "correta": 0,
+      "explicacao": "`jogador.VidaPropriedade = 50;` funciona igual a um campo hoje. A diferença aparece quando você decide colocar uma regra dentro do `set` — o código de fora nem precisa mudar."
+    },
+    {
+      "id": "cs-prop-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["public class Jogador", "{", "    public int Vida { get; set; } = 100;", "}", "", "var jogador = new Jogador();", "jogador.Vida = 70;", "Console.WriteLine(jogador.Vida);"],
+      "alternativas": ["70", "100", "0", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "`Vida` começa em 100 (o valor padrão da propriedade), mas a linha seguinte sobrescreve com `70` antes do `WriteLine`."
+    },
+    {
+      "id": "cs-prop-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: uma propriedade que só pode ser lida de fora da classe.",
+      "codigo": ["public class Jogador", "{", "    public string Nome { ___; }", "}"],
+      "respostas": ["get"],
+      "tokens": ["get", "set", "get; set", "private", "void"],
+      "explicacao": "Só `get` dentro das chaves cria uma propriedade sem forma de escrita externa — a única maneira de dar valor a ela é no construtor."
+    },
+    {
+      "id": "cs-prop-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare uma auto-property pública chamada `Pontos`, do tipo inteiro, com `get` e `set`.",
+      "dica": "public, tipo, nome, chaves com get e set",
+      "resposta": "public int Pontos { get; set; }",
+      "explicacao": "A ordem é acesso, tipo, nome, e as chaves com `get; set;` — sem corpo escrito, C# cuida do resto sozinho."
+    },
+    {
+      "id": "cs-prop-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte uma propriedade só de leitura chamada `Id`, do tipo texto.",
+      "partes": ["public", "string", "Id", "{", "get", ";", "}"],
+      "explicacao": "Sem `set`, `Id` só pode ganhar valor dentro do construtor da classe — nunca depois."
+    },
+    {
+      "id": "cs-prop-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha não compila. Clique nela.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    public string Nome { get; }",
+        "",
+        "    public Jogador(string nome)",
+        "    {",
+        "        Nome = nome;",
+        "    }",
+        "",
+        "    public void Renomear(string novoNome)",
+        "    {",
+        "        Nome = novoNome;",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 11,
+      "explicacao": "`Nome` só tem `get`: pode receber valor no construtor (linha 7, ainda dentro da janela de criação do objeto), mas `Renomear` roda depois que o jogador já existe — e aí a propriedade está travada, igual um campo `readonly`."
+    },
+    {
+      "id": "cs-prop-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe e responda.",
+      "codigo": [
+        "public class ContaBancaria",
+        "{",
+        "    public decimal Saldo { get; private set; } = 0;",
+        "",
+        "    public void Depositar(decimal valor)",
+        "    {",
+        "        Saldo += valor;",
+        "    }",
+        "}",
+        "",
+        "var conta = new ContaBancaria();",
+        "conta.Depositar(100);",
+        "// conta.Saldo = 500;  // esta linha, se descomentada, não compila"
+      ],
+      "pergunta": "Por que a linha comentada não compilaria se fosse descomentada?",
+      "alternativas": [
+        "Porque o `set` de `Saldo` é `private`: só código dentro da própria classe pode escrever nele.",
+        "Porque `Saldo` é do tipo `decimal`, que não aceita atribuição direta.",
+        "Porque `Saldo` não tem `get`, só `set`.",
+        "Porque `Depositar` já travou o valor pra sempre."
+      ],
+      "correta": 0,
+      "explicacao": "`get; private set;` deixa qualquer um ler `Saldo`, mas só a própria `ContaBancaria` pode escrever nele — de fora, o único jeito de mudar o saldo é chamando `Depositar`."
+    },
+    {
+      "id": "cs-prop-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare uma propriedade `Vida`, inteira, que qualquer código pode ler mas só a própria classe pode alterar.",
+      "dica": "get público, set private",
+      "resposta": "public int Vida { get; private set; }",
+      "explicacao": "`get` fica público (herda o acesso da propriedade), e `private` na frente do `set` restringe só a escrita à própria classe."
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "id": "py-classes",
+  "linguagem": "python",
+  "trilha": "py-poo",
+  "titulo": "Classes",
+  "resumo": "Criar objetos com class, __init__, self e métodos.",
+  "conceito": {
+    "texto": [
+      "Uma **classe** é um molde para criar objetos. Ela é definida com `class Nome:`, e cada objeto criado a partir dela é uma **instância**.",
+      "`__init__` é o método especial chamado automaticamente na criação de um objeto. É nele que os **atributos** iniciais da instância são definidos, geralmente a partir de parâmetros recebidos.",
+      "`self` é o primeiro parâmetro de todo método de instância, e representa o próprio objeto que está chamando o método. É por meio de `self` que um método acessa e modifica os atributos daquele objeto específico.",
+      "Um **método** é uma função definida dentro da classe, que opera sobre os dados daquela instância. `self.nome` dentro de um método lê ou escreve o atributo `nome` do objeto atual.",
+      "Criar um objeto é chamar a classe como se fosse uma função: `p = Pessoa(\"Ana\", 28)` cria uma instância nova, passando os argumentos que `__init__` espera (sem contar `self`, que Python passa sozinho)."
+    ],
+    "exemplo": [
+      "class Pessoa:",
+      "    def __init__(self, nome, idade):",
+      "        self.nome = nome",
+      "        self.idade = idade",
+      "",
+      "    def apresentar(self):",
+      "        return f\"Oi, eu sou {self.nome} e tenho {self.idade} anos.\"",
+      "",
+      "ana = Pessoa(\"Ana\", 28)",
+      "print(ana.apresentar())  # Oi, eu sou Ana e tenho 28 anos."
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "classe",
+      "definicao": "Molde que define os atributos e métodos de um tipo de objeto.",
+      "exemplo": "class Pessoa:"
+    },
+    {
+      "termo": "instância",
+      "definicao": "Um objeto concreto criado a partir de uma classe.",
+      "exemplo": "ana = Pessoa(\"Ana\", 28)"
+    },
+    {
+      "termo": "__init__",
+      "definicao": "Método especial chamado automaticamente ao criar uma instância, usado para definir os atributos iniciais.",
+      "exemplo": "def __init__(self, nome):"
+    },
+    {
+      "termo": "self",
+      "definicao": "Representa o próprio objeto dentro de um método; primeiro parâmetro de todo método de instância.",
+      "exemplo": "self.nome = nome"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-cls-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Quando o método `__init__` é chamado?",
+      "codigo": ["class Pessoa:", "    def __init__(self, nome):", "        self.nome = nome"],
+      "alternativas": [
+        "Automaticamente, no momento em que uma instância da classe é criada.",
+        "Toda vez que qualquer método da classe é chamado.",
+        "Só quando o programador chama `__init__()` manualmente.",
+        "Apenas na primeira instância criada, não nas seguintes."
+      ],
+      "correta": 0,
+      "explicacao": "`__init__` é chamado automaticamente por Python sempre que uma instância nova é criada, como em `Pessoa(\"Ana\")`. Ele existe para inicializar os atributos daquele objeto específico."
+    },
+    {
+      "id": "py-cls-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `self` representa dentro de um método?",
+      "codigo": ["class Pessoa:", "    def apresentar(self):", "        return self.nome"],
+      "alternativas": [
+        "O próprio objeto que está chamando o método.",
+        "A classe `Pessoa` em si, não um objeto específico.",
+        "Um parâmetro opcional, que pode ser omitido.",
+        "O último objeto criado da classe."
+      ],
+      "correta": 0,
+      "explicacao": "`self` é a referência ao objeto atual. Quando `ana.apresentar()` é chamado, `self` dentro do método é exatamente `ana`, permitindo acessar `self.nome`, que é `ana.nome`."
+    },
+    {
+      "id": "py-cls-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "class Pessoa:",
+        "    def __init__(self, nome):",
+        "        self.nome = nome",
+        "",
+        "ana = Pessoa(\"Ana\")",
+        "leo = Pessoa(\"Léo\")",
+        "print(ana.nome, leo.nome)"
+      ],
+      "alternativas": [
+        "Ana Léo",
+        "Léo Léo",
+        "Ana Ana",
+        "Erro: nome é compartilhado entre instâncias"
+      ],
+      "correta": 0,
+      "explicacao": "Cada instância guarda seus próprios atributos. `ana.nome` e `leo.nome` são valores independentes, cada um definido na chamada de `__init__` daquela instância específica."
+    },
+    {
+      "id": "py-cls-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a definição do método para que ele receba o próprio objeto corretamente.",
+      "codigo": ["class Pessoa:", "    def apresentar(___):", "        return f\"Oi, eu sou {___.nome}\""],
+      "respostas": ["self", "self"],
+      "tokens": ["self", "this", "obj", "instance", "cls"],
+      "explicacao": "Em Python, o parâmetro que representa a própria instância é chamado `self` por convenção (poderia ter outro nome, mas todo mundo usa `self`). `this` é o nome usado em outras linguagens, não em Python."
+    },
+    {
+      "id": "py-cls-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "class ContaBancaria:",
+        "    def __init__(self, saldo):",
+        "        self.saldo = saldo",
+        "",
+        "    def depositar(self, valor):",
+        "        self.saldo += valor",
+        "",
+        "conta = ContaBancaria(100)",
+        "conta.depositar(50)",
+        "print(conta.saldo)"
+      ],
+      "alternativas": [
+        "150",
+        "100",
+        "50",
+        "Erro: depositar não retorna nada"
+      ],
+      "correta": 0,
+      "explicacao": "`depositar` modifica `self.saldo` diretamente, somando o valor recebido. Não precisa de `return` para isso surtir efeito, porque `self` é o próprio objeto `conta` — a mudança fica gravada nele."
+    },
+    {
+      "id": "py-cls-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que cria uma instância de `Pessoa` com o nome \"Duda\".",
+      "partes": ["pessoa", "=", "Pessoa", "(", "\"Duda\"", ")"],
+      "explicacao": "Criar uma instância é chamar a classe como uma função, passando os argumentos que `__init__` espera — sem contar `self`, que Python já passa automaticamente."
+    },
+    {
+      "id": "py-cls-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha, dentro de `__init__`, que guarda o parâmetro `idade` como atributo do objeto.",
+      "dica": "self, ponto, nome do atributo, igual, nome do parâmetro",
+      "resposta": "self.idade = idade",
+      "explicacao": "O lado esquerdo, `self.idade`, é o atributo do objeto sendo criado. O lado direito, `idade`, é o valor que veio como parâmetro na chamada da classe."
+    },
+    {
+      "id": "py-cls-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código quebra ao rodar. Clique na linha que causa o erro.",
+      "codigo": [
+        "class Pessoa:",
+        "    def __init__(self, nome):",
+        "        self.nome = nome",
+        "",
+        "    def apresentar():",
+        "        return f\"Oi, eu sou {self.nome}\"",
+        "",
+        "ana = Pessoa(\"Ana\")",
+        "print(ana.apresentar())"
+      ],
+      "linhaErrada": 4,
+      "explicacao": "`apresentar` foi definido sem o parâmetro `self`, mas todo método de instância precisa dele — é o que recebe o objeto que fez a chamada. Sem `self`, a chamada `ana.apresentar()` passa `ana` como argumento e sobra sem parâmetro para recebê-lo, dando `TypeError`."
+    },
+    {
+      "id": "py-cls-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "class Retangulo:",
+        "    def __init__(self, largura, altura):",
+        "        self.largura = largura",
+        "        self.altura = altura",
+        "",
+        "    def area(self):",
+        "        return self.largura * self.altura",
+        "",
+        "    def eh_quadrado(self):",
+        "        return self.largura == self.altura",
+        "",
+        "r = Retangulo(4, 4)",
+        "print(r.area(), r.eh_quadrado())"
+      ],
+      "pergunta": "O que aparece no terminal?",
+      "alternativas": [
+        "16 True",
+        "16 False",
+        "8 True",
+        "Erro: eh_quadrado não pode chamar largura e altura"
+      ],
+      "correta": 0,
+      "explicacao": "`area()` calcula `4 * 4 = 16`. `eh_quadrado()` compara `self.largura == self.altura`, que é `4 == 4`, ou seja, `True`. Métodos da mesma instância compartilham livremente os atributos via `self`."
+    }
+  ]
+}

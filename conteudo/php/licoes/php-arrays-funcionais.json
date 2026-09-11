@@ -1,0 +1,188 @@
+{
+  "id": "php-arrays-funcionais",
+  "linguagem": "php",
+  "trilha": "php-arrays",
+  "titulo": "Arrays funcionais",
+  "resumo": "Transformar, filtrar e reduzir arrays sem escrever `foreach`.",
+  "conceito": {
+    "texto": [
+      "`array_map(callback, $array)` aplica uma função a **cada elemento** e devolve um novo array do mesmo tamanho, com os valores transformados. O array original não é alterado.",
+      "`array_filter(callback, $array)` — atenção à ordem, que é invertida em relação a `array_map` — devolve um novo array só com os elementos para os quais a função passada retornou algo verdadeiro (`true`).",
+      "`array_reduce($array, callback, $inicial)` percorre o array acumulando um único resultado. A função recebe o acumulado até agora e o elemento atual, e devolve o novo acumulado.",
+      "Uma **arrow function**, `fn($x) => $x * 2`, é uma forma curta de escrever uma função anônima de uma linha só, sem precisar de `function` nem de `return` explícito — o valor da expressão já é o retorno.",
+      "Essas três funções combinadas substituem a maioria dos `foreach` que só existem para transformar ou selecionar dados: leem-se de fora para dentro, uma etapa por vez."
+    ],
+    "exemplo": [
+      "<?php",
+      "$numeros = [1, 2, 3, 4, 5];",
+      "",
+      "$dobrados = array_map(fn($n) => $n * 2, $numeros);",
+      "// [2, 4, 6, 8, 10]",
+      "",
+      "$pares = array_filter($numeros, fn($n) => $n % 2 === 0);",
+      "// [2, 4] (mantém as chaves originais: [1 => 2, 3 => 4])",
+      "",
+      "$soma = array_reduce($numeros, fn($acumulado, $n) => $acumulado + $n, 0);",
+      "// 15"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "array_map",
+      "definicao": "Aplica uma função a cada elemento de um array e devolve um novo array com os resultados.",
+      "exemplo": "array_map(fn($n) => $n * 2, $numeros)"
+    },
+    {
+      "termo": "array_filter",
+      "definicao": "Devolve um novo array só com os elementos para os quais a função passada retornou verdadeiro.",
+      "exemplo": "array_filter($numeros, fn($n) => $n % 2 === 0)"
+    },
+    {
+      "termo": "array_reduce",
+      "definicao": "Percorre o array acumulando um único valor final, a partir de um valor inicial.",
+      "exemplo": "array_reduce($numeros, fn($a, $n) => $a + $n, 0)"
+    },
+    {
+      "termo": "arrow function",
+      "definicao": "Forma curta de escrever uma função anônima de uma expressão só, com retorno implícito.",
+      "exemplo": "fn($x) => $x * 2"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-fnc-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `array_map` faz aqui?",
+      "codigo": ["$dobrados = array_map(fn($n) => $n * 2, [1, 2, 3]);"],
+      "alternativas": [
+        "Cria um novo array com cada número multiplicado por 2: `[2, 4, 6]`.",
+        "Altera o array original `[1, 2, 3]` para `[2, 4, 6]`.",
+        "Devolve só os números pares do array.",
+        "Soma todos os números e multiplica o total por 2."
+      ],
+      "correta": 0,
+      "explicacao": "`array_map` transforma cada elemento e devolve um array novo, do mesmo tamanho — não filtra nem altera o array original."
+    },
+    {
+      "id": "php-fnc-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "$pares = array_filter([1, 2, 3, 4], fn($n) => $n % 2 === 0);",
+        "echo implode(\", \", $pares);"
+      ],
+      "alternativas": ["2, 4", "1, 3", "1, 2, 3, 4", "true, false, true, false"],
+      "correta": 0,
+      "explicacao": "`array_filter` mantém só os elementos em que a função retorna `true`. `$n % 2 === 0` é verdadeiro para 2 e 4."
+    },
+    {
+      "id": "php-fnc-03",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que essa sintaxe representa?",
+      "codigo": ["fn($x) => $x * 2"],
+      "alternativas": [
+        "Uma arrow function que recebe `$x` e devolve `$x * 2`.",
+        "Uma chamada de função chamada `fn`.",
+        "Um array associativo com chave `$x`.",
+        "Uma comparação entre `$x` e `2`."
+      ],
+      "correta": 0,
+      "explicacao": "`fn(parâmetros) => expressão` declara uma função anônima curta; o valor da expressão à direita da seta já é o retorno, sem precisar de `return`."
+    },
+    {
+      "id": "php-fnc-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "$total = array_reduce([1, 2, 3, 4], fn($acumulado, $n) => $acumulado + $n, 0);",
+        "echo $total;"
+      ],
+      "alternativas": ["10", "4", "0", "\"1234\""],
+      "correta": 0,
+      "explicacao": "Partindo de `0`, `array_reduce` soma cada elemento ao acumulado: 0+1=1, 1+2=3, 3+3=6, 6+4=10."
+    },
+    {
+      "id": "php-fnc-05",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Qual é o valor inicial do acumulador nesta chamada?",
+      "codigo": ["array_reduce($precos, fn($acumulado, $p) => $acumulado + $p, 0)"],
+      "alternativas": [
+        "0, o terceiro argumento passado para `array_reduce`.",
+        "O primeiro elemento de `$precos`.",
+        "`null`, porque nenhum valor inicial foi definido.",
+        "A soma de todos os preços, já calculada de antemão."
+      ],
+      "correta": 0,
+      "explicacao": "O terceiro argumento de `array_reduce` é justamente o valor com que o acumulado começa antes de processar o primeiro elemento."
+    },
+    {
+      "id": "php-fnc-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para transformar cada nome do array em maiúsculas, usando `array_map`.",
+      "codigo": ["$maiusculos = array_map(___($nome) => strtoupper($nome), $nomes);"],
+      "respostas": ["fn"],
+      "tokens": ["fn", "function", "return", "callback"],
+      "explicacao": "`fn` inicia uma arrow function. Poderia ser escrita com `function` tradicional também, mas `fn` é mais curta para uma expressão só."
+    },
+    {
+      "id": "php-fnc-07",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Use `array_filter` para manter só os números maiores que 10 do array `$valores`.",
+      "dica": "array_filter, o array, arrow function comparando com 10",
+      "resposta": "array_filter($valores, fn($n) => $n > 10);",
+      "explicacao": "A função passada para `array_filter` decide, elemento por elemento, se ele permanece (`true`) ou é descartado (`false`)."
+    },
+    {
+      "id": "php-fnc-08",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que dobra cada valor de `$numeros` usando `array_map` e uma arrow function.",
+      "partes": ["array_map", "(", "fn($n) => $n * 2", ",", "$numeros", ")", ";"],
+      "explicacao": "`array_map` recebe primeiro a função de transformação e depois o array — a ordem inversa de `array_filter`, que recebe o array primeiro."
+    },
+    {
+      "id": "php-fnc-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não filtra os números pares como deveria. Clique na linha que causa o erro.",
+      "codigo": [
+        "$numeros = [1, 2, 3, 4, 5, 6];",
+        "$pares = array_filter(fn($n) => $n % 2 === 0, $numeros);",
+        "echo implode(\", \", $pares);"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "`array_filter` espera o array como primeiro argumento e a função como segundo — ordem oposta à de `array_map`. Aqui os argumentos estão trocados."
+    },
+    {
+      "id": "php-fnc-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "$precos = [10, 25, 40, 5];",
+        "",
+        "$comDesconto = array_map(fn($p) => $p * 0.9, $precos);",
+        "$acimaDe10 = array_filter($comDesconto, fn($p) => $p > 10);",
+        "$total = array_reduce($acimaDe10, fn($a, $p) => $a + $p, 0);",
+        "",
+        "echo $total;"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "58.5 — 22.5 + 36, os únicos valores acima de 10 após o desconto.",
+        "80 — a soma dos preços originais.",
+        "72 — a soma de todos os preços com desconto, sem filtrar.",
+        "Erro, porque `array_reduce` não pode receber o resultado de `array_filter`."
+      ],
+      "correta": 0,
+      "explicacao": "Com 10% de desconto os preços viram [9, 22.5, 36, 4.5]. O filtro mantém só os maiores que 10, restando [22.5, 36] (9 e 4.5 são descartados). A soma final é 22.5 + 36 = 58.5."
+    }
+  ]
+}

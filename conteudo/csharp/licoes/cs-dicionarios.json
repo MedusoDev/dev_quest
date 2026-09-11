@@ -1,0 +1,156 @@
+{
+  "id": "cs-dicionarios",
+  "linguagem": "csharp",
+  "trilha": "cs-colecoes",
+  "titulo": "Dictionary<TKey, TValue>",
+  "resumo": "Guardar pares chave-valor: declarar, adicionar, ler e checar existência.",
+  "conceito": {
+    "texto": [
+      "`Dictionary<TKey, TValue>` guarda pares chave-valor: cada chave é única e aponta pra um valor. `Dictionary<string, int>` usa texto como chave e guarda números.",
+      "`dicionario[chave] = valor;` adiciona um par novo ou substitui o valor de uma chave que já existe. Ler `dicionario[chave]` devolve o valor guardado — mas se a chave não existir, lança `KeyNotFoundException`.",
+      "`.ContainsKey(chave)` verifica se uma chave existe, sem risco de erro. É o jeito seguro de checar antes de ler.",
+      "`foreach (var par in dicionario)` percorre todos os pares. Cada `par` é um `KeyValuePair`, com `.Key` e `.Value`.",
+      "`.Remove(chave)` tira o par daquela chave. Chamar `.Remove` numa chave que não existe não lança erro — só não faz nada."
+    ],
+    "exemplo": [
+      "var idades = new Dictionary<string, int>();",
+      "idades[\"Ana\"] = 28;",
+      "idades[\"Beto\"] = 34;",
+      "",
+      "Console.WriteLine(idades[\"Ana\"]);               // 28",
+      "Console.WriteLine(idades.ContainsKey(\"Carla\"));  // false",
+      "",
+      "foreach (var par in idades)",
+      "{",
+      "    Console.WriteLine($\"{par.Key}: {par.Value}\");",
+      "}",
+      "// Ana: 28",
+      "// Beto: 34"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "Dictionary<TKey, TValue>",
+      "definicao": "Coleção de pares chave-valor; cada chave é única.",
+      "exemplo": "Dictionary<string, int> idades = new Dictionary<string, int>();"
+    },
+    {
+      "termo": "ContainsKey",
+      "definicao": "Verifica se uma chave existe, sem lançar erro.",
+      "exemplo": "idades.ContainsKey(\"Ana\")"
+    },
+    {
+      "termo": "KeyValuePair",
+      "definicao": "O par chave-valor que o `foreach` entrega, com `.Key` e `.Value`.",
+      "exemplo": "par.Key, par.Value"
+    },
+    {
+      "termo": "KeyNotFoundException",
+      "definicao": "Erro lançado ao ler uma chave que não existe no dicionário.",
+      "exemplo": "idades[\"Zeca\"] — se \"Zeca\" não existir"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-dic-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que os dois tipos entre `< >` significam em `Dictionary<string, int>`?",
+      "codigo": ["Dictionary<string, int> idades = new Dictionary<string, int>();"],
+      "alternativas": [
+        "O primeiro é o tipo da chave; o segundo é o tipo do valor.",
+        "Os dois juntos formam o tipo da chave.",
+        "O primeiro é opcional; o segundo é obrigatório.",
+        "São os dois primeiros valores guardados."
+      ],
+      "correta": 0,
+      "explicacao": "`Dictionary<TKey, TValue>`: o primeiro parâmetro é sempre o tipo da chave, o segundo é sempre o tipo do valor."
+    },
+    {
+      "id": "cs-dic-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que esta linha faz?",
+      "codigo": ["idades[\"Ana\"] = 28;"],
+      "alternativas": [
+        "Guarda o par chave \"Ana\", valor 28 — cria se não existir, substitui se já existir.",
+        "Compara se `idades[\"Ana\"]` é igual a 28.",
+        "Remove a chave \"Ana\" e coloca 28 no lugar dela.",
+        "Cria uma nova variável chamada 28."
+      ],
+      "correta": 0,
+      "explicacao": "O indexador com atribuição serve tanto pra criar uma chave nova quanto pra atualizar uma que já existia."
+    },
+    {
+      "id": "cs-dic-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["var idades = new Dictionary<string, int>();", "idades[\"Ana\"] = 28;", "idades[\"Ana\"] = 30;", "Console.WriteLine(idades[\"Ana\"]);"],
+      "alternativas": ["30", "28", "2", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "Cada chave é única: a segunda atribuição a \"Ana\" substitui a primeira, não cria um segundo par."
+    },
+    {
+      "id": "cs-dic-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: verifique se a chave existe antes de ler o valor.",
+      "codigo": ["if (idades.___(\"Ana\"))", "{", "    Console.WriteLine(idades[\"Ana\"]);", "}"],
+      "respostas": ["ContainsKey"],
+      "tokens": ["ContainsKey", "Contains", "HasKey", "Add", "Remove"],
+      "explicacao": "`.ContainsKey()` é o jeito seguro de checar antes de ler — sem risco de `KeyNotFoundException`."
+    },
+    {
+      "id": "cs-dic-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare um dicionário vazio com chave texto e valor inteiro, chamado `pontuacoes`.",
+      "dica": "Dictionary<string, int>, nome, igual, new Dictionary<string, int>()",
+      "resposta": "Dictionary<string, int> pontuacoes = new Dictionary<string, int>();",
+      "explicacao": "Os dois tipos entre `< >` se repetem na declaração e no `new`, na mesma ordem: chave primeiro, valor depois."
+    },
+    {
+      "id": "cs-dic-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que lê o valor da chave \"Ana\" no dicionário `idades`.",
+      "partes": ["Console", ".", "WriteLine", "(", "idades", "[", "\"Ana\"", "]", ")", ";"],
+      "explicacao": "`idades[\"Ana\"]` lê o valor guardado na chave \"Ana\", e `Console.WriteLine` imprime esse valor."
+    },
+    {
+      "id": "cs-dic-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha lança erro em tempo de execução. Clique nela.",
+      "codigo": ["var idades = new Dictionary<string, int>();", "idades[\"Ana\"] = 28;", "Console.WriteLine(idades[\"Beto\"]);"],
+      "linhaErrada": 2,
+      "explicacao": "\"Beto\" nunca foi adicionado ao dicionário. Ler uma chave que não existe lança `KeyNotFoundException` — o jeito seguro seria checar `idades.ContainsKey(\"Beto\")` antes."
+    },
+    {
+      "id": "cs-dic-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["var estoque = new Dictionary<string, int>();", "estoque[\"maçã\"] = 10;", "estoque[\"banana\"] = 5;", "estoque.Remove(\"banana\");", "estoque[\"maçã\"] = estoque[\"maçã\"] + 3;"],
+      "pergunta": "Quantos pares o dicionário `estoque` tem ao final, e qual é o valor de \"maçã\"?",
+      "alternativas": [
+        "1 par, \"maçã\" vale 13 — \"banana\" foi removida e \"maçã\" foi somada.",
+        "2 pares, \"maçã\" vale 13.",
+        "1 par, \"maçã\" vale 10 — a soma não teve efeito.",
+        "O código não compila: não dá pra somar um valor lido do próprio dicionário."
+      ],
+      "correta": 0,
+      "explicacao": "`.Remove(\"banana\")` tira esse par, sobrando só \"maçã\". A última linha lê o valor atual (10), soma 3, e guarda 13 de volta na mesma chave."
+    },
+    {
+      "id": "cs-dic-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha que percorre o dicionário `idades` com `foreach`, guardando cada par numa variável `par`.",
+      "dica": "foreach, var par, in, idades",
+      "resposta": "foreach (var par in idades)",
+      "explicacao": "Percorrer um `Dictionary` com `foreach` entrega um `KeyValuePair` por vez — aqui guardado na variável `par`."
+    }
+  ]
+}

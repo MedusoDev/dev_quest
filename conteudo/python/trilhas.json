@@ -1,0 +1,26 @@
+{
+  "id": "python",
+  "nome": "Python",
+  "cor": "#4b8bbe",
+  "descricao": "A linguagem que equilibra simplicidade e poder, dos scripts do dia a dia à ciência de dados.",
+  "trilhas": [
+    {
+      "id": "py-fundamentos",
+      "titulo": "Fundamentos",
+      "descricao": "Variáveis, funções e o escopo que decide onde cada nome vive.",
+      "licoes": ["py-variaveis", "py-funcoes", "py-escopo"]
+    },
+    {
+      "id": "py-colecoes",
+      "titulo": "Coleções",
+      "descricao": "Listas, dicionários e as compreensões que os montam numa linha só.",
+      "licoes": ["py-listas", "py-dicionarios", "py-compreensao-lista"]
+    },
+    {
+      "id": "py-poo",
+      "titulo": "Orientação a Objetos",
+      "descricao": "Classes, herança e o tratamento de erros com try/except.",
+      "licoes": ["py-classes", "py-heranca", "py-excecoes"]
+    }
+  ]
+}

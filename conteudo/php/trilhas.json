@@ -1,0 +1,26 @@
+{
+  "id": "php",
+  "nome": "PHP",
+  "cor": "#8892bf",
+  "descricao": "A linguagem que move a maior parte da web — de WordPress a sistemas inteiros.",
+  "trilhas": [
+    {
+      "id": "php-fundamentos",
+      "titulo": "Fundamentos",
+      "descricao": "Variáveis, funções e escopo do jeito que o PHP entende.",
+      "licoes": ["php-variaveis", "php-funcoes", "php-escopo"]
+    },
+    {
+      "id": "php-arrays",
+      "titulo": "Arrays e Objetos",
+      "descricao": "Arrays associativos, funções de array e classes.",
+      "licoes": ["php-arrays", "php-arrays-funcionais", "php-classes"]
+    },
+    {
+      "id": "php-erros",
+      "titulo": "Erros e Web",
+      "descricao": "Exceções, superglobais e namespaces.",
+      "licoes": ["php-excecoes", "php-superglobais", "php-namespaces"]
+    }
+  ]
+}

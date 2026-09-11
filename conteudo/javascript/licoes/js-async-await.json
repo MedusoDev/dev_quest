@@ -1,0 +1,168 @@
+{
+  "id": "js-async-await",
+  "linguagem": "javascript",
+  "trilha": "js-async",
+  "titulo": "async e await",
+  "resumo": "Escrever código assíncrono que parece síncrono.",
+  "conceito": {
+    "texto": [
+      "`async` na frente de uma função transforma o retorno dela numa Promise, automaticamente — mesmo que o `return` de dentro pareça devolver um valor comum.",
+      "`await` só existe dentro de uma função `async`. Ele pausa a execução daquela função até a Promise ao lado resolver, e devolve o valor resolvido diretamente — sem precisar de `.then()`.",
+      "Enquanto uma função `async` está pausada num `await`, o resto do programa continua rodando normalmente. A pausa é local àquela função, não trava tudo.",
+      "Erros de uma Promise rejeitada, dentro de uma função `async`, viram exceções que dá pra capturar com `try`/`catch` — igual código síncrono normal.",
+      "`await` sem `async` na função de fora é erro de sintaxe. É por isso que `await` costuma aparecer sempre acompanhado de `async function` ou `async () => {}`."
+    ],
+    "exemplo": [
+      "function buscarUsuario(id) {",
+      "  return new Promise(resolve => resolve({ id, nome: \"Ana\" }));",
+      "}",
+      "",
+      "async function mostrarUsuario(id) {",
+      "  const usuario = await buscarUsuario(id);",
+      "  console.log(usuario.nome);",
+      "}",
+      "",
+      "mostrarUsuario(1); // \"Ana\""
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "async",
+      "definicao": "Palavra que transforma o retorno de uma função numa Promise, automaticamente.",
+      "exemplo": "async function buscar() { }"
+    },
+    {
+      "termo": "await",
+      "definicao": "Pausa a função async até a Promise resolver, e devolve o valor direto.",
+      "exemplo": "const valor = await promessa;"
+    },
+    {
+      "termo": "try / catch (com await)",
+      "definicao": "Captura o erro de uma Promise rejeitada, dentro de uma função async.",
+      "exemplo": "try { await buscar(); } catch (e) { }"
+    },
+    {
+      "termo": "função async",
+      "definicao": "Sempre devolve uma Promise, mesmo que o `return` de dentro pareça um valor comum.",
+      "exemplo": "async function f() { return 1; } // f() é uma Promise que resolve com 1"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-aa-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `async` faz na frente de uma função?",
+      "codigo": ["async function buscar() { return 1; }"],
+      "alternativas": [
+        "Transforma o retorno da função numa Promise, automaticamente.",
+        "Faz a função rodar mais rápido.",
+        "Impede a função de lançar erros.",
+        "Só funciona em funções sem parâmetros."
+      ],
+      "correta": 0,
+      "explicacao": "Mesmo `return 1;` dentro de uma função `async` vira uma Promise que resolve com `1` — `buscar()` nunca devolve o `1` puro."
+    },
+    {
+      "id": "js-aa-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `await` faz?",
+      "codigo": ["const usuario = await buscarUsuario(1);"],
+      "alternativas": [
+        "Pausa a função async até a Promise resolver, e devolve o valor direto.",
+        "Cancela a Promise se ela demorar demais.",
+        "Roda a Promise de novo, do zero.",
+        "Transforma o valor resolvido num array."
+      ],
+      "correta": 0,
+      "explicacao": "`await` é o que deixa código assíncrono parecendo síncrono: em vez de `.then()`, o valor cai direto na variável, na linha seguinte."
+    },
+    {
+      "id": "js-aa-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["function buscarNumero() {", "  return new Promise(resolve => resolve(21));", "}", "", "async function dobrar() {", "  const n = await buscarNumero();", "  console.log(n * 2);", "}", "", "dobrar();"],
+      "alternativas": ["42", "21", "Promise { 21 }", "undefined"],
+      "correta": 0,
+      "explicacao": "`await buscarNumero()` devolve `21` direto (não a Promise). `console.log(n * 2)` imprime `42`."
+    },
+    {
+      "id": "js-aa-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Por que `await buscarNumero();` só pode aparecer dentro de uma função `async`?",
+      "codigo": ["function normal() {", "    const n = await buscarNumero(); // erro de sintaxe", "}"],
+      "alternativas": [
+        "Porque `await` depende de uma função async pra saber onde pausar — sem ela, é erro de sintaxe.",
+        "Porque `await` é mais lento fora de funções async.",
+        "Porque `await` só funciona com números.",
+        "Na verdade funciona: qualquer função aceita `await`."
+      ],
+      "correta": 0,
+      "explicacao": "`await` pausa a função em que está — precisa de uma função `async` pra isso fazer sentido. Fora dela, o JavaScript recusa o código antes mesmo de rodar."
+    },
+    {
+      "id": "js-aa-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: declare a função como assíncrona e espere o resultado de `buscarUsuario`.",
+      "codigo": ["___ function mostrarUsuario(id) {", "    const usuario = ___ buscarUsuario(id);", "    console.log(usuario.nome);", "}"],
+      "respostas": ["async", "await"],
+      "tokens": ["async", "await", "then", "catch", "function"],
+      "explicacao": "`async` na função permite usar `await` dentro dela, esperando o valor resolvido de `buscarUsuario`."
+    },
+    {
+      "id": "js-aa-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva a assinatura (sem corpo) de uma função assíncrona chamada `carregarDados`, sem parâmetros.",
+      "dica": "async function, nome, parênteses vazios",
+      "resposta": "async function carregarDados()",
+      "explicacao": "`async` vem antes de `function`, e o resto da assinatura é igual a qualquer outra função."
+    },
+    {
+      "id": "js-aa-07",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que espera o resultado de `buscarUsuario(1)` e guarda em `usuario`.",
+      "partes": ["const", "usuario", "=", "await", "buscarUsuario", "(", "1", ")", ";"],
+      "explicacao": "`await` fica entre o `=` e a chamada da função — ele pausa ali até a Promise resolver, e o valor vai direto pra `usuario`."
+    },
+    {
+      "id": "js-aa-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Clique na linha que lança erro de sintaxe.",
+      "codigo": [
+        "function buscarUsuario(id) {",
+        "  return new Promise(resolve => resolve({ id, nome: \"Ana\" }));",
+        "}",
+        "",
+        "function mostrarUsuario(id) {",
+        "  const usuario = await buscarUsuario(id);",
+        "  console.log(usuario.nome);",
+        "}"
+      ],
+      "linhaErrada": 5,
+      "explicacao": "`await` só é permitido dentro de uma função marcada `async`. `mostrarUsuario` não tem `async` na frente, então usar `await` dentro dela é erro de sintaxe — precisa ser `async function mostrarUsuario(id)`."
+    },
+    {
+      "id": "js-aa-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["async function buscar() {", "  console.log(\"1\");", "  await new Promise(resolve => resolve());", "  console.log(\"3\");", "}", "", "buscar();", "console.log(\"2\");"],
+      "pergunta": "Em que ordem os números aparecem no console?",
+      "alternativas": [
+        "1, 2, 3 — o await pausa só a função buscar, o resto do programa continua correndo.",
+        "1, 3, 2 — await bloqueia tudo até terminar.",
+        "3, 2, 1 — funções async rodam por último, sempre.",
+        "1, 2 apenas — o console.log(\"3\") nunca roda."
+      ],
+      "correta": 0,
+      "explicacao": "`\"1\"` imprime antes do `await`. No `await`, `buscar` pausa e devolve o controle — por isso `\"2\"`, que é código de fora, roda em seguida. Só depois `buscar` retoma e imprime `\"3\"`."
+    }
+  ]
+}

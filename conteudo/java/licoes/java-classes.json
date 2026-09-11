@@ -1,0 +1,219 @@
+{
+  "id": "java-classes",
+  "linguagem": "java",
+  "trilha": "java-poo",
+  "titulo": "Classes e objetos",
+  "resumo": "Class, campos, métodos, new e this.",
+  "conceito": {
+    "texto": [
+      "Uma **classe** é um molde: descreve que campos (dados) e métodos (comportamentos) os objetos feitos a partir dela vão ter. O objeto em si só nasce quando você usa `new`.",
+      "`new NomeDaClasse()` cria um **objeto** (também chamado de instância) daquela classe, reservando memória para os campos dele e devolvendo uma referência para você guardar numa variável.",
+      "Cada objeto tem sua própria cópia dos campos de instância. Criar dois `Jogador` diferentes dá dois `nome` e dois `vidas` independentes — mudar um não afeta o outro.",
+      "Dentro de um método, `this` se refere ao próprio objeto que está executando aquele método. É mais usado quando um parâmetro tem o mesmo nome de um campo, para diferenciar os dois: `this.nome` é o campo, `nome` sozinho seria o parâmetro.",
+      "Métodos de instância (sem `static`) só existem através de um objeto: você chama `jogador.atacar()`, nunca `Jogador.atacar()` diretamente."
+    ],
+    "exemplo": [
+      "public class Jogador",
+      "{",
+      "    String nome;",
+      "    int vidas;",
+      "",
+      "    void receberDano(int quantidade)",
+      "    {",
+      "        this.vidas = this.vidas - quantidade;",
+      "    }",
+      "}",
+      "",
+      "Jogador heroi = new Jogador();",
+      "heroi.nome = \"Ana\";",
+      "heroi.vidas = 10;",
+      "heroi.receberDano(3);",
+      "System.out.println(heroi.vidas); // 7"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "classe",
+      "definicao": "Molde que descreve os campos e métodos que os objetos criados a partir dela vão ter.",
+      "exemplo": "public class Jogador { String nome; int vidas; }"
+    },
+    {
+      "termo": "objeto (instância)",
+      "definicao": "O valor concreto criado a partir de uma classe, usando `new`.",
+      "exemplo": "Jogador heroi = new Jogador();"
+    },
+    {
+      "termo": "new",
+      "definicao": "Palavra-chave que cria um novo objeto de uma classe, reservando memória para os campos dele.",
+      "exemplo": "new Jogador()"
+    },
+    {
+      "termo": "this",
+      "definicao": "Referência ao próprio objeto, usada dentro de métodos de instância — sobretudo para diferenciar campo de parâmetro homônimo.",
+      "exemplo": "this.vidas = vidas;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-cls-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `new Jogador()` faz?",
+      "codigo": ["Jogador heroi = new Jogador();"],
+      "alternativas": [
+        "Cria um novo objeto do tipo `Jogador` e guarda a referência em `heroi`.",
+        "Declara a classe `Jogador`.",
+        "Chama um método chamado `Jogador`.",
+        "Copia um objeto `Jogador` já existente."
+      ],
+      "correta": 0,
+      "explicacao": "`new` é o que efetivamente cria o objeto na memória. A classe `Jogador` é só o molde; sem `new`, nenhum objeto existe ainda."
+    },
+    {
+      "id": "java-cls-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que acontece com `vidas` quando dois objetos `Jogador` são criados?",
+      "codigo": ["Jogador a = new Jogador();", "Jogador b = new Jogador();", "a.vidas = 10;", "b.vidas = 5;"],
+      "alternativas": [
+        "Cada objeto tem sua própria cópia de `vidas`, independente uma da outra.",
+        "`a.vidas` e `b.vidas` são o mesmo valor, compartilhado.",
+        "Mudar `a.vidas` também muda `b.vidas`.",
+        "Isso causa erro de compilação, porque `vidas` já foi usado em `a`."
+      ],
+      "correta": 0,
+      "explicacao": "Campos de instância (sem `static`) pertencem a cada objeto individualmente. `a` e `b` são objetos diferentes, então têm cópias independentes de `vidas`."
+    },
+    {
+      "id": "java-cls-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "Jogador heroi = new Jogador();",
+        "heroi.nome = \"Ana\";",
+        "System.out.println(heroi.nome);"
+      ],
+      "alternativas": ["Ana", "heroi.nome", "null", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "O campo `nome` foi atribuído com `\"Ana\"` logo antes, então `println` imprime exatamente esse valor."
+    },
+    {
+      "id": "java-cls-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Por que este método usa `this.vidas` em vez de só `vidas`?",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    int vidas;",
+        "",
+        "    void definirVidas(int vidas)",
+        "    {",
+        "        this.vidas = vidas;",
+        "    }",
+        "}"
+      ],
+      "alternativas": [
+        "Porque o parâmetro `vidas` tem o mesmo nome do campo, e `this.vidas` deixa claro qual dos dois é o campo.",
+        "Porque `this` torna o campo estático.",
+        "Porque sem `this` o código não compila.",
+        "Porque `this.vidas` é mais rápido de executar."
+      ],
+      "correta": 0,
+      "explicacao": "Quando parâmetro e campo têm o mesmo nome, escrever só `vidas` dentro do método se refere ao parâmetro (o mais próximo). `this.vidas` desambigua, apontando explicitamente para o campo do objeto."
+    },
+    {
+      "id": "java-cls-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a criação de um objeto `Jogador` guardado numa variável chamada `heroi`.",
+      "codigo": ["Jogador heroi = ___ Jogador();"],
+      "respostas": ["new"],
+      "tokens": ["new", "this", "class", "static"],
+      "explicacao": "`new` é a palavra-chave que efetivamente cria o objeto e reserva memória para ele."
+    },
+    {
+      "id": "java-cls-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a declaração de um campo de texto chamado `nome`, dentro de uma classe.",
+      "partes": ["String", "nome", ";"],
+      "explicacao": "Um campo é declarado como qualquer variável: tipo, depois nome. Fora de um método, ele vira parte do molde da classe."
+    },
+    {
+      "id": "java-cls-07",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Chame o método `receberDano` do objeto `heroi`, passando o valor 3.",
+      "dica": "objeto, ponto, nome do método, o argumento entre parênteses",
+      "resposta": "heroi.receberDano(3);",
+      "explicacao": "Métodos de instância são chamados a partir de um objeto, usando ponto: `objeto.metodo(argumentos)`."
+    },
+    {
+      "id": "java-cls-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o problema.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    int vidas;",
+        "}",
+        "",
+        "Jogador heroi;",
+        "heroi.vidas = 10;",
+        "System.out.println(heroi.vidas);"
+      ],
+      "linhaErrada": 6,
+      "explicacao": "`heroi` foi declarado, mas nunca recebeu `new Jogador()` — a variável ainda não aponta para objeto nenhum. Usar `heroi.vidas` antes disso tenta acessar um campo de um objeto que não existe."
+    },
+    {
+      "id": "java-cls-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "public class Retangulo",
+        "{",
+        "    int largura;",
+        "    int altura;",
+        "",
+        "    int area()",
+        "    {",
+        "        return this.largura * this.altura;",
+        "    }",
+        "}",
+        "",
+        "Retangulo r1 = new Retangulo();",
+        "r1.largura = 4;",
+        "r1.altura = 5;",
+        "",
+        "Retangulo r2 = new Retangulo();",
+        "r2.largura = 2;",
+        "r2.altura = 3;",
+        "",
+        "System.out.println(r1.area() + r2.area());"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": ["26", "20", "6", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "`r1.area()` usa os campos de `r1` (4 * 5 = 20) e `r2.area()` usa os campos de `r2` (2 * 3 = 6), porque cada objeto tem sua própria cópia de `largura` e `altura`. A soma é 20 + 6 = 26."
+    },
+    {
+      "id": "java-cls-10",
+      "tipo": "o-que-faz",
+      "nivel": 3,
+      "enunciado": "Um método sem `static` é chamado como `Jogador.atacar()`, direto pela classe, sem criar objeto. O que acontece?",
+      "codigo": ["public class Jogador", "{", "    void atacar()", "    {", "        System.out.println(\"Ataque!\");", "    }", "}", "", "Jogador.atacar();"],
+      "alternativas": [
+        "Erro de compilação: método de instância exige um objeto para ser chamado.",
+        "Funciona normalmente, imprimindo \"Ataque!\".",
+        "Funciona, mas cria um objeto `Jogador` temporário automaticamente.",
+        "Funciona só se `Jogador` tiver um construtor sem parâmetros."
+      ],
+      "correta": 0,
+      "explicacao": "Métodos de instância pertencem a cada objeto, não à classe. Chamá-los sem um objeto (`heroi.atacar()`) é erro de compilação — só métodos `static` podem ser chamados direto pela classe."
+    }
+  ]
+}

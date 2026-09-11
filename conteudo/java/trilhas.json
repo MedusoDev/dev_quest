@@ -1,0 +1,26 @@
+{
+  "id": "java",
+  "nome": "Java",
+  "cor": "#e07a5f",
+  "descricao": "A linguagem por trás de Android, sistemas corporativos e meio mundo da infraestrutura da internet.",
+  "trilhas": [
+    {
+      "id": "java-fundamentos",
+      "titulo": "Fundamentos",
+      "descricao": "Tipos primitivos, métodos e modificadores de acesso.",
+      "licoes": ["java-tipos", "java-metodos", "java-modificadores"]
+    },
+    {
+      "id": "java-poo",
+      "titulo": "Orientação a Objetos",
+      "descricao": "Classe, construtor e herança.",
+      "licoes": ["java-classes", "java-construtores", "java-heranca"]
+    },
+    {
+      "id": "java-colecoes",
+      "titulo": "Coleções",
+      "descricao": "ArrayList, HashMap e Streams.",
+      "licoes": ["java-listas", "java-mapas", "java-streams"]
+    }
+  ]
+}

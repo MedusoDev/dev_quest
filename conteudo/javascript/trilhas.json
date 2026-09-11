@@ -1,0 +1,26 @@
+{
+  "id": "javascript",
+  "nome": "JavaScript",
+  "cor": "#fbbf24",
+  "descricao": "A linguagem que roda no navegador — inclusive neste site.",
+  "trilhas": [
+    {
+      "id": "js-fundamentos",
+      "titulo": "Fundamentos",
+      "descricao": "Declarar, guardar e reaproveitar valores.",
+      "licoes": ["js-declaracoes", "js-funcoes", "js-escopo"]
+    },
+    {
+      "id": "js-objetos",
+      "titulo": "Objetos e Arrays",
+      "descricao": "Desestruturação, map e filter.",
+      "licoes": ["js-desestruturacao", "js-map", "js-filter"]
+    },
+    {
+      "id": "js-async",
+      "titulo": "Assíncrono",
+      "descricao": "Promise, async e await.",
+      "licoes": ["js-promises", "js-async-await", "js-erros-assincronos"]
+    }
+  ]
+}

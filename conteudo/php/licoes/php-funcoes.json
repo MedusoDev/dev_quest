@@ -1,0 +1,186 @@
+{
+  "id": "php-funcoes",
+  "linguagem": "php",
+  "trilha": "php-fundamentos",
+  "titulo": "Funções",
+  "resumo": "Empacotar código com `function`, parâmetros com valor padrão e `return`.",
+  "conceito": {
+    "texto": [
+      "Uma função é criada com `function`, um nome e uma lista de parâmetros entre parênteses. O corpo fica entre chaves.",
+      "`return` devolve um valor para quem chamou a função e encerra a execução dela ali mesmo — qualquer linha depois de um `return` não roda.",
+      "Um parâmetro pode ter um **valor padrão**, usado quando quem chama não passa nada para ele: `function saudar($nome = \"visitante\")`. Parâmetros com padrão sempre vêm depois dos que não têm.",
+      "Desde o PHP 7, dá para declarar o **tipo** de cada parâmetro e o tipo do retorno: `function soma(int $a, int $b): int`. Isso não é obrigatório, mas deixa a função mais clara e o PHP passa a validar os tipos na chamada.",
+      "Uma função sem `return` explícito devolve `null` quando é chamada."
+    ],
+    "exemplo": [
+      "<?php",
+      "function soma(int $a, int $b): int",
+      "{",
+      "    return $a + $b;",
+      "}",
+      "",
+      "function saudar(string $nome = \"visitante\"): string",
+      "{",
+      "    return \"Olá, $nome!\";",
+      "}",
+      "",
+      "echo soma(2, 3);       // 5",
+      "echo saudar();         // Olá, visitante!",
+      "echo saudar(\"Rita\");   // Olá, Rita!"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "function",
+      "definicao": "Palavra-chave que declara uma função em PHP.",
+      "exemplo": "function soma($a, $b) { return $a + $b; }"
+    },
+    {
+      "termo": "return",
+      "definicao": "Devolve um valor e encerra a execução da função na hora.",
+      "exemplo": "return $a + $b;"
+    },
+    {
+      "termo": "valor padrão",
+      "definicao": "O valor que um parâmetro recebe quando quem chama a função não o informa.",
+      "exemplo": "function saudar($nome = \"visitante\")"
+    },
+    {
+      "termo": "tipagem de parâmetro e retorno",
+      "definicao": "Declarar o tipo esperado de cada parâmetro e do valor devolvido pela função.",
+      "exemplo": "function soma(int $a, int $b): int"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-fun-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `return` faz nesta função?",
+      "codigo": ["function dobro($x)", "{", "    return $x * 2;", "}"],
+      "alternativas": [
+        "Devolve `$x * 2` como resultado e encerra a função ali.",
+        "Imprime `$x * 2` na tela.",
+        "Guarda `$x * 2` numa variável global.",
+        "Apenas comenta que a função terminou, sem efeito real."
+      ],
+      "correta": 0,
+      "explicacao": "`return` entrega um valor para quem chamou a função e para a execução da função imediatamente, mesmo que existissem mais linhas depois."
+    },
+    {
+      "id": "php-fun-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "function saudar($nome = \"visitante\")",
+        "{",
+        "    return \"Olá, $nome!\";",
+        "}",
+        "",
+        "echo saudar();"
+      ],
+      "alternativas": ["Olá, visitante!", "Olá, !", "Erro: falta argumento", "Olá, $nome!"],
+      "correta": 0,
+      "explicacao": "Como a chamada não passou nenhum argumento, `$nome` usa o valor padrão `\"visitante\"`."
+    },
+    {
+      "id": "php-fun-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece quando esta função é chamada sem argumentos?",
+      "codigo": ["function multiplicar($a, $b = 2)", "{", "    return $a * $b;", "}"],
+      "alternativas": [
+        "Dá erro, porque `$a` não tem valor padrão e não foi informado.",
+        "`$a` e `$b` viram 0 automaticamente.",
+        "A função retorna `null` sem reclamar.",
+        "`$b` vira 2 e `$a` vira `\"2\"`."
+      ],
+      "correta": 0,
+      "explicacao": "Só `$b` tem valor padrão. `$a` é obrigatório — chamar `multiplicar()` sem argumento nenhum gera um erro de argumento faltando."
+    },
+    {
+      "id": "php-fun-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "function calcular($a, $b)",
+        "{",
+        "    return $a + $b;",
+        "    echo \"nunca chega aqui\";",
+        "}",
+        "",
+        "echo calcular(2, 3);"
+      ],
+      "alternativas": ["5", "5nunca chega aqui", "nunca chega aqui", "Erro de sintaxe"],
+      "correta": 0,
+      "explicacao": "`return` encerra a função na hora. A linha `echo \"nunca chega aqui\";` está depois do `return` e nunca é executada."
+    },
+    {
+      "id": "php-fun-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a assinatura para que a função receba dois inteiros e devolva um inteiro.",
+      "codigo": ["function soma(___ $a, int $b): ___", "{", "    return $a + $b;", "}"],
+      "respostas": ["int", "int"],
+      "tokens": ["int", "int", "string", "float", "void"],
+      "explicacao": "O tipo de cada parâmetro vem antes do nome dele, e o tipo de retorno vem depois dos parênteses, precedido por dois-pontos."
+    },
+    {
+      "id": "php-fun-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva a assinatura de uma função chamada `dobro`, que recebe um parâmetro `$x` do tipo int e retorna int (sem o corpo).",
+      "dica": "function, nome, parênteses com tipo e nome, dois-pontos, tipo de retorno",
+      "resposta": "function dobro(int $x): int",
+      "explicacao": "A ordem é sempre: `function`, nome, lista de parâmetros tipados entre parênteses e, por fim, o tipo de retorno depois dos dois-pontos."
+    },
+    {
+      "id": "php-fun-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a chamada da função `saudar`, passando `\"Marcos\"` como argumento.",
+      "partes": ["saudar", "(", "\"Marcos\"", ")", ";"],
+      "explicacao": "Chamar uma função é escrever o nome dela seguido dos argumentos entre parênteses, na ordem dos parâmetros esperados."
+    },
+    {
+      "id": "php-fun-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Esta função não compila corretamente. Clique na linha que causa o erro.",
+      "codigo": [
+        "function apresentar($nome, $idade = 18, $cidade)",
+        "{",
+        "    return \"$nome, $idade anos, de $cidade\";",
+        "}"
+      ],
+      "linhaErrada": 0,
+      "explicacao": "Um parâmetro com valor padrão (`$idade = 18`) não pode vir antes de um parâmetro obrigatório (`$cidade`). A ordem correta seria colocar `$cidade` antes de `$idade`, ou dar um padrão para `$cidade` também."
+    },
+    {
+      "id": "php-fun-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "function calcularDesconto(float $preco, float $percentual = 10.0): float",
+        "{",
+        "    $desconto = $preco * ($percentual / 100);",
+        "    return $preco - $desconto;",
+        "}",
+        "",
+        "echo calcularDesconto(200);"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "180 — 10% de desconto padrão sobre 200.",
+        "200 — porque nenhum desconto foi informado.",
+        "20 — o valor do desconto, não o preço final.",
+        "Erro, porque `$percentual` não foi passado."
+      ],
+      "correta": 0,
+      "explicacao": "Como `$percentual` não foi informado, usa o padrão `10.0`. O desconto é `200 * 0.10 = 20`, e o preço final é `200 - 20 = 180`."
+    }
+  ]
+}

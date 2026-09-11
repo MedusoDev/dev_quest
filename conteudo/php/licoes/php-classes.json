@@ -1,0 +1,228 @@
+{
+  "id": "php-classes",
+  "linguagem": "php",
+  "trilha": "php-arrays",
+  "titulo": "Classes e objetos",
+  "resumo": "`class`, `__construct`, `$this` e visibilidade de propriedades e métodos.",
+  "conceito": {
+    "texto": [
+      "Uma `class` é um molde para criar objetos. Ela declara **propriedades** (variáveis que cada objeto guarda) e **métodos** (funções que o objeto sabe executar).",
+      "`__construct` é um método especial chamado automaticamente quando um objeto é criado com `new`. É o lugar de receber valores iniciais e preencher as propriedades.",
+      "Dentro de um método, `$this` se refere ao próprio objeto que está executando aquele método — é assim que se acessa as propriedades dele: `$this->nome`.",
+      "Cada propriedade e método carrega uma visibilidade: `public` é acessível de qualquer lugar, `private` só de dentro da própria classe, `protected` da própria classe e de quem herda dela.",
+      "Criar um objeto é chamar a classe com `new`: `$jogador = new Jogador(\"Ana\");`. A partir daí, `$jogador->nome` ou `$jogador->atacar()` acessam propriedades e métodos públicos."
+    ],
+    "exemplo": [
+      "<?php",
+      "class Jogador",
+      "{",
+      "    public string $nome;",
+      "    private int $vidas = 3;",
+      "",
+      "    public function __construct(string $nome)",
+      "    {",
+      "        $this->nome = $nome;",
+      "    }",
+      "",
+      "    public function perderVida(): void",
+      "    {",
+      "        $this->vidas--;",
+      "    }",
+      "",
+      "    public function vidasRestantes(): int",
+      "    {",
+      "        return $this->vidas;",
+      "    }",
+      "}",
+      "",
+      "$jogador = new Jogador(\"Ana\");",
+      "$jogador->perderVida();",
+      "echo $jogador->vidasRestantes(); // 2"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "class",
+      "definicao": "Molde que define propriedades e métodos para criar objetos.",
+      "exemplo": "class Jogador { ... }"
+    },
+    {
+      "termo": "__construct",
+      "definicao": "Método especial executado automaticamente ao criar um objeto com `new`.",
+      "exemplo": "public function __construct(string $nome) { ... }"
+    },
+    {
+      "termo": "$this",
+      "definicao": "Dentro de um método, refere-se ao próprio objeto que está executando aquele método.",
+      "exemplo": "$this->nome = $nome;"
+    },
+    {
+      "termo": "visibilidade",
+      "definicao": "public, private ou protected: define quem pode acessar uma propriedade ou método.",
+      "exemplo": "private int $vidas = 3;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-cls-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Quando o método `__construct` é executado?",
+      "codigo": ["$jogador = new Jogador(\"Ana\");"],
+      "alternativas": [
+        "Automaticamente, no momento em que o objeto é criado com `new`.",
+        "Só quando é chamado manualmente, como qualquer outro método.",
+        "Uma vez por classe, na primeira vez que o arquivo é carregado.",
+        "Nunca — `__construct` é apenas um comentário especial."
+      ],
+      "correta": 0,
+      "explicacao": "`__construct` é chamado automaticamente pelo PHP assim que `new Jogador(...)` cria o objeto, passando os argumentos que vieram entre parênteses."
+    },
+    {
+      "id": "php-cls-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `$this->nome` significa dentro de um método da classe?",
+      "codigo": ["public function __construct(string $nome)", "{", "    $this->nome = $nome;", "}"],
+      "alternativas": [
+        "A propriedade `nome` do objeto atual.",
+        "Uma variável local chamada `nome`.",
+        "O nome da classe.",
+        "Uma constante global chamada `nome`."
+      ],
+      "correta": 0,
+      "explicacao": "`$this` aponta para o objeto que está executando o método. `$this->nome` acessa (ou, neste caso, define) a propriedade `nome` desse objeto específico."
+    },
+    {
+      "id": "php-cls-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "class Contador",
+        "{",
+        "    private int $valor = 0;",
+        "",
+        "    public function incrementar(): void",
+        "    {",
+        "        $this->valor++;",
+        "    }",
+        "",
+        "    public function valor(): int",
+        "    {",
+        "        return $this->valor;",
+        "    }",
+        "}",
+        "",
+        "$c = new Contador();",
+        "$c->incrementar();",
+        "$c->incrementar();",
+        "echo $c->valor();"
+      ],
+      "alternativas": ["2", "0", "1", "Erro: $valor é private"],
+      "correta": 0,
+      "explicacao": "Cada chamada de `incrementar()` soma 1 a `$this->valor`. Depois de duas chamadas, `valor()` devolve 2 — o método público consegue ler a propriedade privada porque está dentro da própria classe."
+    },
+    {
+      "id": "php-cls-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece se um código de fora tentar acessar `$c->valor` diretamente (a propriedade, não o método)?",
+      "codigo": ["class Contador", "{", "    private int $valor = 0;", "}", "", "$c = new Contador();", "echo $c->valor;"],
+      "alternativas": [
+        "Erro: `$valor` é `private` e não pode ser acessada de fora da classe.",
+        "Imprime 0 normalmente.",
+        "Imprime `null`, sem erro.",
+        "Converte `$valor` para `public` automaticamente."
+      ],
+      "correta": 0,
+      "explicacao": "`private` fecha o acesso para qualquer código fora da classe, mesmo que seja só para leitura. É por isso que classes costumam expor um método público (como `valor()`) para ler propriedades privadas."
+    },
+    {
+      "id": "php-cls-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a declaração da classe e da propriedade que só ela mesma pode acessar.",
+      "codigo": ["___ Produto", "{", "    ___ float $preco;", "}"],
+      "respostas": ["class", "private"],
+      "tokens": ["class", "private", "function", "public", "new"],
+      "explicacao": "`class` inicia a declaração da classe; `private` restringe `$preco` ao próprio código da classe `Produto`."
+    },
+    {
+      "id": "php-cls-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Crie um objeto da classe `Produto`, passando `\"Caneca\"` como argumento do construtor, guardando-o em `$produto`.",
+      "dica": "variável, igual, new, nome da classe, argumento entre parênteses",
+      "resposta": "$produto = new Produto(\"Caneca\");",
+      "explicacao": "`new NomeDaClasse(argumentos)` cria o objeto e chama `__construct` automaticamente, passando os argumentos informados."
+    },
+    {
+      "id": "php-cls-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que define a propriedade `$nome`, dentro do construtor, a partir do parâmetro `$nome` recebido.",
+      "partes": ["$this", "->", "nome", "=", "$nome;"],
+      "explicacao": "À esquerda do `=` fica a propriedade do objeto (`$this->nome`); à direita, o parâmetro recebido pelo construtor (`$nome`)."
+    },
+    {
+      "id": "php-cls-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o erro.",
+      "codigo": [
+        "class ContaBancaria",
+        "{",
+        "    private float $saldo = 0;",
+        "",
+        "    public function depositar(float $valor): void",
+        "    {",
+        "        $this->saldo += $valor;",
+        "    }",
+        "}",
+        "",
+        "$conta = new ContaBancaria();",
+        "$conta->depositar(100);",
+        "echo $conta->saldo;"
+      ],
+      "linhaErrada": 12,
+      "explicacao": "`$saldo` é `private`, então só o código de dentro de `ContaBancaria` pode acessá-la. A última linha tenta ler `$conta->saldo` de fora da classe, o que não é permitido."
+    },
+    {
+      "id": "php-cls-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe inteira e responda.",
+      "codigo": [
+        "class Retangulo",
+        "{",
+        "    private float $largura;",
+        "    private float $altura;",
+        "",
+        "    public function __construct(float $largura, float $altura)",
+        "    {",
+        "        $this->largura = $largura;",
+        "        $this->altura = $altura;",
+        "    }",
+        "",
+        "    public function area(): float",
+        "    {",
+        "        return $this->largura * $this->altura;",
+        "    }",
+        "}",
+        "",
+        "$r = new Retangulo(4, 5);",
+        "echo $r->area();"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "20 — a área calculada a partir das propriedades privadas, via método público.",
+        "Erro, porque `$largura` e `$altura` são `private`.",
+        "\"45\" — a concatenação dos dois valores recebidos.",
+        "9 — a soma de `$largura` e `$altura`."
+      ],
+      "correta": 0,
+      "explicacao": "`__construct` recebe 4 e 5 e guarda em propriedades privadas. `area()` é `public`, então pode ser chamado de fora, e por estar dentro da própria classe consegue ler `$this->largura` e `$this->altura`, multiplicando-os: 4 * 5 = 20."
+    }
+  ]
+}

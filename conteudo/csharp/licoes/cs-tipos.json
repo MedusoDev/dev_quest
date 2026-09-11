@@ -1,0 +1,226 @@
+{
+  "id": "cs-tipos",
+  "linguagem": "csharp",
+  "trilha": "cs-fundamentos",
+  "titulo": "Tipos e variáveis",
+  "resumo": "int, string, bool, var, const e readonly.",
+  "conceito": {
+    "texto": [
+      "C# é uma linguagem de tipagem estática: toda variável tem um tipo decidido na hora em que ela é escrita, e esse tipo não muda mais.",
+      "`int` guarda número inteiro. `double` guarda número com casas decimais. `string` guarda texto. `bool` guarda `true` ou `false`.",
+      "`var` **não** é um tipo. É você pedindo para o compilador descobrir o tipo sozinho, olhando o valor do outro lado do `=`. Escrever `var vidas = 3;` produz exatamente o mesmo programa que `int vidas = 3;`.",
+      "Duas palavras travam a mudança de valor, e a diferença entre elas é *quando* o valor é decidido:",
+      "`const` — o valor é fixado ao escrever o código e vale para o programa inteiro. Só aceita valores conhecidos na compilação.",
+      "`readonly` — o valor pode ser decidido em tempo de execução, mas só até o construtor terminar. Depois disso, ninguém mais muda."
+    ],
+    "exemplo": [
+      "public class Partida",
+      "{",
+      "    private const int VidasIniciais = 3;   // fixo desde sempre",
+      "    private readonly DateTime _inicio;     // decidido ao criar o objeto",
+      "",
+      "    private int _pontos = 0;               // muda o tempo todo",
+      "    private string _nome = \"sem nome\";",
+      "    private bool _terminou = false;",
+      "",
+      "    public Partida()",
+      "    {",
+      "        _inicio = DateTime.Now;            // último momento possível",
+      "    }",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "int",
+      "definicao": "Número inteiro. Dividir `int` por `int` devolve `int`: a parte decimal é descartada, não arredondada.",
+      "exemplo": "int total = 7 / 2;   // 3"
+    },
+    {
+      "termo": "var",
+      "definicao": "Não é um tipo — é pedir ao compilador que descubra o tipo pelo valor. Some na compilação.",
+      "exemplo": "var total = 10;   // igual a int total = 10;"
+    },
+    {
+      "termo": "const",
+      "definicao": "Valor fixado ao escrever o código, válido para o programa inteiro. Só aceita o que é conhecido na compilação.",
+      "exemplo": "private const int VidasIniciais = 3;"
+    },
+    {
+      "termo": "readonly",
+      "definicao": "Pode receber valor na declaração ou no construtor, e nunca mais depois. Ao contrário de `const`, o valor pode ser calculado em tempo de execução.",
+      "exemplo": "private readonly DateTime _inicio;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-tip-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `readonly` garante neste campo?",
+      "codigo": [
+        "private readonly DateTime _inicio;"
+      ],
+      "alternativas": [
+        "Que `_inicio` só pode receber valor na declaração ou dentro do construtor, e nunca mais depois.",
+        "Que `_inicio` nunca pode receber valor nenhum.",
+        "Que `_inicio` só pode ser lido por código de fora da classe.",
+        "Que o valor de `_inicio` precisa ser conhecido ao escrever o código."
+      ],
+      "correta": 0,
+      "explicacao": "`readonly` dá uma janela: da declaração até o fim do construtor. Depois que o objeto está pronto, o campo está lacrado."
+    },
+    {
+      "id": "cs-tip-02",
+      "tipo": "palavra-chave",
+      "nivel": 2,
+      "enunciado": "Qual é a diferença real entre `const` e `readonly`?",
+      "codigo": [
+        "private const int VidasIniciais = 3;",
+        "private readonly DateTime _inicio;"
+      ],
+      "alternativas": [
+        "`const` precisa de um valor conhecido ao compilar; `readonly` pode ser calculado em tempo de execução, no construtor.",
+        "`const` só funciona com números; `readonly` funciona com qualquer tipo.",
+        "`const` é privado por padrão; `readonly` é público por padrão.",
+        "Nenhuma, são sinônimos e você escolhe por gosto."
+      ],
+      "correta": 0,
+      "explicacao": "É por isso que `private const DateTime _inicio = DateTime.Now;` nem compila: `DateTime.Now` só tem valor quando o programa roda, e `const` exige saber a resposta antes disso."
+    },
+    {
+      "id": "cs-tip-03",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Qual é o tipo de `total` aqui?",
+      "codigo": [
+        "var total = 10;"
+      ],
+      "alternativas": [
+        "`int` — o compilador deduziu pelo valor `10`.",
+        "`var` — é um tipo próprio, que aceita qualquer valor.",
+        "`double` — números em `var` viram decimais.",
+        "Nenhum ainda; o tipo é decidido só quando `total` for usado."
+      ],
+      "correta": 0,
+      "explicacao": "`var` some na compilação. O programa gerado é idêntico ao de `int total = 10;`. Por isso `total = \"dez\";` na linha seguinte não compila."
+    },
+    {
+      "id": "cs-tip-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "int a = 7;",
+        "int b = 2;",
+        "Console.WriteLine(a / b);"
+      ],
+      "alternativas": [
+        "3",
+        "3.5",
+        "4",
+        "3,5"
+      ],
+      "correta": 0,
+      "explicacao": "Dividir `int` por `int` em C# dá `int`: a parte decimal é descartada, não arredondada. Para obter `3.5` um dos lados precisa ser decimal, como em `(double)a / b`."
+    },
+    {
+      "id": "cs-tip-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: o primeiro nunca muda e vale para o programa todo; o segundo é decidido ao criar o objeto.",
+      "codigo": [
+        "private ___ int VidasIniciais = 3;",
+        "private ___ DateTime _inicio;"
+      ],
+      "respostas": [
+        "const",
+        "readonly"
+      ],
+      "tokens": [
+        "const",
+        "readonly",
+        "static",
+        "var",
+        "private"
+      ],
+      "explicacao": "Repare no nome: `VidasIniciais` em PascalCase porque `const` funciona como uma constante pública do tipo, e `_inicio` com underline porque é um campo comum da instância."
+    },
+    {
+      "id": "cs-tip-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare um campo de texto chamado `_nome`, visível só dentro da classe, que não pode mudar depois que o objeto for construído.",
+      "dica": "modificador de acesso, `readonly`, tipo, nome, ponto e vírgula",
+      "resposta": "private readonly string _nome;",
+      "explicacao": "A ordem canônica é acesso, depois modificadores como `static`/`readonly`, depois tipo e nome. Trocar essa ordem não compila."
+    },
+    {
+      "id": "cs-tip-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha impede a compilação. Clique nela.",
+      "codigo": [
+        "public class Partida",
+        "{",
+        "    private readonly int _vidas;",
+        "",
+        "    public Partida()",
+        "    {",
+        "        _vidas = 3;",
+        "    }",
+        "",
+        "    public void Perder()",
+        "    {",
+        "        _vidas = _vidas - 1;",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 11,
+      "explicacao": "A atribuição dentro do construtor (linha 7) é permitida — é justamente a janela do `readonly`. Já `Perder` roda depois que o objeto existe, e aí o campo já está lacrado."
+    },
+    {
+      "id": "cs-tip-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe e responda.",
+      "codigo": [
+        "public class Cronometro",
+        "{",
+        "    private const string Formato = \"mm:ss\";",
+        "    private readonly DateTime _inicio;",
+        "    private TimeSpan _decorrido;",
+        "",
+        "    public Cronometro()",
+        "    {",
+        "        _inicio = DateTime.Now;",
+        "    }",
+        "",
+        "    public string Atualizar()",
+        "    {",
+        "        _decorrido = DateTime.Now - _inicio;",
+        "        return _decorrido.ToString(Formato);",
+        "    }",
+        "}"
+      ],
+      "pergunta": "Quais dos três campos mudam de valor enquanto o programa roda?",
+      "alternativas": [
+        "Só `_decorrido`.",
+        "`_inicio` e `_decorrido`.",
+        "Os três.",
+        "Nenhum, todos estão travados."
+      ],
+      "correta": 0,
+      "explicacao": "`Formato` é `const`, fixo desde a compilação. `_inicio` é `readonly` e recebeu seu valor no construtor — nunca mais muda. `_decorrido` é um campo comum e é reescrito a cada chamada de `Atualizar`."
+    },
+    {
+      "id": "cs-tip-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare uma constante inteira `VidasIniciais` valendo 3, visível apenas dentro da própria classe.",
+      "dica": "o valor já é conhecido ao escrever o código, então não é `readonly`",
+      "resposta": "private const int VidasIniciais = 3;",
+      "explicacao": "Ordem: acesso, `const`, tipo, nome, valor. `const` exige o valor na mesma linha — declarar `private const int VidasIniciais;` e atribuir depois não compila, porque não existe 'depois' em tempo de compilação."
+    }
+  ]
+}

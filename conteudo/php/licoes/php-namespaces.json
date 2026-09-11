@@ -1,0 +1,188 @@
+{
+  "id": "php-namespaces",
+  "linguagem": "php",
+  "trilha": "php-erros",
+  "titulo": "Namespaces",
+  "resumo": "Organizar classes em `namespace`, importar com `use`, e nomes totalmente qualificados.",
+  "conceito": {
+    "texto": [
+      "Um **namespace** é uma forma de agrupar classes sob um nome, evitando que duas classes de bibliotecas diferentes, com o mesmo nome, entrem em conflito.",
+      "Declara-se um namespace no topo do arquivo: `namespace App\\Modelos;`. Tudo que for definido nesse arquivo passa a pertencer a esse grupo.",
+      "A barra invertida `\\` separa os níveis do namespace, meio que como uma pasta dentro da outra: `App\\Modelos\\Produto` é a classe `Produto` dentro de `App\\Modelos`.",
+      "Para usar uma classe de outro namespace sem escrever o caminho inteiro toda vez, importa-se com `use`: `use App\\Modelos\\Produto;` permite escrever só `Produto` no resto do arquivo.",
+      "Quando não se importa com `use`, ainda dá para referenciar a classe pelo **nome totalmente qualificado**, começando com `\\`: `new \\App\\Modelos\\Produto();` aponta exatamente para aquela classe, sem ambiguidade."
+    ],
+    "exemplo": [
+      "<?php",
+      "// arquivo Produto.php",
+      "namespace App\\Modelos;",
+      "",
+      "class Produto",
+      "{",
+      "    public string $nome;",
+      "}",
+      "",
+      "// arquivo index.php",
+      "namespace App\\Controladores;",
+      "",
+      "use App\\Modelos\\Produto;",
+      "",
+      "$produto = new Produto();",
+      "// equivalente a: new \\App\\Modelos\\Produto();"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "namespace",
+      "definicao": "Agrupa classes sob um nome, evitando conflito entre classes de mesmo nome.",
+      "exemplo": "namespace App\\Modelos;"
+    },
+    {
+      "termo": "\\ (separador de namespace)",
+      "definicao": "Separa os níveis de um namespace, como uma hierarquia de pastas.",
+      "exemplo": "App\\Modelos\\Produto"
+    },
+    {
+      "termo": "use",
+      "definicao": "Importa uma classe de outro namespace, permitindo usar só o nome curto dela no resto do arquivo.",
+      "exemplo": "use App\\Modelos\\Produto;"
+    },
+    {
+      "termo": "nome totalmente qualificado",
+      "definicao": "O caminho completo de uma classe, incluindo todo o namespace, geralmente começando com `\\`.",
+      "exemplo": "\\App\\Modelos\\Produto"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-nsp-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Para que serve um `namespace`?",
+      "codigo": ["namespace App\\Modelos;", "", "class Produto { ... }"],
+      "alternativas": [
+        "Agrupar a classe `Produto` sob o nome `App\\Modelos`, evitando conflito com outra classe `Produto` de outro grupo.",
+        "Tornar a classe `Produto` privada para o arquivo atual.",
+        "Importar automaticamente todas as classes de `App`.",
+        "Melhorar a performance da classe em tempo de execução."
+      ],
+      "correta": 0,
+      "explicacao": "Namespaces existem para organizar e evitar colisão de nomes. Duas bibliotecas podem ter, cada uma, uma classe `Produto` — desde que estejam em namespaces diferentes, não há conflito."
+    },
+    {
+      "id": "php-nsp-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que a barra invertida `\\` representa em `App\\Modelos\\Produto`?",
+      "codigo": ["App\\Modelos\\Produto"],
+      "alternativas": [
+        "O separador entre os níveis do namespace.",
+        "Um operador de divisão entre três variáveis.",
+        "Um caractere de escape sem função aqui.",
+        "O símbolo que marca o fim do namespace."
+      ],
+      "correta": 0,
+      "explicacao": "A `\\` separa cada nível do caminho do namespace, de forma parecida com uma barra separando pastas: `App`, depois `Modelos`, depois a classe `Produto`."
+    },
+    {
+      "id": "php-nsp-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que a linha `use App\\Modelos\\Produto;` permite fazer no resto do arquivo?",
+      "codigo": ["use App\\Modelos\\Produto;", "", "$p = new Produto();"],
+      "alternativas": [
+        "Usar apenas `Produto` no lugar do caminho completo `App\\Modelos\\Produto`.",
+        "Criar uma cópia da classe `Produto` no namespace atual.",
+        "Tornar todos os métodos de `Produto` públicos.",
+        "Importar todas as classes dentro de `App\\Modelos`, não só `Produto`."
+      ],
+      "correta": 0,
+      "explicacao": "`use` importa uma classe específica pelo caminho completo, e a partir daí o nome curto dela já é suficiente para referenciá-la no arquivo."
+    },
+    {
+      "id": "php-nsp-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que `new \\App\\Modelos\\Produto();` representa, com a barra invertida no início?",
+      "codigo": ["$p = new \\App\\Modelos\\Produto();"],
+      "alternativas": [
+        "O nome totalmente qualificado da classe, sem depender de um `use` anterior.",
+        "Um erro de sintaxe, porque não pode haver `\\` antes do nome.",
+        "Uma referência ao namespace global chamado `App`.",
+        "O mesmo que `new Produto();`, mas mais lento."
+      ],
+      "correta": 0,
+      "explicacao": "Começar com `\\` indica o caminho completo a partir da raiz dos namespaces, sem depender de nenhuma importação com `use` — é uma forma inequívoca de apontar para a classe certa."
+    },
+    {
+      "id": "php-nsp-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para declarar o namespace e importar a classe `Conexao` de `App\\Dados`.",
+      "codigo": ["___ App\\Servicos;", "", "___ App\\Dados\\Conexao;"],
+      "respostas": ["namespace", "use"],
+      "tokens": ["namespace", "use", "import", "require"],
+      "explicacao": "`namespace` declara em qual grupo o arquivo atual está; `use` importa uma classe de outro grupo para uso com o nome curto."
+    },
+    {
+      "id": "php-nsp-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare que este arquivo pertence ao namespace `App\\Modelos`.",
+      "dica": "namespace, caminho com barra invertida, ponto e vírgula",
+      "resposta": "namespace App\\Modelos;",
+      "explicacao": "A declaração de namespace precisa ser a primeira instrução do arquivo (fora de comentários), definindo sob qual grupo tudo ali dentro passa a existir."
+    },
+    {
+      "id": "php-nsp-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que importa a classe `Produto` do namespace `App\\Modelos`.",
+      "partes": ["use", "App\\Modelos\\Produto;"],
+      "explicacao": "`use` seguido do caminho completo do namespace até a classe é a forma de importar, permitindo usar o nome curto dali em diante."
+    },
+    {
+      "id": "php-nsp-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não encontra a classe `Produto`. Clique na linha que causa o erro.",
+      "codigo": [
+        "namespace App\\Controladores;",
+        "",
+        "use App\\Modelos\\Cliente;",
+        "",
+        "$produto = new Produto();"
+      ],
+      "linhaErrada": 4,
+      "explicacao": "A classe `Produto` nunca foi importada — só `Cliente` foi. Sem `use App\\Modelos\\Produto;` (ou o nome totalmente qualificado), o PHP procura `Produto` no namespace atual, `App\\Controladores`, onde ela não existe."
+    },
+    {
+      "id": "php-nsp-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia os dois arquivos e responda.",
+      "codigo": [
+        "// arquivo Produto.php",
+        "namespace App\\Modelos;",
+        "class Produto { public string $nome = \"Caneca\"; }",
+        "",
+        "// arquivo index.php",
+        "namespace App\\Controladores;",
+        "",
+        "use App\\Modelos\\Produto;",
+        "",
+        "$p = new Produto();",
+        "echo $p->nome;"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "Caneca — o `use` conecta `Produto` à classe do namespace `App\\Modelos`.",
+        "Erro, porque `Produto` está em outro arquivo.",
+        "Erro, porque namespaces diferentes não podem interagir.",
+        "Nada, porque `$p->nome` precisa do caminho completo mesmo com `use`."
+      ],
+      "correta": 0,
+      "explicacao": "`use App\\Modelos\\Produto;` importa a classe certa para o namespace `App\\Controladores`, e a partir daí `new Produto()` cria um objeto daquela classe importada, cuja propriedade `nome` vale `\"Caneca\"`."
+    }
+  ]
+}

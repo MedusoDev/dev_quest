@@ -1,0 +1,173 @@
+{
+  "id": "py-dicionarios",
+  "linguagem": "python",
+  "trilha": "py-colecoes",
+  "titulo": "Dicionários",
+  "resumo": "Guardar valores por chave, com get, keys, values e items.",
+  "conceito": {
+    "texto": [
+      "Um **dicionário** guarda valores associados a chaves, em vez de posições numéricas: `pessoa = {\"nome\": \"Ana\", \"idade\": 28}`. Cada chave é única e aponta para um valor.",
+      "Acessar `pessoa[\"nome\"]` devolve `\"Ana\"`. Mas se a chave não existir, isso levanta `KeyError` — por isso `pessoa.get(\"cidade\")` é mais seguro: devolve `None` (ou um valor padrão que você escolher) em vez de quebrar o programa.",
+      "`.keys()` devolve todas as chaves, `.values()` devolve todos os valores, e `.items()` devolve pares `(chave, valor)` — muito usado em `for chave, valor in pessoa.items():` para percorrer o dicionário inteiro.",
+      "O operador `in` verifica se uma chave existe no dicionário: `\"nome\" in pessoa` é `True`. Isso evita muitos `KeyError`, checando antes de acessar.",
+      "Assim como listas, dicionários são mutáveis: `pessoa[\"idade\"] = 29` atualiza o valor de uma chave existente, e `pessoa[\"cidade\"] = \"Recife\"` cria uma chave nova, se ela ainda não existir."
+    ],
+    "exemplo": [
+      "pessoa = {\"nome\": \"Ana\", \"idade\": 28}",
+      "",
+      "print(pessoa[\"nome\"])         # Ana",
+      "print(pessoa.get(\"cidade\"))   # None",
+      "",
+      "pessoa[\"cidade\"] = \"Recife\"",
+      "",
+      "for chave, valor in pessoa.items():",
+      "    print(f\"{chave}: {valor}\")"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "dicionário",
+      "definicao": "Coleção que associa chaves a valores, criada com chaves `{}`.",
+      "exemplo": "pessoa = {\"nome\": \"Ana\"}"
+    },
+    {
+      "termo": "get",
+      "definicao": "Busca o valor de uma chave sem quebrar o programa caso ela não exista.",
+      "exemplo": "pessoa.get(\"cidade\")"
+    },
+    {
+      "termo": "items",
+      "definicao": "Devolve os pares chave-valor do dicionário, prontos para percorrer com for.",
+      "exemplo": "for chave, valor in pessoa.items():"
+    },
+    {
+      "termo": "in (em dicionário)",
+      "definicao": "Verifica se uma chave existe no dicionário.",
+      "exemplo": "\"nome\" in pessoa"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-dic-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `pessoa[\"nome\"]` retorna?",
+      "codigo": ["pessoa = {\"nome\": \"Ana\", \"idade\": 28}"],
+      "alternativas": [
+        "\"Ana\"",
+        "\"nome\"",
+        "28",
+        "{\"nome\": \"Ana\"}"
+      ],
+      "correta": 0,
+      "explicacao": "Colchetes com a chave dentro buscam o valor associado a ela. A chave `\"nome\"` aponta para o valor `\"Ana\"`."
+    },
+    {
+      "id": "py-dic-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que acontece ao rodar `pessoa[\"cidade\"]`, se `\"cidade\"` não existe no dicionário?",
+      "codigo": ["pessoa = {\"nome\": \"Ana\", \"idade\": 28}", "pessoa[\"cidade\"]"],
+      "alternativas": [
+        "Levanta um `KeyError`.",
+        "Devolve `None`.",
+        "Devolve uma string vazia.",
+        "Cria a chave `\"cidade\"` automaticamente com valor `None`."
+      ],
+      "correta": 0,
+      "explicacao": "Acessar uma chave inexistente com colchetes quebra o programa com `KeyError`. Para evitar isso, usa-se `.get(\"cidade\")`, que devolve `None` em vez de dar erro."
+    },
+    {
+      "id": "py-dic-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["pessoa = {\"nome\": \"Bea\"}", "print(pessoa.get(\"idade\", 0))"],
+      "alternativas": [
+        "0",
+        "None",
+        "Erro: idade não existe",
+        "\"idade\""
+      ],
+      "correta": 0,
+      "explicacao": "`get(\"idade\", 0)` busca a chave `\"idade\"`; como ela não existe, devolve o valor padrão passado como segundo argumento, que é `0`."
+    },
+    {
+      "id": "py-dic-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["pessoa = {\"nome\": \"Ana\"}", "print(\"nome\" in pessoa)", "print(\"idade\" in pessoa)"],
+      "alternativas": [
+        "True\nFalse",
+        "False\nTrue",
+        "\"nome\"\n\"idade\"",
+        "Erro"
+      ],
+      "correta": 0,
+      "explicacao": "`in` num dicionário verifica se a chave existe. `\"nome\"` está entre as chaves de `pessoa`, então dá `True`; `\"idade\"` não está, então dá `False`."
+    },
+    {
+      "id": "py-dic-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete o for para percorrer chaves e valores do dicionário juntos.",
+      "codigo": ["pessoa = {\"nome\": \"Ana\", \"idade\": 28}", "for chave, valor in pessoa.___():", "    print(chave, valor)"],
+      "respostas": ["items"],
+      "tokens": ["items", "keys", "values", "get", "entries"],
+      "explicacao": "`.items()` devolve pares `(chave, valor)`, que o `for chave, valor in ...` desempacota automaticamente. `.keys()` sozinho só daria as chaves."
+    },
+    {
+      "id": "py-dic-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que adiciona a chave \"cidade\" com o valor \"Recife\" ao dicionário `pessoa`.",
+      "partes": ["pessoa", "[", "\"cidade\"", "]", "=", "\"Recife\""],
+      "explicacao": "Atribuir a uma chave que ainda não existe no dicionário a cria automaticamente — não é preciso nenhum método especial para isso."
+    },
+    {
+      "id": "py-dic-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha que guarda em `chaves` a lista de todas as chaves do dicionário `pessoa`.",
+      "dica": "nome da variável, igual, dicionário, ponto, keys, parênteses",
+      "resposta": "chaves = pessoa.keys()",
+      "explicacao": "`.keys()` devolve todas as chaves do dicionário. O resultado se comporta como uma lista para a maioria dos usos, como percorrer com `for` ou converter com `list()`."
+    },
+    {
+      "id": "py-dic-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código quebra ao rodar. Clique na linha que causa o erro.",
+      "codigo": [
+        "estoque = {\"maçã\": 10, \"banana\": 5}",
+        "quantidade = estoque[\"uva\"]",
+        "print(quantidade)"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "`\"uva\"` não é uma chave de `estoque`, e acessar uma chave inexistente com colchetes levanta `KeyError`. O jeito seguro seria `estoque.get(\"uva\", 0)`."
+    },
+    {
+      "id": "py-dic-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "precos = {\"maçã\": 3, \"banana\": 2}",
+        "precos[\"maçã\"] = precos[\"maçã\"] + 1",
+        "precos[\"uva\"] = 5",
+        "total = sum(precos.values())",
+        "print(total)"
+      ],
+      "pergunta": "O que aparece no terminal?",
+      "alternativas": [
+        "11",
+        "10",
+        "6",
+        "Erro: uva foi criada no meio do código"
+      ],
+      "correta": 0,
+      "explicacao": "Depois das atualizações, `precos` é `{\"maçã\": 4, \"banana\": 2, \"uva\": 5}`. `.values()` devolve `[4, 2, 5]`, e `sum()` soma para 11."
+    }
+  ]
+}

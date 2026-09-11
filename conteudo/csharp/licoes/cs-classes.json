@@ -1,0 +1,215 @@
+{
+  "id": "cs-classes",
+  "linguagem": "csharp",
+  "trilha": "cs-oo",
+  "titulo": "Classes e objetos",
+  "resumo": "Declarar uma classe, criar objetos com new, e por que cada instância tem seus próprios campos.",
+  "conceito": {
+    "texto": [
+      "Uma classe é uma planta baixa. Ela descreve os campos (dados) e métodos (comportamento) que todo objeto feito a partir dela vai ter — mas a classe em si não é um objeto, é o molde.",
+      "`new NomeDaClasse()` cria um objeto — uma instância — a partir da planta. Cada `new` gera uma instância independente, com sua própria cópia dos campos.",
+      "Mudar um campo de uma instância não muda o de outra. `jogador1.Vida = 50;` não encosta em `jogador2`.",
+      "Métodos dentro da classe enxergam os campos da própria instância sem precisar receber nada por parâmetro — é a instância em que o método foi chamado que decide qual `Vida` ele está lendo.",
+      "Dado (campo) e comportamento (método) morando juntos na mesma classe é a ideia central da orientação a objetos: em vez de uma função separada recebendo os dados por fora, o objeto sabe cuidar de si."
+    ],
+    "exemplo": [
+      "public class Jogador",
+      "{",
+      "    public string Nome;",
+      "    public int Vida = 100;",
+      "",
+      "    public void ReceberDano(int quantidade)",
+      "    {",
+      "        Vida -= quantidade;",
+      "    }",
+      "}",
+      "",
+      "var jogador1 = new Jogador { Nome = \"Ana\" };",
+      "var jogador2 = new Jogador { Nome = \"Beto\" };",
+      "jogador1.ReceberDano(30);",
+      "// jogador1.Vida agora é 70; jogador2.Vida continua 100"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "classe",
+      "definicao": "A planta baixa: descreve campos e métodos, mas não é, sozinha, um objeto usável.",
+      "exemplo": "public class Jogador { }"
+    },
+    {
+      "termo": "objeto / instância",
+      "definicao": "O resultado de `new`. Cada instância tem sua própria cópia dos campos da classe.",
+      "exemplo": "var jogador1 = new Jogador();"
+    },
+    {
+      "termo": "campo",
+      "definicao": "Uma variável que vive dentro da classe e guarda o estado de cada instância.",
+      "exemplo": "public int Vida = 100;"
+    },
+    {
+      "termo": "new",
+      "definicao": "A palavra que cria uma instância nova a partir de uma classe.",
+      "exemplo": "new Jogador()"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-cls-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `new` faz nesta linha?",
+      "codigo": ["var jogador1 = new Jogador();"],
+      "alternativas": [
+        "Cria uma instância nova de `Jogador`, com sua própria cópia dos campos.",
+        "Declara a classe `Jogador`.",
+        "Copia os valores de outra instância existente.",
+        "Chama um método chamado `New` dentro de `Jogador`."
+      ],
+      "correta": 0,
+      "explicacao": "`new` é o que transforma a planta baixa (a classe) num objeto de verdade na memória, com seus próprios campos prontos pra usar."
+    },
+    {
+      "id": "cs-cls-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Depois deste código, qual é o valor de `jogador2.Vida`?",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    public int Vida = 100;",
+        "}",
+        "",
+        "var jogador1 = new Jogador();",
+        "var jogador2 = new Jogador();",
+        "jogador1.Vida = 40;"
+      ],
+      "alternativas": [
+        "100 — cada instância tem sua própria cópia do campo.",
+        "40 — os dois objetos compartilham o mesmo campo.",
+        "0 — mudar `jogador1` zera os outros.",
+        "O código não compila."
+      ],
+      "correta": 0,
+      "explicacao": "`jogador1` e `jogador2` são dois `new` diferentes: duas instâncias, dois `Vida` separados na memória. Mexer numa não encosta na outra."
+    },
+    {
+      "id": "cs-cls-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "public class Contador",
+        "{",
+        "    public int Total = 0;",
+        "    public void Somar() { Total++; }",
+        "}",
+        "",
+        "var c = new Contador();",
+        "c.Somar();",
+        "c.Somar();",
+        "c.Somar();",
+        "Console.WriteLine(c.Total);"
+      ],
+      "alternativas": ["3", "0", "1", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "Cada `c.Somar()` roda o método na mesma instância `c`, incrementando o mesmo `Total` — três chamadas, três incrementos."
+    },
+    {
+      "id": "cs-cls-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: crie a classe e depois uma instância dela.",
+      "codigo": [
+        "public ___ Jogador",
+        "{",
+        "    public int Vida = 100;",
+        "}",
+        "",
+        "var jogador1 = ___ Jogador();"
+      ],
+      "respostas": ["class", "new"],
+      "tokens": ["class", "new", "static", "void", "struct"],
+      "explicacao": "`class` declara a planta baixa; `new` é quem constrói um objeto a partir dela. Um sem o outro não gera nenhuma instância."
+    },
+    {
+      "id": "cs-cls-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare um objeto chamado `carro1`, instância da classe `Carro`.",
+      "dica": "palavra-chave de declaração, nome da variável, igual, new, nome da classe, parênteses, ponto e vírgula",
+      "resposta": "var carro1 = new Carro();",
+      "explicacao": "`var` deixa o compilador inferir o tipo — que aqui é `Carro`, decidido pelo `new Carro()` do outro lado do `=`."
+    },
+    {
+      "id": "cs-cls-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a chamada de método que faz `jogador1` sofrer 20 de dano.",
+      "partes": ["jogador1", ".", "ReceberDano", "(", "20", ")", ";"],
+      "explicacao": "Acessa a instância (`jogador1`), pede o método dela (`.ReceberDano`) e passa o argumento que o método espera (`20`)."
+    },
+    {
+      "id": "cs-cls-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha não compila. Clique nela.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    public int Vida = 100;",
+        "",
+        "    public void ReceberDano(int quantidade)",
+        "    {",
+        "        Vida = Vida - quantidade;",
+        "    }",
+        "}",
+        "",
+        "var jogador1 = Jogador();",
+        "jogador1.ReceberDano(30);"
+      ],
+      "linhaErrada": 10,
+      "explicacao": "Criar uma instância exige `new`: `Jogador()` sozinho tenta chamar algo como um método estático chamado `Jogador`, que não existe. A linha certa é `var jogador1 = new Jogador();`."
+    },
+    {
+      "id": "cs-cls-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe e responda.",
+      "codigo": [
+        "public class ContaBancaria",
+        "{",
+        "    public string Titular;",
+        "    public decimal Saldo = 0;",
+        "",
+        "    public void Depositar(decimal valor)",
+        "    {",
+        "        Saldo += valor;",
+        "    }",
+        "}",
+        "",
+        "var contaAna = new ContaBancaria { Titular = \"Ana\" };",
+        "var contaBeto = new ContaBancaria { Titular = \"Beto\" };",
+        "contaAna.Depositar(100);",
+        "contaBeto.Depositar(50);"
+      ],
+      "pergunta": "Depois deste código, qual é o `Saldo` de `contaAna` e de `contaBeto`?",
+      "alternativas": [
+        "contaAna: 100, contaBeto: 50 — cada instância tem seu próprio `Saldo`.",
+        "Os dois ficam com 150, porque `Depositar` soma para todo mundo.",
+        "contaAna: 100, contaBeto: 100 — o último depósito vale para as duas.",
+        "O código não compila porque as duas variáveis têm o mesmo tipo."
+      ],
+      "correta": 0,
+      "explicacao": "São dois `new` diferentes: dois `Saldo` separados. `Depositar` só mexe no campo da instância em que foi chamado."
+    },
+    {
+      "id": "cs-cls-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare um campo chamado `Titular`, do tipo texto, visível apenas dentro da própria classe.",
+      "dica": "modificador de acesso, tipo, nome, ponto e vírgula",
+      "resposta": "private string Titular;",
+      "explicacao": "`private` é o padrão mais seguro para campos: só a própria classe mexe neles diretamente. Deixar tudo `public`, como fizemos nos exemplos anteriores pra simplificar, é o problema que a próxima lição, sobre propriedades, resolve de vez."
+    }
+  ]
+}

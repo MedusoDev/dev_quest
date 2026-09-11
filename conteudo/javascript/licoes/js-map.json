@@ -1,0 +1,152 @@
+{
+  "id": "js-map",
+  "linguagem": "javascript",
+  "trilha": "js-objetos",
+  "titulo": "Map",
+  "resumo": "Transformar cada item de um array num array novo, sem tocar no original.",
+  "conceito": {
+    "texto": [
+      "`.map()` roda uma função pra cada item de um array e devolve um array novo, do mesmo tamanho, com o resultado de cada chamada. O array original não muda.",
+      "A função que você passa recebe o item atual e devolve o que deve entrar no array novo naquela posição. `numeros.map(n => n * 2)` devolve um array com cada número dobrado.",
+      "`.map()` sempre devolve um array do mesmo tamanho do original — um item entra, um item sai. Se a ideia é sobrar ou faltar item, o método certo é outro.",
+      "Como o `.map()` não muda o array original, é comum encadear: pegar o resultado de um `.map()` e chamar outro método em cima, tipo `.map().join(', ')`.",
+      "A função passada para `.map()` também recebe, opcionalmente, o índice do item como segundo parâmetro: `array.map((item, indice) => ...)`."
+    ],
+    "exemplo": [
+      "const precos = [10, 20, 30];",
+      "const comDesconto = precos.map(preco => preco * 0.9);",
+      "console.log(comDesconto); // [9, 18, 27]",
+      "console.log(precos);      // [10, 20, 30] — não mudou",
+      "",
+      "const nomes = [\"ana\", \"beto\"];",
+      "const capitalizados = nomes.map(nome => nome[0].toUpperCase() + nome.slice(1));",
+      "console.log(capitalizados); // [\"Ana\", \"Beto\"]"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "map",
+      "definicao": "Método de array que transforma cada item e devolve um array novo, do mesmo tamanho.",
+      "exemplo": "numeros.map(n => n * 2)"
+    },
+    {
+      "termo": "callback",
+      "definicao": "A função passada para `.map()`, chamada uma vez por item.",
+      "exemplo": "n => n * 2"
+    },
+    {
+      "termo": "imutável (nesse contexto)",
+      "definicao": "`.map()` nunca altera o array original; sempre cria um novo.",
+      "exemplo": "precos.map(p => p * 2) não muda precos"
+    },
+    {
+      "termo": "encadear (chaining)",
+      "definicao": "Chamar um método logo em seguida do resultado de outro.",
+      "exemplo": "precos.map(p => p * 2).join(', ')"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-map-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `.map()` devolve?",
+      "codigo": ["const dobro = numeros.map(n => n * 2);"],
+      "alternativas": [
+        "Um array novo, do mesmo tamanho, com cada item transformado.",
+        "O mesmo array, mas alterado por dentro.",
+        "Um único número: a soma de tudo.",
+        "`true` ou `false`, dependendo do resultado."
+      ],
+      "correta": 0,
+      "explicacao": "`.map()` sempre devolve um array — um item novo pra cada item original, na mesma posição."
+    },
+    {
+      "id": "js-map-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["const numeros = [1, 2, 3];", "const dobro = numeros.map(n => n * 2);", "console.log(dobro);"],
+      "alternativas": ["[2, 4, 6]", "[1, 2, 3]", "6", "[1, 4, 9]"],
+      "correta": 0,
+      "explicacao": "Cada item passa por `n => n * 2`: 1 vira 2, 2 vira 4, 3 vira 6."
+    },
+    {
+      "id": "js-map-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Depois deste código, o que tem dentro de `numeros`?",
+      "codigo": ["const numeros = [1, 2, 3];", "numeros.map(n => n * 10);"],
+      "alternativas": [
+        "`[1, 2, 3]` — `.map()` não altera o array original.",
+        "`[10, 20, 30]` — `.map()` altera o array na hora.",
+        "`[1, 2, 3, 10, 20, 30]`.",
+        "O código dá erro, porque o resultado do `.map()` não foi guardado."
+      ],
+      "correta": 0,
+      "explicacao": "`.map()` sempre cria um array novo e devolve ele — o array original nunca é tocado, mesmo que o resultado seja jogado fora, como aqui."
+    },
+    {
+      "id": "js-map-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["const nomes = [\"ana\", \"beto\", \"carla\"];", "const tamanhos = nomes.map(nome => nome.length);", "console.log(tamanhos);"],
+      "alternativas": ["[3, 4, 5]", "3", "[ana, beto, carla]", "undefined"],
+      "correta": 0,
+      "explicacao": "`.length` de cada nome: \"ana\" tem 3 letras, \"beto\" tem 4, \"carla\" tem 5."
+    },
+    {
+      "id": "js-map-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: transforme cada preço, aplicando 10% de desconto.",
+      "codigo": ["const comDesconto = precos.___(preco => preco * 0.9);"],
+      "respostas": ["map"],
+      "tokens": ["map", "filter", "forEach", "reduce"],
+      "explicacao": "Cada preço vira um novo valor, na mesma posição — é exatamente o que `.map()` faz."
+    },
+    {
+      "id": "js-map-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Use `.map()` para criar um array `dobros`, com cada item de `numeros` multiplicado por 2.",
+      "dica": "const, nome, igual, numeros.map, arrow function",
+      "resposta": "const dobros = numeros.map(n => n * 2);",
+      "explicacao": "A função `n => n * 2` roda pra cada item de `numeros`, e o resultado de cada chamada forma o array `dobros`."
+    },
+    {
+      "id": "js-map-07",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que transforma `nomes` em um array com cada nome em maiúsculas.",
+      "partes": ["const", "maiusculos", "=", "nomes", ".map", "(", "nome", "=>", "nome.toUpperCase()", ")", ";"],
+      "explicacao": "`.map()` chama `nome => nome.toUpperCase()` pra cada item de `nomes`, montando o array `maiusculos`."
+    },
+    {
+      "id": "js-map-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "O array `numeros` não muda como o programador esperava. Clique na linha do problema.",
+      "codigo": ["const numeros = [1, 2, 3];", "numeros.map(n => n * 2);", "console.log(numeros);"],
+      "linhaErrada": 1,
+      "explicacao": "`.map()` devolve um array novo — não altera `numeros`. Chamar `.map()` sem guardar o resultado numa variável (`const dobro = numeros.map(...)`) joga fora o array transformado."
+    },
+    {
+      "id": "js-map-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["const precos = [10, 20, 30];", "const texto = precos.map(p => `R$ ${p}`).join(\", \");", "console.log(texto);"],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "\"R$ 10, R$ 20, R$ 30\" — `.map()` monta o array de textos, e `.join()` junta tudo numa string.",
+        "[10, 20, 30] — `.join()` não afeta o resultado do `.map()`.",
+        "\"R$ 10R$ 20R$ 30\" — sem separador nenhum.",
+        "Erro: não dá pra encadear `.join()` depois de `.map()`."
+      ],
+      "correta": 0,
+      "explicacao": "`.map()` devolve `[\"R$ 10\", \"R$ 20\", \"R$ 30\"]`, e `.join(\", \")` junta os itens numa única string, separados por vírgula."
+    }
+  ]
+}

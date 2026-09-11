@@ -1,0 +1,151 @@
+{
+  "id": "js-desestruturacao",
+  "linguagem": "javascript",
+  "trilha": "js-objetos",
+  "titulo": "Desestruturação",
+  "resumo": "Tirar valores de dentro de objetos e arrays numa linha só.",
+  "conceito": {
+    "texto": [
+      "Desestruturar é tirar valores de dentro de um objeto ou array e guardar cada um numa variável, numa linha só — em vez de escrever `const nome = pessoa.nome;` uma linha por campo.",
+      "Em objetos, o nome da variável precisa bater com o nome da propriedade: `const { nome } = pessoa;` pega `pessoa.nome`. Pra usar outro nome, renomeia com dois-pontos: `const { nome: apelido } = pessoa;`.",
+      "Em arrays, quem decide o que cada variável pega é a posição, não o nome: `const [primeiro, segundo] = lista;` pega os dois primeiros itens, na ordem.",
+      "Dá pra dar um valor padrão pra quando a propriedade não existe: `const { idade = 0 } = pessoa;` usa `0` se `pessoa.idade` for `undefined`.",
+      "Reticências (`...resto`) juntam tudo que sobrou numa variável só — funciona tanto em objeto quanto em array, sempre por último na lista."
+    ],
+    "exemplo": [
+      "const pessoa = { nome: \"Ana\", idade: 28, cidade: \"Recife\" };",
+      "const { nome, idade } = pessoa;",
+      "console.log(nome, idade); // \"Ana\" 28",
+      "",
+      "const numeros = [10, 20, 30];",
+      "const [primeiro, ...resto] = numeros;",
+      "console.log(primeiro, resto); // 10 [20, 30]"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "desestruturação",
+      "definicao": "Tirar valores de um objeto ou array e guardar em variáveis, numa sintaxe só.",
+      "exemplo": "const { nome } = pessoa;"
+    },
+    {
+      "termo": "valor padrão (na desestruturação)",
+      "definicao": "O que a variável recebe se a propriedade não existir.",
+      "exemplo": "const { idade = 0 } = pessoa;"
+    },
+    {
+      "termo": "rest (...)",
+      "definicao": "Junta o que sobrou numa variável só; sempre por último na lista.",
+      "exemplo": "const [primeiro, ...resto] = numeros;"
+    },
+    {
+      "termo": "renomear",
+      "definicao": "Trocar o nome da variável recebida, usando dois-pontos.",
+      "exemplo": "const { nome: apelido } = pessoa;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-des-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que esta linha coloca em `nome`?",
+      "codigo": ["const { nome } = pessoa;"],
+      "alternativas": [
+        "O valor de `pessoa.nome`.",
+        "Uma cópia do objeto `pessoa` inteiro.",
+        "O nome da variável `pessoa`.",
+        "`undefined`, sempre."
+      ],
+      "correta": 0,
+      "explicacao": "A desestruturação de objeto olha a propriedade com o mesmo nome da variável — aqui, `pessoa.nome` — e guarda o valor dela."
+    },
+    {
+      "id": "js-des-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["const carro = { marca: \"Fiat\", ano: 2020 };", "const { marca } = carro;", "console.log(marca);"],
+      "alternativas": ["\"Fiat\"", "carro", "undefined", "{ marca: \"Fiat\" }"],
+      "correta": 0,
+      "explicacao": "`{ marca }` pega só `carro.marca`, que é `\"Fiat\"`."
+    },
+    {
+      "id": "js-des-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Em arrays, o que decide o que cada variável recebe na desestruturação?",
+      "codigo": ["const [a, b] = [10, 20, 30];"],
+      "alternativas": [
+        "A posição — `a` pega o item 0, `b` pega o item 1.",
+        "O nome da variável precisa bater com algo no array.",
+        "A ordem alfabética dos nomes das variáveis.",
+        "O tipo do valor: números vão para a primeira variável."
+      ],
+      "correta": 0,
+      "explicacao": "Arrays não têm nomes de propriedade — só posição. `a` sempre pega o índice 0, `b` o índice 1, e assim por diante."
+    },
+    {
+      "id": "js-des-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["const pessoa = { nome: \"Bea\" };", "const { idade = 18 } = pessoa;", "console.log(idade);"],
+      "alternativas": ["18", "undefined", "NaN", "Erro"],
+      "correta": 0,
+      "explicacao": "`pessoa.idade` não existe, então vale `undefined` — e é exatamente aí que o valor padrão `= 18` entra."
+    },
+    {
+      "id": "js-des-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: pegue `pessoa.nome`, mas guarde numa variável chamada `apelido`.",
+      "codigo": ["const { nome: ___ } = pessoa;"],
+      "respostas": ["apelido"],
+      "tokens": ["apelido", "nome", "pessoa", "default", "rest"],
+      "explicacao": "Antes dos dois-pontos vai o nome da propriedade original (`nome`); depois vai o nome da variável nova (`apelido`)."
+    },
+    {
+      "id": "js-des-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Desestruture o array `[10, 20, 30]` guardando só o primeiro item numa variável chamada `primeiro`.",
+      "dica": "const, colchetes, nome, igual, o array",
+      "resposta": "const [primeiro] = [10, 20, 30];",
+      "explicacao": "Colchetes indicam desestruturação de array. Como só há uma variável, só o primeiro item é capturado — os outros são ignorados."
+    },
+    {
+      "id": "js-des-07",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que pega o primeiro item de `numeros` e junta o resto numa variável `resto`.",
+      "partes": ["const", "[", "primeiro", ",", "...resto", "]", "=", "numeros", ";"],
+      "explicacao": "`primeiro` pega o índice 0; `...resto` junta tudo que sobrou (do índice 1 em diante) num array novo."
+    },
+    {
+      "id": "js-des-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha não faz o que o programador queria. Clique nela.",
+      "codigo": ["const pessoa = { nome: \"Ana\", idade: 28 };", "const { Nome, idade } = pessoa;", "console.log(Nome);"],
+      "linhaErrada": 1,
+      "explicacao": "Desestruturar objeto exige bater o nome exato da propriedade, e JavaScript diferencia maiúscula de minúscula: a propriedade é `nome`, não `Nome`. `Nome` sai `undefined`."
+    },
+    {
+      "id": "js-des-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["const produto = { titulo: \"Caneca\", preco: 25 };", "const { titulo: nomeProduto, estoque = 0 } = produto;", "console.log(nomeProduto, estoque);"],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "\"Caneca\" 0 — `titulo` foi renomeado e `estoque` não existia, então usou o padrão.",
+        "undefined 0 — `titulo` não existe em `produto`.",
+        "\"Caneca\" undefined — valores padrão não funcionam junto com renomear.",
+        "Erro: não dá pra renomear e usar padrão na mesma linha."
+      ],
+      "correta": 0,
+      "explicacao": "Renomear (`titulo: nomeProduto`) e valor padrão (`estoque = 0`) funcionam juntos, em qualquer combinação, sem conflito."
+    }
+  ]
+}

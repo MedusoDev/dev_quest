@@ -1,0 +1,168 @@
+{
+  "id": "py-compreensao-lista",
+  "linguagem": "python",
+  "trilha": "py-colecoes",
+  "titulo": "Compreensão de listas",
+  "resumo": "Montar listas (e dicionários) numa linha só, com for e if embutidos.",
+  "conceito": {
+    "texto": [
+      "Uma **compreensão de lista** monta uma lista nova a partir de outra, numa única expressão: `[x * 2 for x in numeros]` cria uma lista com o dobro de cada item de `numeros`, sem precisar de um `for` tradicional com `append`.",
+      "A forma geral é `[expressao for item in iteravel]`. `expressao` decide o que entra na lista nova, e `item` é o nome que cada elemento de `iteravel` recebe, um de cada vez.",
+      "Dá para filtrar itens acrescentando um `if` no fim: `[x for x in numeros if x % 2 == 0]` só inclui os números pares. O `if` aqui decide *se* o item entra, não o que ele vira.",
+      "O mesmo princípio funciona para dicionários, trocando colchetes por chaves e escrevendo `chave: valor`: `{x: x * x for x in numeros}` cria um dicionário onde cada número aponta para o próprio quadrado.",
+      "Compreensões deixam o código mais curto e, geralmente, mais fácil de ler — mas quando a lógica fica complexa demais (vários `if`, várias transformações), um `for` tradicional pode comunicar melhor a intenção."
+    ],
+    "exemplo": [
+      "numeros = [1, 2, 3, 4, 5]",
+      "",
+      "dobrados = [x * 2 for x in numeros]",
+      "print(dobrados)          # [2, 4, 6, 8, 10]",
+      "",
+      "pares = [x for x in numeros if x % 2 == 0]",
+      "print(pares)             # [2, 4]",
+      "",
+      "quadrados = {x: x * x for x in numeros}",
+      "print(quadrados)         # {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "compreensão de lista",
+      "definicao": "Expressão que monta uma lista nova a partir de outro iterável, numa linha só.",
+      "exemplo": "[x * 2 for x in numeros]"
+    },
+    {
+      "termo": "filtro (if na compreensão)",
+      "definicao": "Condição que decide se um item entra na lista nova.",
+      "exemplo": "[x for x in numeros if x % 2 == 0]"
+    },
+    {
+      "termo": "compreensão de dicionário",
+      "definicao": "Mesmo princípio da compreensão de lista, gerando pares chave-valor.",
+      "exemplo": "{x: x * x for x in numeros}"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-cmp-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que esta compreensão de lista produz?",
+      "codigo": ["numeros = [1, 2, 3]", "resultado = [x * 2 for x in numeros]"],
+      "alternativas": [
+        "Uma lista nova com o dobro de cada número: [2, 4, 6].",
+        "A soma de todos os números dobrados: 12.",
+        "A lista original inalterada: [1, 2, 3].",
+        "Um erro, porque compreensão de lista precisa de um if."
+      ],
+      "correta": 0,
+      "explicacao": "`[x * 2 for x in numeros]` percorre cada item de `numeros`, calcula `x * 2`, e junta os resultados numa lista nova. Um `if` é opcional, não obrigatório."
+    },
+    {
+      "id": "py-cmp-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["numeros = [1, 2, 3, 4]", "pares = [x for x in numeros if x % 2 == 0]", "print(pares)"],
+      "alternativas": [
+        "[2, 4]",
+        "[1, 3]",
+        "[1, 2, 3, 4]",
+        "True, False, True, False"
+      ],
+      "correta": 0,
+      "explicacao": "O `if x % 2 == 0` filtra: só os números cujo resto da divisão por 2 é zero entram na lista nova. Entre 1, 2, 3 e 4, só 2 e 4 passam no filtro."
+    },
+    {
+      "id": "py-cmp-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["palavras = [\"sol\", \"lua\", \"mar\"]", "tamanhos = [len(p) for p in palavras]", "print(tamanhos)"],
+      "alternativas": [
+        "[3, 3, 3]",
+        "[\"sol\", \"lua\", \"mar\"]",
+        "9",
+        "Erro: len não funciona em compreensão"
+      ],
+      "correta": 0,
+      "explicacao": "`len(p)` calcula o tamanho de cada palavra. As três palavras (\"sol\", \"lua\", \"mar\") têm 3 letras cada, então o resultado é `[3, 3, 3]`."
+    },
+    {
+      "id": "py-cmp-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a compreensão para gerar os quadrados dos números de `numeros`.",
+      "codigo": ["numeros = [1, 2, 3]", "quadrados = [x ___ 2 for x in numeros]"],
+      "respostas": ["**"],
+      "tokens": ["**", "*", "^", "//", "%"],
+      "explicacao": "`**` é o operador de potência em Python. `x ** 2` calcula o quadrado de `x`. `^` faz outra coisa em Python (operação bit a bit), não potência."
+    },
+    {
+      "id": "py-cmp-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["numeros = [1, 2, 3]", "quadrados = {x: x * x for x in numeros}", "print(quadrados[3])"],
+      "alternativas": [
+        "9",
+        "3",
+        "{3: 9}",
+        "Erro: dicionário não tem chave 3"
+      ],
+      "correta": 0,
+      "explicacao": "A compreensão de dicionário cria `{1: 1, 2: 4, 3: 9}`. Buscar a chave `3` devolve o valor associado a ela, que é `9`."
+    },
+    {
+      "id": "py-cmp-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a compreensão que gera uma lista com os números negativos de `numeros`.",
+      "partes": ["[", "-x", "for", "x", "in", "numeros", "]"],
+      "explicacao": "A ordem de uma compreensão é sempre expressão primeiro, depois o `for item in iteravel`. Aqui, a expressão `-x` inverte o sinal de cada número."
+    },
+    {
+      "id": "py-cmp-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a compreensão de lista que pega só as palavras com mais de 3 letras da lista `palavras`.",
+      "dica": "colchetes, a variável, for, a variável, in, palavras, if, len da variável, maior que 3",
+      "resposta": "[p for p in palavras if len(p) > 3]",
+      "explicacao": "A expressão `p` mantém a palavra como está (sem transformar); o `if len(p) > 3` é o filtro que decide quais palavras entram na lista nova."
+    },
+    {
+      "id": "py-cmp-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não faz o que o programador queria. Clique na linha do erro.",
+      "codigo": [
+        "numeros = [1, 2, 3, 4, 5, 6]",
+        "pares_dobrados = [x for x in numeros if x * 2 % 2 == 0]",
+        "print(pares_dobrados)"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "A condição `x * 2 % 2 == 0` é sempre verdadeira (qualquer número vezes 2 é par), então nenhum item é filtrado — a lista sai igual à original. O programador queria filtrar os números originalmente pares, o que exigiria `if x % 2 == 0`."
+    },
+    {
+      "id": "py-cmp-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "notas = [5.5, 8.0, 3.2, 9.1, 6.7]",
+        "aprovados = [n for n in notas if n >= 6.0]",
+        "arredondados = [round(n) for n in aprovados]",
+        "print(arredondados)"
+      ],
+      "pergunta": "O que aparece no terminal?",
+      "alternativas": [
+        "[8, 9, 7]",
+        "[6, 8, 9, 7]",
+        "[5.5, 8.0, 3.2, 9.1, 6.7]",
+        "[8.0, 9.1, 6.7]"
+      ],
+      "correta": 0,
+      "explicacao": "`aprovados` filtra as notas maiores ou iguais a 6.0, resultando em `[8.0, 9.1, 6.7]`. `arredondados` aplica `round()` em cada uma dessas notas, virando `[8, 9, 7]`."
+    }
+  ]
+}

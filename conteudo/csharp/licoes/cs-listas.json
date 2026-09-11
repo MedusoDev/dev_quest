@@ -1,0 +1,158 @@
+{
+  "id": "cs-listas",
+  "linguagem": "csharp",
+  "trilha": "cs-colecoes",
+  "titulo": "Listas (List<T>)",
+  "resumo": "Criar, adicionar, remover e percorrer uma List<T>.",
+  "conceito": {
+    "texto": [
+      "`List<T>` é uma coleção que cresce e encolhe em tempo de execução — diferente de um array, que nasce com tamanho fixo. O `<T>` é o tipo que a lista vai guardar: `List<int>` só aceita `int`, `List<string>` só aceita `string`.",
+      "`.Add(valor)` bota um item no fim da lista. `.Remove(valor)` tira a primeira ocorrência daquele valor. `.Count` diz quantos itens tem agora — não `.Length`, que é de array.",
+      "Acessa-se um item pela posição com colchetes, igual array: `lista[0]` é o primeiro item. Pedir uma posição que não existe (`lista[10]` numa lista de 3 itens) lança `ArgumentOutOfRangeException` em tempo de execução.",
+      "`foreach (var item in lista)` percorre todos os itens, na ordem em que foram adicionados, sem precisar controlar índice nenhum.",
+      "Uma `List<T>` vazia (`new List<int>()`) não é `null` — ela existe, só não tem itens. `.Count` dela é `0`."
+    ],
+    "exemplo": [
+      "var nomes = new List<string>();",
+      "nomes.Add(\"Ana\");",
+      "nomes.Add(\"Beto\");",
+      "nomes.Add(\"Carla\");",
+      "",
+      "Console.WriteLine(nomes.Count);     // 3",
+      "Console.WriteLine(nomes[0]);        // \"Ana\"",
+      "",
+      "nomes.Remove(\"Beto\");",
+      "foreach (var nome in nomes)",
+      "{",
+      "    Console.WriteLine(nome);",
+      "}",
+      "// Ana",
+      "// Carla"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "List<T>",
+      "definicao": "Coleção que cresce e encolhe em tempo de execução; `T` é o tipo dos itens guardados.",
+      "exemplo": "List<string> nomes = new List<string>();"
+    },
+    {
+      "termo": "Add",
+      "definicao": "Acrescenta um item no fim da lista.",
+      "exemplo": "nomes.Add(\"Ana\");"
+    },
+    {
+      "termo": "Count",
+      "definicao": "Quantos itens a lista tem agora.",
+      "exemplo": "nomes.Count"
+    },
+    {
+      "termo": "foreach",
+      "definicao": "Percorre todos os itens de uma coleção, na ordem, sem precisar de índice.",
+      "exemplo": "foreach (var nome in nomes) { }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-lst-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `<string>` define em `List<string>`?",
+      "codigo": ["List<string> nomes = new List<string>();"],
+      "alternativas": [
+        "O tipo de valor que a lista pode guardar — aqui, só texto.",
+        "O número máximo de itens da lista.",
+        "O nome da variável.",
+        "Se a lista pode ficar vazia ou não."
+      ],
+      "correta": 0,
+      "explicacao": "O `<T>` de `List<T>` fixa o tipo dos itens. `List<string>` só aceita texto; tentar `nomes.Add(5)` não compila."
+    },
+    {
+      "id": "cs-lst-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `.Add()` faz?",
+      "codigo": ["nomes.Add(\"Ana\");"],
+      "alternativas": [
+        "Acrescenta \"Ana\" no fim da lista.",
+        "Substitui todos os itens por \"Ana\".",
+        "Verifica se \"Ana\" já está na lista.",
+        "Remove \"Ana\" da lista."
+      ],
+      "correta": 0,
+      "explicacao": "`.Add()` sempre bota o item novo no final — nunca substitui, nunca remove."
+    },
+    {
+      "id": "cs-lst-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["var numeros = new List<int>();", "numeros.Add(10);", "numeros.Add(20);", "numeros.Add(30);", "Console.WriteLine(numeros.Count);"],
+      "alternativas": ["3", "30", "0", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "Três `.Add()` colocam três itens na lista. `.Count` conta quantos itens existem — não qual foi o último valor."
+    },
+    {
+      "id": "cs-lst-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: crie uma lista de inteiros e acrescente o número 5.",
+      "codigo": ["List<int> numeros = new List<int>();", "numeros.___(5);"],
+      "respostas": ["Add"],
+      "tokens": ["Add", "Count", "Remove", "Insert", "Push"],
+      "explicacao": "`.Add()` é o método que acrescenta um item novo no fim da lista."
+    },
+    {
+      "id": "cs-lst-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare uma lista vazia de strings chamada `tarefas`.",
+      "dica": "List<string>, nome, igual, new List<string>()",
+      "resposta": "List<string> tarefas = new List<string>();",
+      "explicacao": "O tipo se repete dos dois lados: uma vez pra declarar a variável, outra dentro do `new`."
+    },
+    {
+      "id": "cs-lst-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que abre um laço percorrendo `nomes`, guardando cada item em `nome`.",
+      "partes": ["foreach", "(", "var", "nome", "in", "nomes", ")"],
+      "explicacao": "`foreach (var item in colecao)` é o formato fixo: a variável do meio recebe cada item, um por vez."
+    },
+    {
+      "id": "cs-lst-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha lança erro em tempo de execução. Clique nela.",
+      "codigo": ["var nomes = new List<string>();", "nomes.Add(\"Ana\");", "nomes.Add(\"Beto\");", "Console.WriteLine(nomes[2]);"],
+      "linhaErrada": 3,
+      "explicacao": "A lista tem só dois itens, nos índices 0 e 1. Pedir `nomes[2]` — o terceiro item, que não existe — lança `ArgumentOutOfRangeException`."
+    },
+    {
+      "id": "cs-lst-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["var lista = new List<int> { 10, 20, 30 };", "lista.Remove(20);", "lista.Add(40);"],
+      "pergunta": "O que tem dentro de `lista` ao final?",
+      "alternativas": [
+        "[10, 30, 40] — Remove tira o 20; Add acrescenta 40 no fim.",
+        "[10, 20, 30, 40] — Remove não fez nada porque 20 não existia mais.",
+        "[40] — Add substitui a lista inteira.",
+        "O código não compila: não dá pra inicializar List com valores entre chaves."
+      ],
+      "correta": 0,
+      "explicacao": "`new List<int> { 10, 20, 30 }` é um jeito válido de já criar a lista com itens dentro. `Remove(20)` tira o 20; `Add(40)` bota o 40 no fim."
+    },
+    {
+      "id": "cs-lst-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare e inicialize uma lista de inteiros chamada `notas`, já contendo 7, 8 e 9.",
+      "dica": "List<int>, nome, igual, new List<int>, chaves com os três valores",
+      "resposta": "List<int> notas = new List<int> { 7, 8, 9 };",
+      "explicacao": "As chaves depois de `new List<int>` inicializam a lista já com esses itens, sem precisar de três `.Add()` separados."
+    }
+  ]
+}

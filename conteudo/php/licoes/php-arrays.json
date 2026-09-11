@@ -1,0 +1,177 @@
+{
+  "id": "php-arrays",
+  "linguagem": "php",
+  "trilha": "php-arrays",
+  "titulo": "Arrays indexados e associativos",
+  "resumo": "Listas por posição, listas por chave, e como percorrê-las com `foreach`.",
+  "conceito": {
+    "texto": [
+      "Em PHP existe só um tipo de array, mas ele serve para dois papéis. Um **array indexado** guarda valores em posições numéricas, começando em 0: `$frutas = [\"maçã\", \"pera\", \"uva\"];`.",
+      "Um **array associativo** guarda valores associados a chaves escolhidas por você, geralmente strings: `$pessoa = [\"nome\" => \"Ana\", \"idade\" => 28];`. A seta `=>` liga a chave ao valor.",
+      "`foreach` percorre qualquer array. Em um indexado, `foreach ($frutas as $fruta)` passa por cada valor; em um associativo, `foreach ($pessoa as $chave => $valor)` dá acesso à chave e ao valor juntos.",
+      "`count($array)` devolve quantos elementos o array tem, funcionando igual para os dois tipos.",
+      "Para adicionar um elemento a um array indexado, usa-se `$frutas[] = \"manga\";` — o PHP calcula a próxima posição sozinho. Para um associativo, atribui-se direto pela chave: `$pessoa[\"cidade\"] = \"Recife\";`.",
+      "`unset($array[$chave])` remove um elemento pela chave ou posição, em qualquer um dos dois tipos."
+    ],
+    "exemplo": [
+      "<?php",
+      "$frutas = [\"maçã\", \"pera\", \"uva\"];",
+      "$frutas[] = \"manga\";",
+      "",
+      "$pessoa = [\"nome\" => \"Ana\", \"idade\" => 28];",
+      "$pessoa[\"cidade\"] = \"Recife\";",
+      "",
+      "foreach ($frutas as $fruta) {",
+      "    echo $fruta . \" \";",
+      "}",
+      "",
+      "foreach ($pessoa as $chave => $valor) {",
+      "    echo \"$chave: $valor\\n\";",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "array indexado",
+      "definicao": "Array cujas posições são números, começando em 0.",
+      "exemplo": "$frutas = [\"maçã\", \"pera\"];"
+    },
+    {
+      "termo": "array associativo",
+      "definicao": "Array cujas posições são chaves escolhidas por você, geralmente strings.",
+      "exemplo": "$pessoa = [\"nome\" => \"Ana\"];"
+    },
+    {
+      "termo": "=>",
+      "definicao": "Seta que liga uma chave ao seu valor dentro de um array associativo.",
+      "exemplo": "\"idade\" => 28"
+    },
+    {
+      "termo": "foreach",
+      "definicao": "Estrutura de repetição feita para percorrer todos os elementos de um array.",
+      "exemplo": "foreach ($frutas as $fruta) { ... }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-arr-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Que tipo de array é este?",
+      "codigo": ["$cores = [\"vermelho\", \"azul\", \"verde\"];"],
+      "alternativas": [
+        "Indexado — as posições são números começando em 0.",
+        "Associativo — as posições são as próprias cores.",
+        "Misto — metade indexado, metade associativo.",
+        "Inválido, porque falta a seta `=>`."
+      ],
+      "correta": 0,
+      "explicacao": "Sem chaves explícitas, o PHP numera as posições automaticamente a partir de 0: `$cores[0]` é `\"vermelho\"`, `$cores[1]` é `\"azul\"`, e assim por diante."
+    },
+    {
+      "id": "php-arr-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["$pessoa = [\"nome\" => \"Lia\", \"idade\" => 20];", "echo $pessoa[\"nome\"];"],
+      "alternativas": ["Lia", "nome", "0", "Erro: chave inválida"],
+      "correta": 0,
+      "explicacao": "Em array associativo, o acesso é feito pela chave entre colchetes. `$pessoa[\"nome\"]` devolve o valor ligado à chave `\"nome\"`, que é `\"Lia\"`."
+    },
+    {
+      "id": "php-arr-03",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `count()` devolve neste caso?",
+      "codigo": ["$itens = [\"pão\", \"leite\", \"ovo\"];", "echo count($itens);"],
+      "alternativas": [
+        "3, a quantidade de elementos no array.",
+        "2, o maior índice do array.",
+        "O último elemento do array.",
+        "Erro, porque `count` só funciona em array associativo."
+      ],
+      "correta": 0,
+      "explicacao": "`count()` conta quantos elementos existem no array, e funciona da mesma forma para arrays indexados e associativos."
+    },
+    {
+      "id": "php-arr-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "$numeros = [1, 2, 3];",
+        "$numeros[] = 4;",
+        "echo implode(\", \", $numeros);"
+      ],
+      "alternativas": ["1, 2, 3, 4", "1, 2, 3", "4, 1, 2, 3", "Erro: índice inválido"],
+      "correta": 0,
+      "explicacao": "`$numeros[] = 4;` adiciona 4 na próxima posição livre, que é o índice 3. `implode` junta os elementos numa string separada por vírgulas."
+    },
+    {
+      "id": "php-arr-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete o `foreach` para obter a chave e o valor de cada item de `$estoque`.",
+      "codigo": ["foreach ($estoque as $produto ___ $quantidade) {", "    echo \"$produto: $quantidade\\n\";", "}"],
+      "respostas": ["=>"],
+      "tokens": ["=>", "->", "==", ":"],
+      "explicacao": "`as $chave => $valor` é a sintaxe do `foreach` para percorrer um array associativo dando acesso à chave e ao valor em cada volta."
+    },
+    {
+      "id": "php-arr-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Remova a chave \"idade\" do array `$pessoa`.",
+      "dica": "unset, parênteses, array, colchetes com a chave",
+      "resposta": "unset($pessoa[\"idade\"]);",
+      "aceitas": ["unset($pessoa['idade']);"],
+      "explicacao": "`unset` remove um elemento de um array pela chave ou índice — depois dessa linha, `$pessoa[\"idade\"]` deixa de existir."
+    },
+    {
+      "id": "php-arr-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que cria um array associativo com uma chave `\"cor\"` valendo `\"azul\"`.",
+      "partes": ["$carro", "=", "[\"cor\"", "=>", "\"azul\"];"],
+      "explicacao": "Um array associativo é escrito como uma lista de pares chave-valor entre colchetes, cada par ligado pela seta `=>`."
+    },
+    {
+      "id": "php-arr-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não imprime o telefone corretamente. Clique na linha que causa o erro.",
+      "codigo": [
+        "$contato = [\"nome\" => \"Davi\", \"telefone\" => \"9999-0000\"];",
+        "",
+        "echo $contato[0];"
+      ],
+      "linhaErrada": 2,
+      "explicacao": "`$contato` é associativo — não tem a posição numérica `0`. Para pegar o telefone, seria preciso usar a chave certa: `$contato[\"telefone\"]`."
+    },
+    {
+      "id": "php-arr-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "$carrinho = [\"maçã\" => 3, \"pão\" => 2];",
+        "$total = 0;",
+        "",
+        "foreach ($carrinho as $item => $quantidade) {",
+        "    $total += $quantidade;",
+        "}",
+        "",
+        "echo $total;"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "5 — a soma das quantidades de cada item.",
+        "2 — a quantidade de chaves no array.",
+        "\"maçãpão\" — a concatenação das chaves.",
+        "Erro, porque `$item` não é usado no corpo do loop."
+      ],
+      "correta": 0,
+      "explicacao": "O `foreach` passa por cada par chave-valor; `$total += $quantidade` soma só os valores (3 e 2), resultando em 5. Não usar `$item` dentro do corpo não é erro — apenas significa que a chave não é necessária ali."
+    }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "id": "java-heranca",
+  "linguagem": "java",
+  "trilha": "java-poo",
+  "titulo": "Herança",
+  "resumo": "extends, super, @Override, e uma primeira olhada em interface.",
+  "conceito": {
+    "texto": [
+      "**Herança** deixa uma classe reaproveitar campos e métodos de outra. A classe que herda usa `extends`: `class Mago extends Personagem` diz que `Mago` é um tipo de `Personagem`, com tudo que ela tem, mais o que for próprio de `Mago`.",
+      "A classe original chama-se **superclasse** (ou classe-mãe); a que herda chama-se **subclasse** (ou classe-filha). A subclasse não reescreve o que já existe na superclasse — ela herda automaticamente.",
+      "Dentro da subclasse, `super` se refere à superclasse. `super(...)` no construtor chama o construtor da superclasse, e precisa ser a primeira linha do corpo. `super.metodo()` chama a versão do método definida na superclasse, mesmo que a subclasse tenha uma versão própria.",
+      "Quando a subclasse redefine um método que já existe na superclasse, chama-se **sobrescrever** (*override*) — diferente de sobrecarregar, que é ter o mesmo nome com parâmetros diferentes. A anotação `@Override` marca essa intenção e faz o compilador conferir que existe mesmo um método correspondente na superclasse para sobrescrever, pegando erros de digitação cedo.",
+      "Uma **interface** declara métodos que uma classe promete implementar, sem dar o corpo deles. Uma classe usa `implements` para cumprir essa promessa: `class Mago implements Atacante` obriga `Mago` a escrever o corpo de todo método que `Atacante` declarar."
+    ],
+    "exemplo": [
+      "public class Personagem",
+      "{",
+      "    String nome;",
+      "    int vidas;",
+      "",
+      "    public Personagem(String nome)",
+      "    {",
+      "        this.nome = nome;",
+      "        this.vidas = 10;",
+      "    }",
+      "",
+      "    public void atacar()",
+      "    {",
+      "        System.out.println(nome + \" ataca.\");",
+      "    }",
+      "}",
+      "",
+      "public class Mago extends Personagem",
+      "{",
+      "    public Mago(String nome)",
+      "    {",
+      "        super(nome);",
+      "    }",
+      "",
+      "    @Override",
+      "    public void atacar()",
+      "    {",
+      "        System.out.println(nome + \" lança uma bola de fogo.\");",
+      "    }",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "extends",
+      "definicao": "Declara que uma classe herda campos e métodos de outra.",
+      "exemplo": "class Mago extends Personagem"
+    },
+    {
+      "termo": "superclasse / subclasse",
+      "definicao": "Superclasse é a classe original; subclasse é a que herda dela com `extends`.",
+      "exemplo": "Personagem é superclasse de Mago"
+    },
+    {
+      "termo": "super",
+      "definicao": "Referência à superclasse, usada para chamar o construtor dela ou uma versão de método que a subclasse sobrescreveu.",
+      "exemplo": "super(nome);"
+    },
+    {
+      "termo": "@Override",
+      "definicao": "Anotação que marca um método como redefinindo um método da superclasse, e faz o compilador conferir isso.",
+      "exemplo": "@Override public void atacar() { ... }"
+    },
+    {
+      "termo": "interface",
+      "definicao": "Declara métodos que uma classe promete implementar, sem dar o corpo deles.",
+      "exemplo": "interface Atacante { void atacar(); }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-her-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `extends` faz nesta declaração?",
+      "codigo": ["public class Mago extends Personagem", "{", "}"],
+      "alternativas": [
+        "Faz `Mago` herdar campos e métodos de `Personagem`.",
+        "Faz `Personagem` herdar de `Mago`.",
+        "Cria uma cópia independente de `Personagem` chamada `Mago`.",
+        "Impede que `Mago` tenha campos próprios."
+      ],
+      "correta": 0,
+      "explicacao": "`extends` estabelece a relação de herança: `Mago` passa a ter tudo que `Personagem` tem, e pode acrescentar ou sobrescrever comportamento."
+    },
+    {
+      "id": "java-her-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `@Override` faz sobre este método?",
+      "codigo": ["@Override", "public void atacar()", "{", "    System.out.println(\"Bola de fogo!\");", "}"],
+      "alternativas": [
+        "Marca que este método redefine um método já existente na superclasse, e o compilador confere isso.",
+        "Torna o método privado.",
+        "Impede que outras classes sobrescrevam este método de novo.",
+        "Faz o método ser chamado automaticamente antes do construtor."
+      ],
+      "correta": 0,
+      "explicacao": "`@Override` não muda o comportamento do método — é uma checagem do compilador. Se não existir `atacar()` correspondente na superclasse, o compilador acusa erro, evitando bugs de digitação silenciosos."
+    },
+    {
+      "id": "java-her-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "Usando as classes `Personagem` e `Mago` do conceito, o que este código imprime?",
+      "codigo": [
+        "Mago gandalf = new Mago(\"Gandalf\");",
+        "gandalf.atacar();"
+      ],
+      "alternativas": [
+        "Gandalf lança uma bola de fogo.",
+        "Gandalf ataca.",
+        "Gandalf lança uma bola de fogo.\nGandalf ataca.",
+        "Erro de compilação"
+      ],
+      "correta": 0,
+      "explicacao": "`Mago` sobrescreve `atacar()`, então chamar `atacar()` num objeto `Mago` executa a versão de `Mago`, não a de `Personagem`."
+    },
+    {
+      "id": "java-her-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que `super(nome)` faz no construtor de `Mago`?",
+      "codigo": [
+        "public class Mago extends Personagem",
+        "{",
+        "    public Mago(String nome)",
+        "    {",
+        "        super(nome);",
+        "    }",
+        "}"
+      ],
+      "alternativas": [
+        "Chama o construtor de `Personagem`, passando `nome` para ele inicializar os campos herdados.",
+        "Cria um novo objeto `Personagem` separado, dentro de `Mago`.",
+        "Chama o método `atacar()` da superclasse.",
+        "É opcional e pode ser removido sem efeito."
+      ],
+      "correta": 0,
+      "explicacao": "`super(nome)` delega a inicialização dos campos herdados (`nome`, `vidas`) para o construtor de `Personagem`, que já sabe como montá-los."
+    },
+    {
+      "id": "java-her-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "Se `Mago` chamasse `super.atacar()` dentro do próprio `atacar()` sobrescrito, o que aconteceria?",
+      "codigo": [
+        "@Override",
+        "public void atacar()",
+        "{",
+        "    super.atacar();",
+        "    System.out.println(nome + \" lança uma bola de fogo.\");",
+        "}",
+        "",
+        "// gandalf.atacar();"
+      ],
+      "alternativas": [
+        "Gandalf ataca.\nGandalf lança uma bola de fogo.",
+        "Só \"Gandalf lança uma bola de fogo.\", porque a sobrescrita substitui a versão antiga.",
+        "Erro de compilação: `super` não pode ser chamado dentro de um método sobrescrito.",
+        "Só \"Gandalf ataca.\", porque `super.atacar()` interrompe a execução."
+      ],
+      "correta": 0,
+      "explicacao": "`super.atacar()` executa a versão de `atacar()` da superclasse antes de continuar. As duas linhas imprimem, na ordem: primeiro a de `Personagem`, depois a de `Mago`."
+    },
+    {
+      "id": "java-her-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para que `Guerreiro` herde de `Personagem` e o construtor repasse `nome` para a superclasse.",
+      "codigo": [
+        "public class Guerreiro ___ Personagem",
+        "{",
+        "    public Guerreiro(String nome)",
+        "    {",
+        "        ___(nome);",
+        "    }",
+        "}"
+      ],
+      "respostas": ["extends", "super"],
+      "tokens": ["extends", "super", "implements", "this"],
+      "explicacao": "`extends` estabelece a herança na declaração da classe; `super(nome)` delega a inicialização ao construtor da superclasse."
+    },
+    {
+      "id": "java-her-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a declaração de uma interface chamada `Atacante`, com um método `atacar` sem corpo.",
+      "partes": ["interface", "Atacante", "{", "void", "atacar", "(", ")", ";", "}"],
+      "explicacao": "Uma interface declara a assinatura do método, terminando em ponto e vírgula, sem chaves de corpo — quem implementar é que escreve o comportamento."
+    },
+    {
+      "id": "java-her-08",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a declaração de uma classe `Arqueiro` que herda de `Personagem` e implementa a interface `Atacante`.",
+      "dica": "class, nome, extends, superclasse, implements, interface",
+      "resposta": "public class Arqueiro extends Personagem implements Atacante",
+      "aceitas": ["class Arqueiro extends Personagem implements Atacante"],
+      "explicacao": "Uma classe pode herdar de uma superclasse (`extends`, no máximo uma) e ao mesmo tempo implementar uma ou mais interfaces (`implements`), nessa ordem."
+    },
+    {
+      "id": "java-her-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o problema.",
+      "codigo": [
+        "public class Personagem",
+        "{",
+        "    String nome;",
+        "",
+        "    public Personagem(String nome)",
+        "    {",
+        "        this.nome = nome;",
+        "    }",
+        "}",
+        "",
+        "public class Mago extends Personagem",
+        "{",
+        "    public Mago(String nome)",
+        "    {",
+        "        this.nome = nome;",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 13,
+      "explicacao": "`Personagem` não tem construtor sem parâmetros (só o que recebe `nome`), então `Mago` é obrigado a chamar `super(nome)` explicitamente antes de mais nada. Sem isso, o compilador tenta inserir uma chamada implícita a um construtor sem parâmetros que não existe, e recusa compilar."
+    },
+    {
+      "id": "java-her-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "public class Personagem",
+        "{",
+        "    public void atacar()",
+        "    {",
+        "        System.out.println(\"Ataque genérico.\");",
+        "    }",
+        "}",
+        "",
+        "public class Mago extends Personagem",
+        "{",
+        "    public void lancarFeitico()",
+        "    {",
+        "        System.out.println(\"Feitiço lançado.\");",
+        "    }",
+        "}",
+        "",
+        "Personagem p = new Mago();",
+        "p.atacar();",
+        "p.lancarFeitico();"
+      ],
+      "pergunta": "O que acontece ao executar as duas últimas linhas?",
+      "alternativas": [
+        "`p.atacar()` imprime \"Ataque genérico.\"; `p.lancarFeitico()` dá erro de compilação.",
+        "As duas linhas executam normalmente, sem erro.",
+        "`p.atacar()` dá erro de compilação; `p.lancarFeitico()` funciona.",
+        "As duas linhas dão erro de compilação."
+      ],
+      "correta": 0,
+      "explicacao": "A variável `p` é declarada como `Personagem`, então o compilador só permite chamar métodos que `Personagem` conhece — mesmo que o objeto real seja um `Mago`. `atacar()` existe em `Personagem` e funciona; `lancarFeitico()` só existe em `Mago`, e o compilador recusa a chamada através de uma variável do tipo `Personagem`."
+    }
+  ]
+}

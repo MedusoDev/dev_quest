@@ -1,0 +1,163 @@
+{
+  "id": "cs-foreach",
+  "linguagem": "csharp",
+  "trilha": "cs-colecoes",
+  "titulo": "Iterar coleções",
+  "resumo": "for, foreach, break e por que não dá pra alterar uma lista enquanto ela é percorrida.",
+  "conceito": {
+    "texto": [
+      "`foreach` é o jeito mais simples de percorrer uma coleção inteira, item por item, sem controlar índice. Quando o objetivo é só \"fazer algo com cada item\", `foreach` é a escolha natural.",
+      "`for` dá controle explícito sobre o índice — útil quando você precisa saber a posição, pular itens, ou percorrer de trás pra frente. `for (int i = 0; i < lista.Count; i++)` percorre uma `List<T>` do primeiro ao último índice.",
+      "`break` para o laço na hora, saindo dele completamente. `continue` pula pro próximo item, sem terminar o resto do corpo pro item atual.",
+      "Adicionar ou remover itens de uma coleção **durante** um `foreach` nela lança `InvalidOperationException` — a coleção não pode mudar de tamanho enquanto está sendo percorrida. Pra remover itens condicionalmente, o jeito seguro é montar uma lista à parte com o que sobra.",
+      "Um `foreach` dentro de outro — laço aninhado — percorre todos os pares possíveis entre duas coleções, tipo cada linha com cada coluna de um tabuleiro."
+    ],
+    "exemplo": [
+      "var numeros = new List<int> { 4, 8, 15, 16, 23 };",
+      "",
+      "foreach (var n in numeros)",
+      "{",
+      "    if (n > 15) break;",
+      "    Console.WriteLine(n);",
+      "}",
+      "// 4",
+      "// 8",
+      "// 15",
+      "",
+      "for (int i = 0; i < numeros.Count; i++)",
+      "{",
+      "    Console.WriteLine($\"posição {i}: {numeros[i]}\");",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "foreach",
+      "definicao": "Percorre todos os itens de uma coleção, na ordem, sem controlar índice.",
+      "exemplo": "foreach (var n in numeros) { }"
+    },
+    {
+      "termo": "for",
+      "definicao": "Laço com controle explícito de índice — início, condição de parada e incremento.",
+      "exemplo": "for (int i = 0; i < numeros.Count; i++) { }"
+    },
+    {
+      "termo": "break",
+      "definicao": "Sai do laço imediatamente, sem terminar as voltas que faltavam.",
+      "exemplo": "if (n > 15) break;"
+    },
+    {
+      "termo": "continue",
+      "definicao": "Pula direto pra próxima volta do laço, sem rodar o resto do corpo pro item atual.",
+      "exemplo": "if (n < 0) continue;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-for-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `break` faz dentro de um laço?",
+      "codigo": ["foreach (var n in numeros)", "{", "    if (n > 15) break;", "    Console.WriteLine(n);", "}"],
+      "alternativas": [
+        "Sai do laço na hora, sem rodar as voltas que faltavam.",
+        "Pula só a volta atual e continua no próximo item.",
+        "Reinicia o laço do primeiro item.",
+        "Só funciona dentro de um `if`, nunca sozinho."
+      ],
+      "correta": 0,
+      "explicacao": "`break` termina o laço inteiro na hora em que roda — nenhum item depois dele é visitado."
+    },
+    {
+      "id": "cs-for-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Qual é a diferença entre `foreach` e `for` aqui?",
+      "codigo": ["foreach (var n in numeros) { }", "for (int i = 0; i < numeros.Count; i++) { }"],
+      "alternativas": [
+        "`foreach` não expõe o índice; `for` dá controle explícito sobre ele.",
+        "São exatamente a mesma coisa, só muda a palavra.",
+        "`foreach` só funciona em `List<T>`; `for` funciona em qualquer coleção.",
+        "`for` sempre percorre de trás pra frente."
+      ],
+      "correta": 0,
+      "explicacao": "`foreach` entrega os itens direto; `for` entrega a posição, e você decide como usá-la."
+    },
+    {
+      "id": "cs-for-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["var numeros = new List<int> { 4, 8, 15, 16, 23 };", "foreach (var n in numeros)", "{", "    if (n > 15) break;", "    Console.WriteLine(n);", "}"],
+      "alternativas": [
+        "4, depois 8, depois 15 — e para aí.",
+        "4, 8, 15, 16 e 23, todos.",
+        "Só 16 e 23.",
+        "Nada é impresso."
+      ],
+      "correta": 0,
+      "explicacao": "O laço imprime 4, 8 e 15. Ao chegar em 16, `n > 15` é verdadeiro e `break` interrompe antes de imprimir 16 ou 23."
+    },
+    {
+      "id": "cs-for-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: pule os números negativos, sem interromper o laço.",
+      "codigo": ["foreach (var n in numeros)", "{", "    if (n < 0) ___;", "    Console.WriteLine(n);", "}"],
+      "respostas": ["continue"],
+      "tokens": ["continue", "break", "return", "skip", "pass"],
+      "explicacao": "`continue` pula o resto do corpo só pra este item e segue pro próximo — `break` sairia do laço inteiro, o que não é o que se quer aqui."
+    },
+    {
+      "id": "cs-for-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva um `for` (sem corpo) que percorre os índices de `numeros`, de `0` até `numeros.Count - 1`.",
+      "dica": "for, int i = 0, condição com Count, i++",
+      "resposta": "for (int i = 0; i < numeros.Count; i++)",
+      "explicacao": "As três partes do `for`: `i` começa em 0, o laço roda enquanto `i` for menor que `Count`, e `i` cresce 1 a cada volta."
+    },
+    {
+      "id": "cs-for-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte o laço `foreach` (sem corpo) que percorre `numeros`, guardando cada item em `n`.",
+      "partes": ["foreach", "(", "var", "n", "in", "numeros", ")"],
+      "explicacao": "`foreach (var item in colecao)` é o formato fixo — só o nome da variável e da coleção mudam."
+    },
+    {
+      "id": "cs-for-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Uma linha lança erro em tempo de execução. Clique nela.",
+      "codigo": ["var numeros = new List<int> { 1, 2, 3, 4, 5 };", "foreach (var n in numeros)", "{", "    if (n % 2 == 0) numeros.Remove(n);", "}", "Console.WriteLine(numeros.Count);"],
+      "linhaErrada": 3,
+      "explicacao": "Remover um item de `numeros` enquanto o `foreach` está percorrendo essa mesma lista lança `InvalidOperationException` — a coleção não pode mudar de tamanho no meio da volta."
+    },
+    {
+      "id": "cs-for-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["var linhas = new List<string> { \"A\", \"B\" };", "var colunas = new List<int> { 1, 2 };", "", "foreach (var linha in linhas)", "{", "    foreach (var coluna in colunas)", "    {", "        Console.Write($\"{linha}{coluna} \");", "    }", "}"],
+      "pergunta": "Quantas vezes o `Console.Write` de dentro roda ao todo?",
+      "alternativas": [
+        "4 vezes — cada uma das 2 linhas combina com cada uma das 2 colunas.",
+        "2 vezes — uma por linha.",
+        "2 vezes — uma por coluna.",
+        "8 vezes — o dobro de linhas vezes colunas."
+      ],
+      "correta": 0,
+      "explicacao": "Pra cada uma das 2 linhas, o laço de dentro roda as 2 colunas inteiras: 2 × 2 = 4 execuções do `Console.Write`."
+    },
+    {
+      "id": "cs-for-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva um `for` (sem corpo) que percorre `numeros` de trás pra frente, do último índice até 0.",
+      "dica": "for, int i = numeros.Count - 1, condição i >= 0, i--",
+      "resposta": "for (int i = numeros.Count - 1; i >= 0; i--)",
+      "explicacao": "Começar em `Count - 1` (o último índice válido), continuar enquanto `i >= 0`, e decrementar a cada volta percorre a lista ao contrário."
+    }
+  ]
+}

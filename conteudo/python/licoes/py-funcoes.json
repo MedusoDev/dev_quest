@@ -1,0 +1,191 @@
+{
+  "id": "py-funcoes",
+  "linguagem": "python",
+  "trilha": "py-fundamentos",
+  "titulo": "Funções",
+  "resumo": "Empacotar código com def, parâmetros com valor padrão e return.",
+  "conceito": {
+    "texto": [
+      "Uma função é criada com `def nome(parametros):`, seguida do corpo indentado. Ela existe para empacotar um pedaço de código que você quer reaproveitar sem reescrever.",
+      "Um parâmetro pode ter um **valor padrão**: `def saudacao(nome=\"visitante\"):` permite chamar `saudacao()` sem argumento nenhum, usando `\"visitante\"` automaticamente.",
+      "`return` devolve um valor para quem chamou a função e encerra a execução dela ali mesmo. Uma função sem `return` explícito devolve `None`.",
+      "`*args` recebe qualquer quantidade de argumentos posicionais extras, agrupados numa tupla. `**kwargs` faz o mesmo para argumentos nomeados, agrupados num dicionário. São úteis quando a função não sabe de antemão quantos argumentos vai receber.",
+      "A ordem numa definição de função é sempre: parâmetros normais, depois os com valor padrão, depois `*args`, depois `**kwargs`."
+    ],
+    "exemplo": [
+      "def saudacao(nome=\"visitante\"):",
+      "    return f\"Olá, {nome}!\"",
+      "",
+      "print(saudacao())        # Olá, visitante!",
+      "print(saudacao(\"Léo\"))   # Olá, Léo!",
+      "",
+      "def somar_tudo(*numeros):",
+      "    return sum(numeros)",
+      "",
+      "print(somar_tudo(1, 2, 3))  # 6"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "def",
+      "definicao": "Palavra-chave que cria uma função.",
+      "exemplo": "def saudacao(nome):"
+    },
+    {
+      "termo": "valor padrão",
+      "definicao": "Valor usado por um parâmetro quando o argumento correspondente não é passado na chamada.",
+      "exemplo": "def saudacao(nome=\"visitante\"):"
+    },
+    {
+      "termo": "return",
+      "definicao": "Devolve um valor para quem chamou a função e encerra a execução dela.",
+      "exemplo": "return nome.upper()"
+    },
+    {
+      "termo": "*args",
+      "definicao": "Agrupa argumentos posicionais extras numa tupla.",
+      "exemplo": "def somar_tudo(*numeros):"
+    },
+    {
+      "termo": "**kwargs",
+      "definicao": "Agrupa argumentos nomeados extras num dicionário.",
+      "exemplo": "def config(**opcoes):"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-fun-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `def` faz nesta linha?",
+      "codigo": ["def dobrar(numero):"],
+      "alternativas": [
+        "Começa a definição de uma função chamada `dobrar`.",
+        "Chama a função `dobrar` imediatamente.",
+        "Declara `dobrar` como uma variável.",
+        "Importa a função `dobrar` de outro arquivo."
+      ],
+      "correta": 0,
+      "explicacao": "`def` é a palavra-chave que inicia a definição de uma função. O código dentro dela só roda quando a função for chamada, não quando é definida."
+    },
+    {
+      "id": "py-fun-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que esta função devolve quando chamada sem argumento nenhum?",
+      "codigo": ["def saudacao(nome=\"visitante\"):", "    return f\"Olá, {nome}!\"", "", "saudacao()"],
+      "alternativas": [
+        "\"Olá, visitante!\"",
+        "\"Olá, None!\"",
+        "Erro: falta o argumento nome",
+        "\"Olá, !\""
+      ],
+      "correta": 0,
+      "explicacao": "Como `nome` tem valor padrão `\"visitante\"`, chamar `saudacao()` sem argumento usa esse valor automaticamente, sem gerar erro."
+    },
+    {
+      "id": "py-fun-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "def dobrar(numero):",
+        "    numero * 2",
+        "",
+        "resultado = dobrar(5)",
+        "print(resultado)"
+      ],
+      "alternativas": [
+        "None",
+        "10",
+        "5",
+        "Erro"
+      ],
+      "correta": 0,
+      "explicacao": "A função calcula `numero * 2`, mas nunca usa `return` para devolver esse valor. Sem `return` explícito, toda função devolve `None`."
+    },
+    {
+      "id": "py-fun-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a função para que ela devolva o dobro do número recebido.",
+      "codigo": ["def dobrar(numero):", "    ___ numero * 2"],
+      "respostas": ["return"],
+      "tokens": ["return", "print", "def", "yield", "pass"],
+      "explicacao": "`return` é o que envia o valor calculado de volta para quem chamou a função. `print` apenas mostraria o valor no terminal, sem devolvê-lo."
+    },
+    {
+      "id": "py-fun-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "def somar_tudo(*numeros):",
+        "    return sum(numeros)",
+        "",
+        "print(somar_tudo(1, 2, 3, 4))"
+      ],
+      "alternativas": [
+        "10",
+        "(1, 2, 3, 4)",
+        "Erro: muitos argumentos",
+        "None"
+      ],
+      "correta": 0,
+      "explicacao": "`*numeros` agrupa 1, 2, 3 e 4 numa tupla `(1, 2, 3, 4)`, e `sum()` soma todos os itens dela, resultando em 10."
+    },
+    {
+      "id": "py-fun-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a definição de uma função chamada `area` que recebe `largura` e `altura`.",
+      "partes": ["def", "area", "(", "largura", ",", "altura", ")", ":"],
+      "explicacao": "A sintaxe de definição é sempre `def nome(parametros):` — os parênteses envolvem os parâmetros separados por vírgula, e os dois-pontos abrem o corpo indentado da função."
+    },
+    {
+      "id": "py-fun-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a chamada da função `saudacao` passando `nome=\"Duda\"` como argumento nomeado.",
+      "dica": "nome da função, parênteses, nome do parâmetro, igual, valor",
+      "resposta": "saudacao(nome=\"Duda\")",
+      "explicacao": "Passar `nome=\"Duda\"` na chamada é um argumento nomeado: deixa explícito qual parâmetro está recebendo o valor, independente da ordem em que os parâmetros foram definidos."
+    },
+    {
+      "id": "py-fun-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Esta função não pode ser definida assim. Clique na linha do erro.",
+      "codigo": [
+        "def cadastrar(nome=\"anônimo\", idade):",
+        "    return f\"{nome}, {idade} anos\"",
+        "",
+        "print(cadastrar(\"Léo\", 20))"
+      ],
+      "linhaErrada": 0,
+      "explicacao": "Um parâmetro sem valor padrão não pode vir depois de um que tem valor padrão. Python exige que todos os parâmetros com padrão fiquem por último na lista."
+    },
+    {
+      "id": "py-fun-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "def perfil(nome, **detalhes):",
+        "    for chave, valor in detalhes.items():",
+        "        print(f\"{chave}: {valor}\")",
+        "",
+        "perfil(\"Ana\", idade=28, cidade=\"Recife\")"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": [
+        "idade: 28\ncidade: Recife",
+        "nome: Ana\nidade: 28\ncidade: Recife",
+        "Erro: nome não está em detalhes",
+        "{'idade': 28, 'cidade': 'Recife'}"
+      ],
+      "correta": 0,
+      "explicacao": "`nome` é um parâmetro normal e recebe `\"Ana\"` diretamente. Só os argumentos nomeados extras (`idade` e `cidade`) caem em `**detalhes`, que o `for` percorre imprimindo chave e valor."
+    }
+  ]
+}

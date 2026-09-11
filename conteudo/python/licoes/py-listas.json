@@ -1,0 +1,181 @@
+{
+  "id": "py-listas",
+  "linguagem": "python",
+  "trilha": "py-colecoes",
+  "titulo": "Listas",
+  "resumo": "Indexação, slicing e os métodos que mudam a lista por dentro.",
+  "conceito": {
+    "texto": [
+      "Uma **lista** guarda vários valores numa sequência ordenada, criada com colchetes: `numeros = [10, 20, 30]`. Os itens podem ser de tipos diferentes e a lista pode crescer ou encolher depois de criada.",
+      "Cada item tem um **índice**, começando em 0: `numeros[0]` é o primeiro item. Índices negativos contam do fim: `numeros[-1]` é o último item.",
+      "**Slicing** recorta um pedaço da lista com `lista[inicio:fim]`, pegando do índice `inicio` até `fim - 1` (o `fim` nunca é incluído). Omitir um dos dois pega até a ponta correspondente: `lista[:2]` pega os dois primeiros.",
+      "Listas são **mutáveis**: `append(valor)` adiciona um item no fim, `pop()` remove e devolve o último (ou o índice passado como argumento), e `sort()` ordena a lista no lugar, sem criar uma nova.",
+      "Como a lista é mutável, atribuir `outra = lista` não copia nada — `outra` e `lista` passam a apontar para a mesma lista na memória. Mudar uma muda a outra."
+    ],
+    "exemplo": [
+      "frutas = [\"maçã\", \"banana\", \"uva\"]",
+      "",
+      "print(frutas[0])       # maçã",
+      "print(frutas[-1])      # uva",
+      "print(frutas[0:2])     # ['maçã', 'banana']",
+      "",
+      "frutas.append(\"pera\")",
+      "frutas.sort()",
+      "print(frutas)          # ['banana', 'maçã', 'pera', 'uva']",
+      "",
+      "ultima = frutas.pop()",
+      "print(ultima)          # uva"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "lista",
+      "definicao": "Sequência ordenada e mutável de valores, criada com colchetes.",
+      "exemplo": "numeros = [10, 20, 30]"
+    },
+    {
+      "termo": "índice",
+      "definicao": "Posição de um item na lista, começando em 0; índices negativos contam do fim.",
+      "exemplo": "numeros[-1]"
+    },
+    {
+      "termo": "slicing",
+      "definicao": "Recorte de um pedaço da lista, com o fim excluído.",
+      "exemplo": "numeros[1:3]"
+    },
+    {
+      "termo": "mutabilidade",
+      "definicao": "Capacidade de a lista ser alterada depois de criada, sem virar um objeto novo.",
+      "exemplo": "numeros.append(40)"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-lst-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Qual é o valor de `frutas[0]`?",
+      "codigo": ["frutas = [\"maçã\", \"banana\", \"uva\"]"],
+      "alternativas": [
+        "\"maçã\"",
+        "\"banana\"",
+        "\"uva\"",
+        "0"
+      ],
+      "correta": 0,
+      "explicacao": "Índices em Python começam em 0, então `frutas[0]` é o primeiro item da lista: `\"maçã\"`."
+    },
+    {
+      "id": "py-lst-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `numeros[-1]` retorna?",
+      "codigo": ["numeros = [10, 20, 30]"],
+      "alternativas": [
+        "O último item da lista, 30.",
+        "Um erro, porque não existe índice negativo.",
+        "O primeiro item da lista, 10.",
+        "A lista inteira, invertida."
+      ],
+      "correta": 0,
+      "explicacao": "Índices negativos contam a partir do fim da lista: `-1` é o último item, `-2` o penúltimo, e assim por diante."
+    },
+    {
+      "id": "py-lst-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["numeros = [10, 20, 30, 40, 50]", "print(numeros[1:3])"],
+      "alternativas": [
+        "[20, 30]",
+        "[10, 20, 30]",
+        "[20, 30, 40]",
+        "[30, 40]"
+      ],
+      "correta": 0,
+      "explicacao": "O slice `[1:3]` pega os índices de 1 até 2 — o índice 3 é o limite, e nunca entra no resultado. Por isso vem `[20, 30]`."
+    },
+    {
+      "id": "py-lst-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "numeros = [3, 1, 2]",
+        "outra = numeros",
+        "outra.append(4)",
+        "print(numeros)"
+      ],
+      "alternativas": [
+        "[3, 1, 2, 4]",
+        "[3, 1, 2]",
+        "[4]",
+        "Erro: outra não pode alterar numeros"
+      ],
+      "correta": 0,
+      "explicacao": "`outra = numeros` não cria uma lista nova, só um segundo nome apontando para a mesma lista. Alterar `outra` altera exatamente a mesma lista que `numeros` também enxerga."
+    },
+    {
+      "id": "py-lst-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para adicionar \"pera\" no fim da lista.",
+      "codigo": ["frutas = [\"maçã\", \"banana\"]", "frutas.___(\"pera\")"],
+      "respostas": ["append"],
+      "tokens": ["append", "add", "push", "insert", "pop"],
+      "explicacao": "`append` é o método que adiciona um item no fim da lista. `add` é de outro tipo de coleção (conjuntos), e `push` não existe em listas Python."
+    },
+    {
+      "id": "py-lst-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que ordena a lista `numeros` no lugar.",
+      "partes": ["numeros", ".", "sort", "(", ")"],
+      "explicacao": "`sort()` ordena a própria lista, sem criar uma nova — é por isso que não se atribui o resultado a nada, o efeito já acontece em `numeros`."
+    },
+    {
+      "id": "py-lst-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha que remove e guarda em `removido` o item do índice 0 da lista `fila`.",
+      "dica": "nome da variável, igual, lista, ponto, pop, o índice entre parênteses",
+      "resposta": "removido = fila.pop(0)",
+      "explicacao": "`pop()` sem argumento remove o último item; passando um índice, como `pop(0)`, ele remove e devolve o item daquela posição específica — aqui, o primeiro da fila."
+    },
+    {
+      "id": "py-lst-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não faz o que o programador esperava. Clique na linha do erro.",
+      "codigo": [
+        "numeros = [5, 3, 8, 1]",
+        "numeros_ordenados = numeros.sort()",
+        "print(numeros_ordenados)"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "`sort()` ordena a lista no próprio lugar e devolve `None` — ela não retorna a lista ordenada. Quem quer guardar o resultado como variável nova precisa usar `sorted(numeros)`, que devolve uma lista nova ordenada."
+    },
+    {
+      "id": "py-lst-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "pilha = [1, 2, 3]",
+        "pilha.append(4)",
+        "topo = pilha.pop()",
+        "pilha.append(topo * 10)",
+        "print(pilha)"
+      ],
+      "pergunta": "O que aparece no terminal?",
+      "alternativas": [
+        "[1, 2, 3, 40]",
+        "[1, 2, 3, 4, 40]",
+        "[1, 2, 3, 4]",
+        "[10, 20, 30, 40]"
+      ],
+      "correta": 0,
+      "explicacao": "Depois de `append(4)`, a lista é `[1, 2, 3, 4]`. `pop()` remove e devolve o 4, deixando `[1, 2, 3]` e guardando `topo = 4`. Por fim, `append(topo * 10)` adiciona 40, resultando em `[1, 2, 3, 40]`."
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "id": "php-excecoes",
+  "linguagem": "php",
+  "trilha": "php-erros",
+  "titulo": "Exceções",
+  "resumo": "`try`, `catch`, `finally` e lançar erros de propósito com `throw`.",
+  "conceito": {
+    "texto": [
+      "Uma **exceção** é um erro que interrompe o fluxo normal do código e pode ser capturado, em vez de derrubar o script inteiro.",
+      "`try` marca um bloco de código que pode falhar. Se algo dentro dele lançar uma exceção, a execução pula direto para o `catch` correspondente.",
+      "`catch (Exception $e)` captura a exceção e guarda o objeto dela em `$e`. `$e->getMessage()` devolve a mensagem de erro associada.",
+      "`throw new Exception(\"mensagem\")` lança uma exceção de propósito, quando o próprio código detecta que algo está errado — por exemplo, um valor inválido recebido por uma função.",
+      "`finally` é um bloco que roda sempre, tenha ocorrido exceção ou não — útil para liberar recursos, como fechar um arquivo ou uma conexão.",
+      "PHP tem várias classes de exceção além de `Exception`, como `InvalidArgumentException` ou `DivisionByZeroError`. Capturar uma classe mais específica antes de uma mais genérica permite tratar cada erro de um jeito diferente."
+    ],
+    "exemplo": [
+      "<?php",
+      "function dividir(float $a, float $b): float",
+      "{",
+      "    if ($b === 0.0) {",
+      "        throw new InvalidArgumentException(\"Não é possível dividir por zero.\");",
+      "    }",
+      "    return $a / $b;",
+      "}",
+      "",
+      "try {",
+      "    echo dividir(10, 0);",
+      "} catch (InvalidArgumentException $e) {",
+      "    echo \"Erro: \" . $e->getMessage();",
+      "} finally {",
+      "    echo \"Operação encerrada.\";",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "try",
+      "definicao": "Marca um bloco de código que pode lançar uma exceção.",
+      "exemplo": "try { ... } catch (Exception $e) { ... }"
+    },
+    {
+      "termo": "catch",
+      "definicao": "Captura uma exceção lançada dentro do bloco `try` e permite tratá-la.",
+      "exemplo": "catch (Exception $e) { echo $e->getMessage(); }"
+    },
+    {
+      "termo": "throw",
+      "definicao": "Lança uma exceção de propósito, interrompendo o fluxo normal.",
+      "exemplo": "throw new Exception(\"mensagem\");"
+    },
+    {
+      "termo": "finally",
+      "definicao": "Bloco que roda sempre, com ou sem exceção.",
+      "exemplo": "finally { echo \"Fim.\"; }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-exc-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `throw` faz nesta linha?",
+      "codigo": ["throw new Exception(\"Valor inválido\");"],
+      "alternativas": [
+        "Lança uma exceção, interrompendo o fluxo normal do código a partir dali.",
+        "Imprime a mensagem \"Valor inválido\" na tela.",
+        "Cria uma variável chamada `Exception`.",
+        "Registra a mensagem num arquivo de log, sem interromper nada."
+      ],
+      "correta": 0,
+      "explicacao": "`throw` lança o objeto de exceção criado com `new Exception(...)`. A execução para ali e pula para o `catch` mais próximo capaz de tratá-la."
+    },
+    {
+      "id": "php-exc-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `$e->getMessage()` devolve?",
+      "codigo": ["catch (Exception $e) {", "    echo $e->getMessage();", "}"],
+      "alternativas": [
+        "A mensagem de texto associada à exceção capturada.",
+        "O nome da classe da exceção.",
+        "A linha do código onde o erro ocorreu.",
+        "Sempre a string \"Exception\"."
+      ],
+      "correta": 0,
+      "explicacao": "`getMessage()` é um método da classe `Exception` que devolve o texto passado para ela no momento em que foi criada, com `new Exception(\"...\")`."
+    },
+    {
+      "id": "php-exc-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "try {",
+        "    throw new Exception(\"Falhou\");",
+        "} catch (Exception $e) {",
+        "    echo \"Capturado: \" . $e->getMessage();",
+        "}"
+      ],
+      "alternativas": ["Capturado: Falhou", "Falhou", "Erro fatal, sem captura", "Capturado: Exception"],
+      "correta": 0,
+      "explicacao": "A exceção lançada dentro do `try` é capturada pelo `catch`, que imprime o texto fixo concatenado com a mensagem da exceção."
+    },
+    {
+      "id": "php-exc-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime, na ordem?",
+      "codigo": [
+        "try {",
+        "    throw new Exception(\"erro\");",
+        "} catch (Exception $e) {",
+        "    echo \"tratado \";",
+        "} finally {",
+        "    echo \"sempre\";",
+        "}"
+      ],
+      "alternativas": ["tratado sempre", "sempre tratado", "tratado", "sempre"],
+      "correta": 0,
+      "explicacao": "O `catch` trata a exceção e imprime \"tratado \"; depois, `finally` roda incondicionalmente e imprime \"sempre\", independentemente de ter havido exceção ou não."
+    },
+    {
+      "id": "php-exc-05",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece se nenhum `catch` capturar o tipo de exceção lançada?",
+      "codigo": ["try {", "    throw new InvalidArgumentException(\"ruim\");", "} catch (DivisionByZeroError $e) {", "    echo \"tratado\";", "}"],
+      "alternativas": [
+        "A exceção não é capturada e o script para com um erro fatal.",
+        "O PHP ignora a exceção silenciosamente.",
+        "O `catch` trata mesmo assim, porque toda exceção é compatível.",
+        "O `finally`, mesmo sem existir aqui, é criado automaticamente para tratar."
+      ],
+      "correta": 0,
+      "explicacao": "Um `catch` só captura exceções do tipo declarado (ou de subtipos dele). `InvalidArgumentException` não é um `DivisionByZeroError`, então essa exceção passa direto e derruba o script."
+    },
+    {
+      "id": "php-exc-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a estrutura para capturar qualquer `Exception` e imprimir a mensagem dela.",
+      "codigo": ["try {", "    processar();", "} ___ (Exception $e) {", "    echo $e->___();", "}"],
+      "respostas": ["catch", "getMessage"],
+      "tokens": ["catch", "getMessage", "throw", "getError"],
+      "explicacao": "`catch` captura a exceção do tipo indicado, e `getMessage()` é o método padrão da classe `Exception` para ler a mensagem de erro."
+    },
+    {
+      "id": "php-exc-07",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Lance uma exceção com a mensagem \"Idade inválida\".",
+      "dica": "throw, new, Exception, mensagem entre parênteses",
+      "resposta": "throw new Exception(\"Idade inválida\");",
+      "explicacao": "`throw new Exception(\"...\")` cria e lança a exceção numa linha só. A mensagem passada fica disponível depois via `getMessage()`."
+    },
+    {
+      "id": "php-exc-08",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que abre um bloco `catch` para capturar uma `Exception` em `$erro`.",
+      "partes": ["catch", "(", "Exception", "$erro", ")", "{"],
+      "explicacao": "A sintaxe do `catch` é o tipo da exceção esperada seguido do nome da variável que vai guardar o objeto capturado."
+    },
+    {
+      "id": "php-exc-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não captura a exceção como deveria. Clique na linha que causa o erro.",
+      "codigo": [
+        "function validarIdade(int $idade): void",
+        "{",
+        "    if ($idade < 0) {",
+        "        throw new InvalidArgumentException(\"Idade não pode ser negativa\");",
+        "    }",
+        "}",
+        "",
+        "try {",
+        "    validarIdade(-5);",
+        "} catch (DivisionByZeroError $e) {",
+        "    echo $e->getMessage();",
+        "}"
+      ],
+      "linhaErrada": 9,
+      "explicacao": "A exceção lançada é `InvalidArgumentException`, mas o `catch` só está preparado para `DivisionByZeroError`. Como os tipos não batem, a exceção não é capturada e o script quebra."
+    },
+    {
+      "id": "php-exc-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "function processarPedido(int $quantidade): string",
+        "{",
+        "    if ($quantidade <= 0) {",
+        "        throw new InvalidArgumentException(\"Quantidade inválida\");",
+        "    }",
+        "    return \"Pedido de $quantidade unidades confirmado.\";",
+        "}",
+        "",
+        "try {",
+        "    echo processarPedido(0);",
+        "} catch (InvalidArgumentException $e) {",
+        "    echo \"Erro: \" . $e->getMessage();",
+        "} finally {",
+        "    echo \" (fim)\";",
+        "}"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "Erro: Quantidade inválida (fim)",
+        "Pedido de 0 unidades confirmado. (fim)",
+        "Erro: Quantidade inválida",
+        "Erro fatal, porque `finally` não pode vir depois de `catch`."
+      ],
+      "correta": 0,
+      "explicacao": "`processarPedido(0)` lança a exceção antes de chegar ao `return`. O `catch` trata e imprime a mensagem de erro, e o `finally` roda depois, sempre, imprimindo \" (fim)\"."
+    }
+  ]
+}

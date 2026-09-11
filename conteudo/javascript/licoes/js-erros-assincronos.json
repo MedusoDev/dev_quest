@@ -1,0 +1,194 @@
+{
+  "id": "js-erros-assincronos",
+  "linguagem": "javascript",
+  "trilha": "js-async",
+  "titulo": "Erros assíncronos",
+  "resumo": "try/catch com await, e por que uma função async sempre devolve uma Promise — mesmo quando dá erro.",
+  "conceito": {
+    "texto": [
+      "Dentro de uma função `async`, uma Promise rejeitada esperada com `await` vira uma exceção comum — pega com `try`/`catch`, igual erro síncrono.",
+      "Sem `try`/`catch`, o erro de um `await` que falhou não trava o programa inteiro: ele faz a Promise devolvida pela função `async` ficar rejeitada, silenciosamente, se ninguém tratar.",
+      "`try { await algo(); } catch (erro) { ... }` é o padrão: tudo que pode falhar entra no `try`, e o `catch` decide o que fazer quando falha.",
+      "Chamar `.catch()` na Promise devolvida por uma função `async` funciona igual chamar em qualquer outra Promise — os dois jeitos de tratar erro (`try`/`catch` por dentro, `.catch()` por fora) convivem.",
+      "Uma função `async` sempre devolve uma Promise, mesmo que ela lance um erro com `throw` — o `throw` não quebra o programa na hora, ele rejeita a Promise que a função devolveu."
+    ],
+    "exemplo": [
+      "function buscarUsuario(id) {",
+      "  return new Promise((resolve, reject) => {",
+      "    if (id > 0) resolve({ id, nome: \"Ana\" });",
+      "    else reject(new Error(\"id inválido\"));",
+      "  });",
+      "}",
+      "",
+      "async function mostrarUsuario(id) {",
+      "  try {",
+      "    const usuario = await buscarUsuario(id);",
+      "    console.log(usuario.nome);",
+      "  } catch (erro) {",
+      "    console.log(\"falhou:\", erro.message);",
+      "  }",
+      "}",
+      "",
+      "mostrarUsuario(-1); // \"falhou: id inválido\""
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "try / catch (assíncrono)",
+      "definicao": "Captura o erro de uma Promise rejeitada esperada com `await`.",
+      "exemplo": "try { await buscar(); } catch (e) { }"
+    },
+    {
+      "termo": "rejeição não tratada",
+      "definicao": "O que acontece quando ninguém pega o erro de uma Promise rejeitada.",
+      "exemplo": "buscar(); // sem .catch() nem try/catch"
+    },
+    {
+      "termo": "throw dentro de async",
+      "definicao": "Lança um erro que rejeita a Promise devolvida pela função, sem travar o programa na hora.",
+      "exemplo": "async function f() { throw new Error(\"falhou\"); }"
+    },
+    {
+      "termo": ".catch() em função async",
+      "definicao": "Trata o erro por fora, na Promise que a função devolveu, sem usar try/catch por dentro.",
+      "exemplo": "mostrarUsuario(-1).catch(e => console.log(e.message));"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-err-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `catch (erro)` recebe aqui?",
+      "codigo": ["try {", "    await buscarUsuario(id);", "} catch (erro) {", "    console.log(erro.message);", "}"],
+      "alternativas": [
+        "O erro da Promise rejeitada esperada no `await`.",
+        "O valor resolvido, se a Promise der certo.",
+        "Sempre `undefined`.",
+        "Um número: o código do erro."
+      ],
+      "correta": 0,
+      "explicacao": "O `catch` só roda se algo dentro do `try` falhar — e é o erro daquela falha que ele recebe como parâmetro."
+    },
+    {
+      "id": "js-err-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que entra dentro do `try` neste padrão?",
+      "codigo": ["try {", "    const usuario = await buscarUsuario(id);", "    console.log(usuario.nome);", "} catch (erro) {", "    console.log('falhou');", "}"],
+      "alternativas": [
+        "Tudo que pode falhar — aqui, o `await` que pode ser rejeitado.",
+        "Só o `console.log`.",
+        "Só a declaração da variável, sem o await.",
+        "O `catch` inteiro deveria estar dentro do `try`."
+      ],
+      "correta": 0,
+      "explicacao": "Tudo dentro do `try` está sob proteção do `catch` — inclusive o `console.log` seguinte, que só roda se o `await` não falhar."
+    },
+    {
+      "id": "js-err-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "function buscarUsuario(id) {",
+        "  return new Promise((resolve, reject) => {",
+        "    reject(new Error(\"id inválido\"));",
+        "  });",
+        "}",
+        "",
+        "async function mostrarUsuario(id) {",
+        "  try {",
+        "    const usuario = await buscarUsuario(id);",
+        "    console.log(usuario.nome);",
+        "  } catch (erro) {",
+        "    console.log(\"falhou:\", erro.message);",
+        "  }",
+        "}",
+        "",
+        "mostrarUsuario(-1);"
+      ],
+      "alternativas": ["\"falhou: id inválido\"", "\"undefined\"", "O programa trava.", "Nada aparece no console."],
+      "correta": 0,
+      "explicacao": "`buscarUsuario` sempre rejeita. O `await` dentro do `try` lança essa rejeição como erro, e o `catch` a imprime."
+    },
+    {
+      "id": "js-err-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece se um `await` dentro de uma função `async` falhar e não houver `try`/`catch`?",
+      "codigo": ["async function mostrarUsuario(id) {", "    const usuario = await buscarUsuario(id);", "    console.log(usuario.nome);", "}"],
+      "alternativas": [
+        "A Promise devolvida por `mostrarUsuario` fica rejeitada, sem travar o resto do programa.",
+        "O programa inteiro para de rodar.",
+        "O erro é ignorado silenciosamente, e `usuario.nome` vira `undefined`.",
+        "O JavaScript captura o erro sozinho e tenta de novo."
+      ],
+      "correta": 0,
+      "explicacao": "Sem `try`/`catch`, o erro só propaga pra Promise que a função devolveu — quem chamar `mostrarUsuario(id)` é quem precisa tratar, com `.catch()` ou outro `try`/`catch` por fora."
+    },
+    {
+      "id": "js-err-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: capture o erro de um `await` que pode falhar.",
+      "codigo": ["___ {", "    await buscarUsuario(id);", "} ___ (erro) {", "    console.log(erro.message);", "}"],
+      "respostas": ["try", "catch"],
+      "tokens": ["try", "catch", "then", "finally", "async"],
+      "explicacao": "`try` envolve o que pode falhar; `catch (erro)` roda só se algo dentro do `try` lançar um erro."
+    },
+    {
+      "id": "js-err-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva a chamada que trata o erro de `mostrarUsuario(-1)` usando `.catch()`, sem `try`/`catch`.",
+      "dica": "mostrarUsuario(-1), .catch, arrow function, console.log(erro.message)",
+      "resposta": "mostrarUsuario(-1).catch(erro => console.log(erro.message));",
+      "explicacao": "Como `mostrarUsuario` devolve uma Promise, dá pra tratar o erro dela com `.catch()` por fora, sem precisar de `try`/`catch` dentro de outra função `async`."
+    },
+    {
+      "id": "js-err-07",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que lança um erro dentro de uma função, com a mensagem \"id inválido\".",
+      "partes": ["throw", "new", "Error", "(", "\"id inválido\"", ")", ";"],
+      "explicacao": "`throw new Error(mensagem)` cria e lança o erro na mesma linha — dentro de uma função `async`, isso rejeita a Promise que ela devolve."
+    },
+    {
+      "id": "js-err-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "O `catch` nunca roda, mesmo quando a Promise falha. Clique na linha do problema.",
+      "codigo": [
+        "async function mostrarUsuario(id) {",
+        "  const usuario = await buscarUsuario(id);",
+        "  console.log(usuario.nome);",
+        "}",
+        "",
+        "try {",
+        "  mostrarUsuario(-1);",
+        "} catch (erro) {",
+        "  console.log(\"falhou:\", erro.message);",
+        "}"
+      ],
+      "linhaErrada": 6,
+      "explicacao": "`mostrarUsuario(-1)` devolve uma Promise na hora — o `try`/`catch` de fora só pega erros síncronos, e a rejeição acontece depois, de forma assíncrona. O certo é `await mostrarUsuario(-1);` dentro do `try` (numa função `async`), ou `mostrarUsuario(-1).catch(...)`."
+    },
+    {
+      "id": "js-err-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["async function verificar(id) {", "  if (id <= 0) {", "    throw new Error(\"id inválido\");", "  }", "  return { id, nome: \"Ana\" };", "}", "", "verificar(-1).catch(erro => console.log(\"capturado:\", erro.message));"],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "\"capturado: id inválido\" — o throw rejeita a Promise que verificar devolve, e .catch() pega.",
+        "O programa trava, porque throw dentro de async quebra tudo.",
+        "Nada aparece, porque throw dentro de async é ignorado.",
+        "Erro de sintaxe: não dá pra usar throw dentro de função async."
+      ],
+      "correta": 0,
+      "explicacao": "`throw` dentro de uma função `async` não quebra o programa: ele rejeita a Promise devolvida, e quem chamou pode tratar com `.catch()` ou `try`/`catch`."
+    }
+  ]
+}

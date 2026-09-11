@@ -1,0 +1,172 @@
+{
+  "id": "php-variaveis",
+  "linguagem": "php",
+  "trilha": "php-fundamentos",
+  "titulo": "Variáveis e tipos",
+  "resumo": "O `$` na frente de tudo, tipos soltos e interpolação de string.",
+  "conceito": {
+    "texto": [
+      "Toda variável em PHP começa com `$`. Não existe declarar o tipo antes — `$idade = 25;` já cria a variável e decide o tipo pelo valor.",
+      "PHP é **fracamente tipado**: uma variável pode guardar um número, depois uma string, sem avisar ninguém. `$x = 10; $x = \"dez\";` é código válido.",
+      "Os tipos básicos são `int`, `float`, `string` e `bool`. Dá para checar o tipo atual de uma variável com `gettype()` ou `var_dump()`.",
+      "Dentro de uma string entre aspas duplas, uma variável simples é trocada pelo valor sozinha: `\"Olá, $nome\"`. Quando o nome da variável pode se confundir com o texto ao redor, usa-se chaves: `\"Olá, {$nome}!\"`.",
+      "Aspas simples não fazem interpolação — `'Olá, $nome'` imprime `$nome` literalmente, sem trocar por valor nenhum.",
+      "**Type juggling** é o nome do PHP converter tipos sozinho em certas operações, como somar uma string numérica com um número: `\"5\" + 3` vira `8`. É útil, mas surpreende quem não espera."
+    ],
+    "exemplo": [
+      "<?php",
+      "$nome = \"Ana\";",
+      "$idade = 28;",
+      "$altura = 1.65;",
+      "$ativa = true;",
+      "",
+      "echo \"Olá, $nome! Você tem {$idade} anos.\";"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "$",
+      "definicao": "Todo nome de variável em PHP começa com cifrão. Faz parte do nome, não é um operador.",
+      "exemplo": "$idade = 25;"
+    },
+    {
+      "termo": "fracamente tipado",
+      "definicao": "A mesma variável pode trocar de tipo durante a execução, sem erro.",
+      "exemplo": "$x = 10; $x = \"dez\";"
+    },
+    {
+      "termo": "interpolação",
+      "definicao": "Trocar uma variável pelo seu valor dentro de uma string entre aspas duplas.",
+      "exemplo": "\"Olá, $nome\""
+    },
+    {
+      "termo": "type juggling",
+      "definicao": "Conversão automática de tipo que o PHP faz em certas operações, como misturar string numérica com número.",
+      "exemplo": "\"5\" + 3 // 8"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-var-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que o `$` faz nesta linha?",
+      "codigo": ["$idade = 25;"],
+      "alternativas": [
+        "Marca `idade` como o nome de uma variável.",
+        "Converte `25` para string.",
+        "Declara `idade` como constante.",
+        "Indica que o valor é um número negativo."
+      ],
+      "correta": 0,
+      "explicacao": "Em PHP, `$` faz parte da sintaxe de nomear variáveis — sem ele, `idade` seria interpretado como outra coisa (uma constante ou função, por exemplo)."
+    },
+    {
+      "id": "php-var-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["$nome = \"Carlos\";", "echo \"Olá, $nome!\";"],
+      "alternativas": ["Olá, Carlos!", "Olá, $nome!", "Olá, nome!", "Erro de sintaxe"],
+      "correta": 0,
+      "explicacao": "Dentro de aspas duplas, `$nome` é trocado pelo valor da variável. Se fossem aspas simples, o resultado seria literalmente `Olá, $nome!`."
+    },
+    {
+      "id": "php-var-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["$cidade = \"Recife\";", "echo 'Moro em $cidade';"],
+      "alternativas": ["Moro em $cidade", "Moro em Recife", "Moro em cidade", "Erro: variável não definida"],
+      "correta": 0,
+      "explicacao": "Aspas simples não interpolam. `$cidade` fica escrito do jeito que está, sem virar o valor `Recife`."
+    },
+    {
+      "id": "php-var-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece com `$x` ao longo destas linhas?",
+      "codigo": ["$x = 10;", "$x = \"dez\";", "$x = true;"],
+      "alternativas": [
+        "Nada de errado: `$x` troca de tipo a cada atribuição, porque PHP é fracamente tipado.",
+        "A segunda linha dá erro, porque `$x` já era `int`.",
+        "PHP ignora a segunda e a terceira atribuição, mantendo `$x` como `int`.",
+        "É preciso usar `(string)` e `(bool)` para trocar o tipo."
+      ],
+      "correta": 0,
+      "explicacao": "Não existe declaração de tipo fixo para a variável. Cada atribuição decide o tipo pelo valor atual, e o PHP não reclama disso."
+    },
+    {
+      "id": "php-var-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a interpolação para que a saudação use o valor de `$produto` dentro da string.",
+      "codigo": ["$produto = \"caneca\";", "echo \"Você comprou uma ___\";"],
+      "respostas": ["{$produto}"],
+      "tokens": ["{$produto}", "$produto", "($produto)", "%produto%"],
+      "explicacao": "Chaves em volta de `{$produto}` deixam claro onde a variável começa e termina, evitando que o texto ao redor seja confundido com o nome dela."
+    },
+    {
+      "id": "php-var-06",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["$a = \"5\";", "$b = 3;", "echo $a + $b;"],
+      "alternativas": ["8", "\"53\"", "53", "Erro de tipo"],
+      "correta": 0,
+      "explicacao": "O operador `+` é aritmético em PHP, então a string numérica `\"5\"` é convertida para número antes da soma — isso é type juggling. Para concatenar texto, o operador é `.`, não `+`."
+    },
+    {
+      "id": "php-var-07",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare uma variável `$preco` do tipo float com o valor 19.90.",
+      "dica": "cifrão, nome, igual, valor, ponto e vírgula",
+      "resposta": "$preco = 19.90;",
+      "aceitas": ["$preco = 19.9;"],
+      "explicacao": "Não há palavra-chave de tipo: o próprio valor `19.90` já faz `$preco` ser um `float`."
+    },
+    {
+      "id": "php-var-08",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que imprime uma saudação interpolando `$usuario` com chaves.",
+      "partes": ["echo", "\"Bem-vindo, {$usuario}!\";"],
+      "explicacao": "As chaves em `{$usuario}` deixam explícito para o PHP (e para quem lê) onde a variável começa e termina dentro da string."
+    },
+    {
+      "id": "php-var-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não imprime o que deveria. Clique na linha que causa o erro.",
+      "codigo": [
+        "$nome = \"Bia\";",
+        "$saudacao = 'Oi, $nome, tudo bem?';",
+        "echo $saudacao;"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "Aspas simples não interpolam variáveis. Para que `$nome` vire `Bia` dentro do texto, a string precisaria estar entre aspas duplas."
+    },
+    {
+      "id": "php-var-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "$quantidade = \"3\";",
+        "$preco = 2.5;",
+        "$total = $quantidade * $preco;",
+        "echo gettype($total);"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "double — a string numérica \"3\" foi convertida e a multiplicação resultou em float.",
+        "string — porque `$quantidade` começou como string.",
+        "integer — porque `$quantidade` representa um número inteiro.",
+        "Erro, porque não se pode multiplicar string por float."
+      ],
+      "correta": 0,
+      "explicacao": "Em uma operação aritmética, PHP converte a string numérica para número. `3 * 2.5` resulta em `7.5`, um `float` — que o PHP chama internamente de `double`."
+    }
+  ]
+}

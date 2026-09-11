@@ -1,0 +1,252 @@
+{
+  "id": "js-escopo",
+  "linguagem": "javascript",
+  "trilha": "js-fundamentos",
+  "titulo": "Escopo",
+  "resumo": "Onde uma variável existe, e por que var estraga isso.",
+  "conceito": {
+    "texto": [
+      "**Escopo** é a resposta para: a partir de onde este nome pode ser lido? Em JavaScript, um par de chaves `{ }` cria um escopo novo.",
+      "`let` e `const` valem apenas dentro do bloco em que foram escritos. Saiu das chaves, o nome não existe mais.",
+      "`var` ignora blocos. Ele vaza para a função inteira, mesmo tendo sido declarado dentro de um `if` ou de um `for`. É a razão principal de `var` ter caído em desuso.",
+      "Código de dentro enxerga o de fora, nunca o contrário. Uma função lê as variáveis do arquivo; o arquivo não lê as variáveis de dentro da função.",
+      "Quando um nome se repete em dois escopos, o de dentro **sombreia** o de fora: ali dentro, o nome de fora fica inacessível.",
+      "Ler escopo é o que permite responder \"de onde veio esta variável?\" ao abrir um arquivo que você nunca viu — e é metade do trabalho de entender código alheio."
+    ],
+    "exemplo": [
+      "const meta = 10;              // visível no arquivo inteiro",
+      "",
+      "function iniciar() {",
+      "  const acertos = 0;          // só dentro de iniciar",
+      "",
+      "  if (acertos < meta) {       // lê `meta` de fora: permitido",
+      "    let faltam = meta - acertos;",
+      "    var vazou = true;",
+      "  }",
+      "",
+      "  console.log(vazou);         // true, `var` escapou do if",
+      "  console.log(faltam);        // ReferenceError, `let` ficou preso",
+      "}",
+      "",
+      "console.log(acertos);         // ReferenceError, de fora não se enxerga dentro"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "escopo",
+      "definicao": "A resposta para 'a partir de onde este nome pode ser lido'. Um par de chaves cria um escopo novo.",
+      "exemplo": "if (true) { let faltam = 5; }   // faltam so existe aqui"
+    },
+    {
+      "termo": "escopo de bloco",
+      "definicao": "O nome existe só entre as chaves onde foi declarado. Vale para `let` e `const`; `var` tem escopo de função.",
+      "exemplo": "for (const card of cards) { }"
+    },
+    {
+      "termo": "sombreamento",
+      "definicao": "Quando um nome se repete em dois escopos, o de dentro cobre o de fora. Não é erro: são duas variáveis diferentes.",
+      "exemplo": "const nome = 'fora';\nfunction f() { const nome = 'dentro'; }"
+    },
+    {
+      "termo": "closure",
+      "definicao": "Uma função declarada dentro de outra enxerga tudo do escopo em volta, e carrega esse acesso consigo para onde for passada.",
+      "exemplo": "function fora() { let n = 0; return () => n += 1; }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-esc-01",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que acontece na última linha?",
+      "codigo": [
+        "if (true) {",
+        "  let faltam = 5;",
+        "}",
+        "",
+        "console.log(faltam);"
+      ],
+      "alternativas": [
+        "Lança `ReferenceError` — `faltam` só existe dentro do `if`.",
+        "Imprime `5`.",
+        "Imprime `undefined`.",
+        "Imprime `null`."
+      ],
+      "correta": 0,
+      "explicacao": "`let` é preso ao bloco. Fechou a chave, o nome deixou de existir — não é que ele valha `undefined`, é que ele não existe mesmo."
+    },
+    {
+      "id": "js-esc-02",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "E trocando `let` por `var`?",
+      "codigo": [
+        "if (true) {",
+        "  var faltam = 5;",
+        "}",
+        "",
+        "console.log(faltam);"
+      ],
+      "alternativas": [
+        "Imprime `5` — `var` vaza do bloco para a função.",
+        "Lança `ReferenceError`.",
+        "Imprime `undefined`.",
+        "Não roda, porque `var` não pode ficar dentro de `if`."
+      ],
+      "correta": 0,
+      "explicacao": "Este par de cards é a demonstração inteira do problema. O mesmo código dá dois resultados opostos só por causa da palavra usada — e `var` é o que surpreende quem lê."
+    },
+    {
+      "id": "js-esc-03",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que significa dizer que `let` tem escopo de bloco?",
+      "codigo": [
+        "let faltam = 5;"
+      ],
+      "alternativas": [
+        "Que a variável existe só entre as chaves onde foi declarada.",
+        "Que a variável existe na função inteira onde foi declarada.",
+        "Que a variável existe no arquivo inteiro.",
+        "Que a variável só pode receber um valor uma única vez."
+      ],
+      "correta": 0,
+      "explicacao": "Bloco é qualquer par de chaves: de um `if`, de um `for`, de uma função, ou até um `{ }` solto. `var` é o caso diferente — o escopo dele é a função, não o bloco."
+    },
+    {
+      "id": "js-esc-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "const nome = 'fora';",
+        "",
+        "function mostrar() {",
+        "  const nome = 'dentro';",
+        "  console.log(nome);",
+        "}",
+        "",
+        "mostrar();"
+      ],
+      "alternativas": [
+        "dentro",
+        "fora",
+        "undefined",
+        "Lança erro de nome duplicado."
+      ],
+      "correta": 0,
+      "explicacao": "Isto é sombreamento: o `nome` de dentro cobre o de fora enquanto a função roda. Não é erro — são duas variáveis diferentes que por acaso têm o mesmo nome, em escopos diferentes."
+    },
+    {
+      "id": "js-esc-05",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Por que esta linha falha?",
+      "codigo": [
+        "function iniciar() {",
+        "  const acertos = 0;",
+        "}",
+        "",
+        "console.log(acertos);"
+      ],
+      "alternativas": [
+        "Porque `acertos` vive dentro de `iniciar`, e código de fora não enxerga o de dentro.",
+        "Porque `iniciar` nunca foi chamada.",
+        "Porque `const` não pode ser usado dentro de função.",
+        "Porque `acertos` vale 0, e 0 é tratado como ausente."
+      ],
+      "correta": 0,
+      "explicacao": "A visão é de dentro para fora, em mão única. Se `iniciar` precisa entregar esse valor para o resto do programa, o caminho é `return acertos;`."
+    },
+    {
+      "id": "js-esc-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para que `total` continue existindo depois do `for`, e `atual` fique preso a cada volta.",
+      "codigo": [
+        "___ total = 0;",
+        "",
+        "for (const card of cards) {",
+        "  ___ atual = card.pontos;",
+        "  total += atual;",
+        "}"
+      ],
+      "respostas": [
+        "let",
+        "const"
+      ],
+      "tokens": [
+        "let",
+        "const",
+        "var",
+        "function"
+      ],
+      "explicacao": "`total` é declarado antes do laço, então sobrevive a ele — e precisa de `let` porque é reatribuído. `atual` nasce e morre a cada volta, e como não é reatribuído dentro da volta, `const` serve."
+    },
+    {
+      "id": "js-esc-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Clique na linha que lança `ReferenceError` ao rodar.",
+      "codigo": [
+        "function montarDiaria(cards, meta) {",
+        "  const selecionados = [];",
+        "",
+        "  for (const card of cards) {",
+        "    const revisar = card.proximaEm <= hoje;",
+        "    selecionados.push(card);",
+        "  }",
+        "",
+        "  console.log(revisar);",
+        "  return selecionados;",
+        "}"
+      ],
+      "linhaErrada": 8,
+      "explicacao": "`revisar` foi declarado com `const` dentro do `for`, então ele morre no fim de cada volta. Fora do laço, o nome não existe. Se `var` tivesse sido usado ali, esta linha imprimiria o valor da última volta — que é justamente o tipo de bug silencioso que `let` e `const` evitam."
+    },
+    {
+      "id": "js-esc-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o trecho e responda.",
+      "codigo": [
+        "const META = 10;",
+        "",
+        "function montarSessao(cards) {",
+        "  const fila = [];",
+        "  let restantes = META;",
+        "",
+        "  function adicionar(card) {",
+        "    fila.push(card);",
+        "    restantes -= 1;",
+        "  }",
+        "",
+        "  for (const card of cards) {",
+        "    if (restantes === 0) break;",
+        "    adicionar(card);",
+        "  }",
+        "",
+        "  return fila;",
+        "}"
+      ],
+      "pergunta": "Como `adicionar` consegue mexer em `fila` e `restantes`, se elas não são parâmetros dela?",
+      "alternativas": [
+        "Porque `adicionar` está escrita dentro de `montarSessao` e enxerga o escopo em volta dela.",
+        "Porque `fila` e `restantes` são globais.",
+        "Porque JavaScript passa todas as variáveis automaticamente para funções internas.",
+        "Não consegue — este código lança `ReferenceError`."
+      ],
+      "correta": 0,
+      "explicacao": "Uma função declarada dentro de outra enxerga tudo do escopo em volta. Isso tem nome — **closure** — e é o mecanismo por trás de metade dos padrões de JavaScript. `adicionar` carrega consigo o acesso a `fila` e `restantes` mesmo se for passada para outro lugar."
+    },
+    {
+      "id": "js-esc-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a função `iniciar`, sem parâmetros, que declara dentro dela um contador `restantes` começando no valor de `META` e que vai diminuir depois.",
+      "dica": "`function`, nome, parênteses vazios, chaves, e a declaração dentro delas",
+      "resposta": "function iniciar() { let restantes = META; }",
+      "explicacao": "`restantes` vive só dentro de `iniciar` — de fora, o nome não existe. Já `META`, declarado no arquivo, é enxergado de dentro: a visão é sempre de dentro para fora, nunca o contrário."
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "id": "py-heranca",
+  "linguagem": "python",
+  "trilha": "py-poo",
+  "titulo": "Herança",
+  "resumo": "Reaproveitar classes com herança, super() e sobrescrita de métodos.",
+  "conceito": {
+    "texto": [
+      "**Herança** permite que uma classe reaproveite os atributos e métodos de outra. `class Cachorro(Animal):` cria `Cachorro` como filha de `Animal` — toda instância de `Cachorro` também é um `Animal`, com tudo que essa classe já oferece.",
+      "`super().__init__(...)` chama o `__init__` da classe pai de dentro do `__init__` da filha. É assim que a filha reaproveita a inicialização já pronta do pai, em vez de reescrever os mesmos atributos do zero.",
+      "**Sobrescrever** um método é redefinir, na classe filha, um método que já existe na classe pai — com o mesmo nome. Quando o objeto da filha chama esse método, a versão da filha é usada, não a do pai.",
+      "De dentro de um método sobrescrito, `super().metodo()` ainda dá para chamar a versão original do pai, se quiser aproveitar parte do comportamento dele e só complementar.",
+      "A regra prática: herança serve para o caso \"é um tipo de\" — `Cachorro` é um tipo de `Animal`. Se a relação for outra (por exemplo, \"tem um\"), geralmente um atributo resolve melhor do que herança."
+    ],
+    "exemplo": [
+      "class Animal:",
+      "    def __init__(self, nome):",
+      "        self.nome = nome",
+      "",
+      "    def emitir_som(self):",
+      "        return \"...\"",
+      "",
+      "class Cachorro(Animal):",
+      "    def __init__(self, nome, raca):",
+      "        super().__init__(nome)",
+      "        self.raca = raca",
+      "",
+      "    def emitir_som(self):",
+      "        return \"Au au!\"",
+      "",
+      "rex = Cachorro(\"Rex\", \"Vira-lata\")",
+      "print(rex.nome, rex.emitir_som())  # Rex Au au!"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "herança",
+      "definicao": "Mecanismo pelo qual uma classe filha reaproveita atributos e métodos de uma classe pai.",
+      "exemplo": "class Cachorro(Animal):"
+    },
+    {
+      "termo": "super()",
+      "definicao": "Referência à classe pai, usada para chamar o __init__ ou métodos dela de dentro da filha.",
+      "exemplo": "super().__init__(nome)"
+    },
+    {
+      "termo": "sobrescrita",
+      "definicao": "Redefinir na classe filha um método que já existe na classe pai, com o mesmo nome.",
+      "exemplo": "def emitir_som(self):\n    return \"Au au!\""
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-her-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `class Cachorro(Animal):` estabelece?",
+      "codigo": ["class Cachorro(Animal):", "    pass"],
+      "alternativas": [
+        "`Cachorro` herda de `Animal`, reaproveitando seus atributos e métodos.",
+        "`Cachorro` guarda um objeto `Animal` como atributo.",
+        "`Cachorro` e `Animal` são a mesma classe, com nomes diferentes.",
+        "`Animal` passa a herdar de `Cachorro`."
+      ],
+      "correta": 0,
+      "explicacao": "O nome entre parênteses na definição da classe é a classe pai. `Cachorro(Animal)` diz que `Cachorro` é filha de `Animal`, herdando tudo que ela oferece."
+    },
+    {
+      "id": "py-her-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `super().__init__(nome)` faz dentro do `__init__` da classe filha?",
+      "codigo": [
+        "class Cachorro(Animal):",
+        "    def __init__(self, nome, raca):",
+        "        super().__init__(nome)",
+        "        self.raca = raca"
+      ],
+      "alternativas": [
+        "Chama o `__init__` da classe pai, passando `nome` para ele.",
+        "Cria uma nova instância da classe pai, separada.",
+        "Impede que a classe filha tenha seu próprio `__init__`.",
+        "Sobrescreve o `__init__` da classe pai, sem executá-lo."
+      ],
+      "correta": 0,
+      "explicacao": "`super()` dá acesso à classe pai. `super().__init__(nome)` executa a inicialização que o pai já define — nesse caso, guardar `self.nome` — sem precisar repetir essa linha na filha."
+    },
+    {
+      "id": "py-her-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "class Animal:",
+        "    def emitir_som(self):",
+        "        return \"...\"",
+        "",
+        "class Gato(Animal):",
+        "    def emitir_som(self):",
+        "        return \"Miau\"",
+        "",
+        "bichano = Gato()",
+        "print(bichano.emitir_som())"
+      ],
+      "alternativas": [
+        "Miau",
+        "...",
+        "Miau...",
+        "Erro: Gato não pode ter o mesmo método de Animal"
+      ],
+      "correta": 0,
+      "explicacao": "`Gato` sobrescreve `emitir_som`, redefinindo o comportamento herdado de `Animal`. Quando `bichano.emitir_som()` é chamado, Python usa a versão mais específica, a de `Gato`."
+    },
+    {
+      "id": "py-her-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "class Animal:",
+        "    def __init__(self, nome):",
+        "        self.nome = nome",
+        "",
+        "class Passaro(Animal):",
+        "    pass",
+        "",
+        "piu = Passaro(\"Piu-piu\")",
+        "print(piu.nome)"
+      ],
+      "alternativas": [
+        "Piu-piu",
+        "Erro: Passaro não tem __init__",
+        "None",
+        "Erro: pass não permite atributos"
+      ],
+      "correta": 0,
+      "explicacao": "`Passaro` não define `__init__` próprio, então herda o de `Animal` sem alterações. `Passaro(\"Piu-piu\")` executa o `__init__` do pai normalmente, guardando `self.nome`."
+    },
+    {
+      "id": "py-her-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para que `Cachorro` herde de `Animal`.",
+      "codigo": ["class Cachorro(___):", "    pass"],
+      "respostas": ["Animal"],
+      "tokens": ["Animal", "object", "self", "Cachorro", "super"],
+      "explicacao": "O nome entre parênteses na definição de uma classe é a classe pai — é o que estabelece a herança."
+    },
+    {
+      "id": "py-her-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que chama o `__init__` da classe pai, passando `nome`.",
+      "partes": ["super", "(", ")", ".", "__init__", "(", "nome", ")"],
+      "explicacao": "`super()` acessa a classe pai; `.__init__(nome)` chama o construtor dela, passando `nome` como argumento — exatamente como uma chamada de método comum."
+    },
+    {
+      "id": "py-her-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a definição da classe `Gerente`, que herda de `Funcionario`.",
+      "dica": "class, nome da classe filha, a classe pai entre parênteses, dois pontos",
+      "resposta": "class Gerente(Funcionario):",
+      "explicacao": "A sintaxe de herança em Python é `class Filha(Pai):` — o nome da classe pai vai entre parênteses, logo após o nome da classe filha."
+    },
+    {
+      "id": "py-her-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não faz o que o programador esperava. Clique na linha do erro.",
+      "codigo": [
+        "class Animal:",
+        "    def __init__(self, nome):",
+        "        self.nome = nome",
+        "",
+        "class Cachorro(Animal):",
+        "    def __init__(self, nome, raca):",
+        "        self.raca = raca",
+        "",
+        "rex = Cachorro(\"Rex\", \"Vira-lata\")",
+        "print(rex.nome)"
+      ],
+      "linhaErrada": 6,
+      "explicacao": "O `__init__` de `Cachorro` nunca chama `super().__init__(nome)`, então `self.nome` nunca é definido — só `self.raca` é. Ao tentar `rex.nome`, o programa levanta `AttributeError`."
+    },
+    {
+      "id": "py-her-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "class Funcionario:",
+        "    def __init__(self, nome, salario):",
+        "        self.nome = nome",
+        "        self.salario = salario",
+        "",
+        "    def bonificacao(self):",
+        "        return self.salario * 0.1",
+        "",
+        "class Gerente(Funcionario):",
+        "    def bonificacao(self):",
+        "        base = super().bonificacao()",
+        "        return base + 500",
+        "",
+        "g = Gerente(\"Léo\", 3000)",
+        "print(g.bonificacao())"
+      ],
+      "pergunta": "O que aparece no terminal?",
+      "alternativas": [
+        "800.0",
+        "300.0",
+        "500",
+        "Erro: super() não pode ser usado dentro de método sobrescrito"
+      ],
+      "correta": 0,
+      "explicacao": "`super().bonificacao()` chama a versão de `Funcionario`, que calcula `3000 * 0.1 = 300.0`. `Gerente` soma 500 a esse valor, totalizando `800.0` — reaproveitando o cálculo do pai em vez de repeti-lo."
+    }
+  ]
+}

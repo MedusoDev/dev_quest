@@ -1,0 +1,102 @@
+rules_version = '2';
+
+/**
+ * Regras do Firestore para o app Ouroboros.
+ *
+ * Publique no console: Firestore Database → Rules → colar → Publish.
+ *
+ * O projeto `call-of-ouroboros` é compartilhado com o site. As coleções do site
+ * (`users`) continuam com as regras que já tinham; estas só acrescentam as duas
+ * coleções do app. **Cole as duas junto** — publicar só estas apagaria as do
+ * site.
+ *
+ * Modelo de privacidade, explícito para não haver surpresa:
+ *
+ *   O perfil é PÚBLICO entre quem tem conta. Nome, foto, XP e sequência são
+ *   lidos por qualquer pessoa autenticada — é o que faz um ranking existir.
+ *   Nada além disso sai do aparelho: as respostas, os erros e o que se estuda
+ *   ficam só no SQLite local.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    // Só verdade para quem tem `admin: true` gravado no próprio documento de
+    // perfil — e só o console do Firebase grava isso, nunca o app (ver as
+    // regras de `perfis` abaixo). Usado para travar leitura de dado que não é
+    // público, como os eventos de sessão.
+    function souAdmin() {
+      return autenticado() &&
+        get(/databases/$(database)/documents/perfis/$(request.auth.uid)).data.get('admin', false) == true;
+    }
+
+    // ── perfis ────────────────────────────────────────────────────
+    // Leitura aberta a quem tem conta, porque o ranking precisa ler o perfil
+    // dos outros. Escrita só no próprio.
+    match /perfis/{uid} {
+      allow read: if autenticado();
+
+      // `admin` dá acesso ao painel de métricas em /admin — nunca é gravado
+      // pelo app. Sem esta trava, qualquer pessoa poderia setar `admin: true`
+      // no próprio documento e abrir o painel. Só vira `true` mexendo direto
+      // no console do Firebase (ou via Admin SDK).
+      // `plano` é o mesmo tipo de campo: hoje só existe 'free', mas quando
+      // planos pagos chegarem, virar 'plus' tem que vir de um pagamento
+      // confirmado no servidor (Admin SDK), nunca do cliente se autopromovendo.
+      allow create: if autenticado() && request.auth.uid == uid
+                    && request.resource.data.uid == uid
+                    // `.get(campo, padrao)` porque o app nunca inclui a chave
+                    // `admin` no documento quando é `false` — acessá-la direto
+                    // (`.admin`) quebraria a regra por campo inexistente, e
+                    // negaria a escrita mesmo sendo um cadastro legítimo.
+                    && request.resource.data.get('admin', false) != true
+                    && request.resource.data.get('plano', 'free') == 'free';
+      allow update: if autenticado() && request.auth.uid == uid
+                    && request.resource.data.uid == uid
+                    // Os dois só podem continuar do jeito que já estavam —
+                    // nunca mudar pela mão do cliente.
+                    && request.resource.data.get('admin', false) == resource.data.get('admin', false)
+                    && request.resource.data.get('plano', 'free') == resource.data.get('plano', 'free');
+      // Direito de eliminação (LGPD): a própria pessoa pode apagar o próprio
+      // perfil ao excluir a conta — ver `excluirConta` em `dados/conta.ts`.
+      allow delete: if autenticado() && request.auth.uid == uid;
+    }
+
+    // ── eventos de sessão ────────────────────────────────────────
+    // Cada pessoa grava o próprio evento e pode ler/apagar só os próprios —
+    // isto último é o que permite excluir a conta por completo. Além disso,
+    // só quem é admin lê tudo, para o painel de métricas. Diferente de
+    // `perfis`, esta coleção não precisa ser pública: não existe ranking nem
+    // liga que dependa dela.
+    match /eventosSessao/{id} {
+      allow read: if souAdmin() || (autenticado() && resource.data.uid == request.auth.uid);
+      allow create: if autenticado() && request.resource.data.uid == request.auth.uid;
+      allow delete: if autenticado() && resource.data.uid == request.auth.uid;
+      allow update: if false;
+    }
+
+    // ── ligas ─────────────────────────────────────────────────────
+    // Qualquer pessoa com conta pode criar uma liga e ler uma pelo código.
+    // Ninguém edita nem apaga: o código é a chave, e mudar o nome de uma liga
+    // alheia seria o único estrago possível.
+    match /ligas/{codigo} {
+      allow read: if autenticado();
+      allow create: if autenticado() && request.resource.data.criadaPor == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ── o site, que divide este projeto ───────────────────────────
+    match /users/{uid} {
+      allow read, write: if autenticado() && request.auth.uid == uid;
+
+      match /{documento=**} {
+        allow read, write: if autenticado() && request.auth.uid == uid;
+      }
+    }
+
+    // Qualquer outro caminho é negado por omissão.
+  }
+}

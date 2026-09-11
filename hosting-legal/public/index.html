@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ouroboros</title>
+<meta name="description" content="Página inicial, política de privacidade e termos de serviço do app Ouroboros.">
+<meta name="google-site-verification" content="5HnXvQhsDVHCcOHG2u1TjvW0U9QF89MACXCz5euYqio" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fundo: #f7f8f6;
+    --superficie: #ffffff;
+    --linha: #dde1d9;
+    --acento: #5b8a1f;
+    --acento-fundo: #eef6e2;
+    --acento-linha: #cfe3b6;
+    --texto-forte: #14170f;
+    --texto: #33392c;
+    --texto-fraco: #5b6350;
+    --legenda: #767f6b;
+    --desativado: #9aa190;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fundo: #08090b;
+      --superficie: #0f1115;
+      --linha: #1e2128;
+      --acento: #c7f74e;
+      --acento-fundo: #0d1006;
+      --acento-linha: #2b3417;
+      --texto-forte: #f2f4f7;
+      --texto: #c3c9d2;
+      --texto-fraco: #9aa1ad;
+      --legenda: #6f7683;
+      --desativado: #4a505b;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 40px max(20px, calc((100vw - 680px) / 2)) 0;
+  }
+
+  .anel {
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    border: 3px solid var(--acento);
+    border-right-color: transparent;
+    transform: rotate(-45deg);
+    flex-shrink: 0;
+  }
+
+  .nome-marca {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--acento);
+    text-transform: uppercase;
+  }
+
+  header.hero {
+    padding: 28px max(20px, calc((100vw - 680px) / 2)) 44px;
+    border-bottom: 1px solid var(--linha);
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5vw, 2.8rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 14px;
+    color: var(--texto-forte);
+    text-wrap: balance;
+  }
+
+  .dek {
+    font-size: 1.05rem;
+    color: var(--texto-fraco);
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  nav.indice {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--linha);
+    padding: 0 max(20px, calc((100vw - 680px) / 2));
+    overflow-x: auto;
+  }
+
+  nav.indice a {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--legenda);
+    text-decoration: none;
+    padding: 16px 0;
+    margin-right: 28px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav.indice a:hover,
+  nav.indice a:focus-visible {
+    color: var(--acento);
+  }
+
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--linha);
+  }
+
+  section:last-of-type { border-bottom: none; }
+
+  .rotulo {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 2.6px;
+    text-transform: uppercase;
+    color: var(--legenda);
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  section h2 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--texto-forte);
+    margin: 0 0 24px;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--texto-forte);
+    margin: 30px 0 8px;
+  }
+
+  h3:first-of-type { margin-top: 0; }
+
+  p { margin: 0 0 14px; max-width: 62ch; }
+  p:last-child { margin-bottom: 0; }
+
+  ul {
+    margin: 0 0 14px;
+    padding-left: 0;
+    list-style: none;
+    max-width: 62ch;
+  }
+
+  li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+
+  li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    background: var(--acento);
+  }
+
+  .destaque {
+    background: var(--acento-fundo);
+    border: 1px solid var(--acento-linha);
+    padding: 18px 20px;
+    margin: 22px 0;
+    font-size: 0.95rem;
+  }
+
+  .destaque strong { color: var(--texto-forte); }
+
+  .grade-contato {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--linha);
+    border: 1px solid var(--linha);
+    margin-top: 8px;
+  }
+
+  .celula-contato {
+    background: var(--superficie);
+    padding: 18px 20px;
+  }
+
+  .celula-contato .rotulo { margin-bottom: 8px; }
+
+  .celula-contato a,
+  .celula-contato span {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 13px;
+    color: var(--texto-forte);
+    text-decoration: none;
+  }
+
+  .celula-contato a:hover { color: var(--acento); }
+
+  footer {
+    padding: 32px max(20px, calc((100vw - 680px) / 2)) 48px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    color: var(--desativado);
+  }
+
+  a { color: inherit; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a { transition: color 120ms ease; }
+  }
+</style>
+</head>
+<body>
+
+<div class="marca">
+  <div class="anel"></div>
+  <span class="nome-marca">Ouroboros</span>
+</div>
+
+<header class="hero">
+  <h1>Ouroboros é um app para aprender a programar.</h1>
+  <p class="dek">É um aplicativo de celular gratuito, feito por Meduso.dev, que ensina C# e JavaScript através de exercícios curtos e diários — parecido com um "Duolingo para programação". Está em fase de teste fechado.</p>
+</header>
+
+<nav class="indice">
+  <a href="#sobre">Sobre</a>
+  <a href="#privacidade">Privacidade</a>
+  <a href="#termos">Termos</a>
+  <a href="#contato">Contato</a>
+</nav>
+
+<main>
+  <section id="sobre">
+    <span class="rotulo">Página inicial</span>
+    <h2>O que é o Ouroboros</h2>
+    <p>O Ouroboros é um aplicativo móvel de aprendizado de programação. A cada dia, uma sessão curta mistura conteúdo novo com revisão espaçada do que você já viu — errar não penaliza, o card só volta pra fila. Hoje o app cobre C# e JavaScript, com trilhas, um modo de velocidade (Relâmpago) e liga entre amigos.</p>
+    <p>O projeto está em fase de teste fechado, com um grupo pequeno de pessoas usando a versão beta antes de um lançamento mais amplo.</p>
+  </section>
+
+  <section id="privacidade">
+    <span class="rotulo">Política de privacidade</span>
+    <h2>Como usamos seus dados</h2>
+
+    <h3>O que coletamos</h3>
+    <p>Ao criar conta, pedimos codinome, e-mail (ou nada, se você entrar como convidado), data de nascimento, foco de estudo e nível de conhecimento informado. A cada sessão concluída, guardamos quantos cards você acertou e errou, o XP ganho e o horário — nunca o conteúdo das suas respostas, que fica só no seu aparelho.</p>
+
+    <h3>Para que usamos</h3>
+    <p>Para melhorar o aplicativo e entender como as pessoas usam ele de verdade: em que ponto travam, com que frequência voltam, se o conteúdo está ensinando. Seu codinome, XP e sequência aparecem num ranking para quem também tem conta; o restante não é mostrado a mais ninguém além de você.</p>
+
+    <div class="destaque">
+      <strong>Com quem compartilhamos:</strong> com ninguém fora deste app. Os dados ficam no Firebase (Google Cloud) e não são vendidos nem repassados a terceiros — inclusive os dados obtidos via login com Google, usados apenas para autenticar sua conta.
+    </div>
+
+    <h3>Seus direitos</h3>
+    <ul>
+      <li>Editar codinome e data de nascimento a qualquer momento, dentro do app.</li>
+      <li>Excluir sua conta e todos os seus dados permanentemente, pela opção "Excluir conta" no Perfil — a exclusão é imediata e não pode ser desfeita.</li>
+      <li>Pedir esclarecimento sobre qualquer dado guardado, pelo e-mail de contato abaixo.</li>
+    </ul>
+
+    <h3>Menores de idade</h3>
+    <p>Se você tem menos de 18 anos, use o app com o conhecimento de um responsável legal.</p>
+  </section>
+
+  <section id="termos">
+    <span class="rotulo">Termos de serviço</span>
+    <h2>Regras de uso</h2>
+
+    <h3>A conta é sua</h3>
+    <p>Você é responsável pelas informações que cadastra e pelo uso feito com sua conta. Codinomes ofensivos ou com conotação sexual não são permitidos e podem ser recusados automaticamente no cadastro.</p>
+
+    <h3>Fase de teste</h3>
+    <p>O app está em beta fechado. Funcionalidades podem mudar, falhar ou ser removidas sem aviso prévio, e o progresso pode eventualmente ser reiniciado durante essa fase — isso será comunicado com antecedência sempre que possível.</p>
+
+    <h3>Uso aceitável</h3>
+    <p>Não use o app para automatizar respostas, explorar falhas de segurança, ou tentar acessar dados de outras contas. Contas que violem isso podem ser suspensas.</p>
+
+    <h3>Sem garantias</h3>
+    <p>O app é oferecido "como está", sem garantia de disponibilidade contínua durante o período de teste.</p>
+  </section>
+
+  <section id="contato">
+    <span class="rotulo">Contato</span>
+    <h2>Fale com quem mantém o app</h2>
+    <div class="grade-contato">
+      <div class="celula-contato">
+        <span class="rotulo">Desenvolvedor</span>
+        <span>Meduso.dev</span>
+      </div>
+      <div class="celula-contato">
+        <span class="rotulo">E-mail</span>
+        <a href="mailto:gabrieloliveirabarros1997@gmail.com">gabrieloliveirabarros1997@gmail.com</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  OUROBOROS — DOCUMENTO PÚBLICO DE REFERÊNCIA PARA CADASTRO OAUTH E TRANSPARÊNCIA COM BETA TESTERS
+</footer>
+
+</body>
+</html>

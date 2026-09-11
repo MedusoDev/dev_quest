@@ -1,0 +1,157 @@
+{
+  "id": "js-filter",
+  "linguagem": "javascript",
+  "trilha": "js-objetos",
+  "titulo": "Filter",
+  "resumo": "Selecionar só os itens que passam num teste, sem tocar no array original.",
+  "conceito": {
+    "texto": [
+      "`.filter()` roda um teste pra cada item de um array e devolve um array novo, só com os itens em que o teste deu `true`. O array original não muda.",
+      "A função passada devolve `true` (mantém o item) ou `false` (descarta). `numeros.filter(n => n > 10)` devolve só os números maiores que 10.",
+      "Diferente de `.map()`, o array que sai de `.filter()` pode ter menos itens que o original — ou nenhum, se nada passar no teste.",
+      "`.filter()` e `.map()` combinam bem em sequência: primeiro filtra o que interessa, depois transforma o que sobrou.",
+      "Se nenhum item passar no teste, `.filter()` devolve um array vazio (`[]`) — não `null`, nem `undefined`, nem erro."
+    ],
+    "exemplo": [
+      "const numeros = [3, 12, 7, 20, 5];",
+      "const maioresQue10 = numeros.filter(n => n > 10);",
+      "console.log(maioresQue10); // [12, 20]",
+      "",
+      "const produtos = [",
+      "  { nome: \"Caneca\", preco: 25 },",
+      "  { nome: \"Mouse\", preco: 80 }",
+      "];",
+      "const baratos = produtos.filter(p => p.preco < 50).map(p => p.nome);",
+      "console.log(baratos); // [\"Caneca\"]"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "filter",
+      "definicao": "Método de array que devolve um array novo, só com os itens que passaram num teste.",
+      "exemplo": "numeros.filter(n => n > 10)"
+    },
+    {
+      "termo": "predicado",
+      "definicao": "A função de teste passada pro `.filter()`, que devolve `true` ou `false` pra cada item.",
+      "exemplo": "n => n > 10"
+    },
+    {
+      "termo": "array vazio",
+      "definicao": "O que `.filter()` devolve quando nenhum item passa no teste — `[]`, não erro.",
+      "exemplo": "[1, 2].filter(n => n > 100) // []"
+    },
+    {
+      "termo": "filter + map",
+      "definicao": "Encadear os dois: filtrar o que interessa, depois transformar o que sobrou.",
+      "exemplo": "produtos.filter(p => p.preco < 50).map(p => p.nome)"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-fil-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `.filter()` devolve?",
+      "codigo": ["const maiores = numeros.filter(n => n > 10);"],
+      "alternativas": [
+        "Um array novo, só com os itens em que o teste deu `true`.",
+        "O mesmo array, com os itens que falharam removidos por dentro.",
+        "Um único valor: `true` ou `false`.",
+        "A quantidade de itens que passaram no teste."
+      ],
+      "correta": 0,
+      "explicacao": "`.filter()` sempre devolve um array — pode ter menos itens que o original, mas nunca um número ou um booleano sozinho."
+    },
+    {
+      "id": "js-fil-02",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["const numeros = [3, 12, 7, 20];", "const grandes = numeros.filter(n => n > 10);", "console.log(grandes);"],
+      "alternativas": ["[12, 20]", "[3, 7]", "4", "[3, 12, 7, 20]"],
+      "correta": 0,
+      "explicacao": "Só `12` e `20` são maiores que `10`; `3` e `7` são descartados."
+    },
+    {
+      "id": "js-fil-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que `.filter()` devolve se nenhum item passa no teste?",
+      "codigo": ["const resultado = [1, 2, 3].filter(n => n > 100);"],
+      "alternativas": ["Um array vazio: `[]`.", "`null`.", "`undefined`.", "Um erro é lançado."],
+      "correta": 0,
+      "explicacao": "`.filter()` nunca devolve outra coisa que não seja array — mesmo que nenhum item sobre, o resultado é `[]`."
+    },
+    {
+      "id": "js-fil-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["const nomes = [\"Ana\", \"Isabela\", \"Rui\", \"Catarina\"];", "const compridos = nomes.filter(nome => nome.length > 3);", "console.log(compridos.length);"],
+      "alternativas": ["2", "4", "3", "0"],
+      "correta": 0,
+      "explicacao": "\"Ana\" (3) e \"Rui\" (3) não passam no teste `length > 3`. \"Isabela\" (7) e \"Catarina\" (8) passam — sobram 2."
+    },
+    {
+      "id": "js-fil-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: mantenha só os produtos com preço abaixo de 50.",
+      "codigo": ["const baratos = produtos.___(p => p.preco < 50);"],
+      "respostas": ["filter"],
+      "tokens": ["filter", "map", "find", "reduce"],
+      "explicacao": "\"Manter só os que passam num teste\" é exatamente a definição de `.filter()` — `.map()` transformaria todo mundo, sem descartar ninguém."
+    },
+    {
+      "id": "js-fil-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Use `.filter()` para criar `pares`, só com os números pares de `numeros`.",
+      "dica": "const, nome, igual, numeros.filter, arrow function, resto por 2 igual a 0",
+      "resposta": "const pares = numeros.filter(n => n % 2 === 0);",
+      "explicacao": "`n % 2 === 0` é `true` só quando `n` é par — o teste clássico de paridade."
+    },
+    {
+      "id": "js-fil-07",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que filtra só os produtos com `preco` menor que 50.",
+      "partes": ["const", "baratos", "=", "produtos", ".filter", "(", "p", "=>", "p.preco < 50", ")", ";"],
+      "explicacao": "`.filter()` testa cada `p` com `p.preco < 50`, e só os que passam entram no array `baratos`."
+    },
+    {
+      "id": "js-fil-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Clique na linha que lança `ReferenceError` ao rodar.",
+      "codigo": ["const numeros = [3, 12, 7, 20];", "const grandes = numeros.filter(n > 10);", "console.log(grandes);"],
+      "linhaErrada": 1,
+      "explicacao": "`.filter()` espera receber uma função — `n => n > 10` — não o resultado pronto de uma comparação. Escrever `n > 10` direto tenta usar `n` como se já existisse uma variável com esse nome fora de qualquer função, e não existe: `ReferenceError: n is not defined`."
+    },
+    {
+      "id": "js-fil-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "const produtos = [",
+        "  { nome: \"Caneca\", preco: 25 },",
+        "  { nome: \"Mouse\", preco: 80 },",
+        "  { nome: \"Caderno\", preco: 12 }",
+        "];",
+        "const nomesBaratos = produtos.filter(p => p.preco < 50).map(p => p.nome);",
+        "console.log(nomesBaratos);"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "[\"Caneca\", \"Caderno\"] — filtra os baratos, depois pega só o nome de cada um.",
+        "[\"Caneca\", \"Mouse\", \"Caderno\"] — `.filter()` não muda nada aqui.",
+        "[25, 12] — o resultado guarda os preços, não os nomes.",
+        "Erro: não dá pra encadear `.filter()` com `.map()`."
+      ],
+      "correta": 0,
+      "explicacao": "`.filter(p => p.preco < 50)` sobra com Caneca (25) e Caderno (12) — Mouse (80) é descartado. `.map(p => p.nome)` transforma esses dois objetos em só os nomes."
+    }
+  ]
+}

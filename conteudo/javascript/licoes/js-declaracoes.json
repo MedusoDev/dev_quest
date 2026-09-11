@@ -1,0 +1,206 @@
+{
+  "id": "js-declaracoes",
+  "linguagem": "javascript",
+  "trilha": "js-fundamentos",
+  "titulo": "let, const e var",
+  "resumo": "As três formas de declarar — e por que só duas se usam hoje.",
+  "conceito": {
+    "texto": [
+      "JavaScript tem três palavras para criar uma variável, e a escolha entre elas diz muito sobre quem escreveu o código.",
+      "`const` — o nome fica amarrado a um valor e não pode ser reapontado. É a escolha padrão: use sempre, até descobrir que precisa reatribuir.",
+      "`let` — o nome pode receber um valor novo depois. Use quando a reatribuição for mesmo necessária, como num contador.",
+      "`var` — a forma antiga. Vaza para fora do bloco onde foi declarada e pode ser redeclarada sem reclamação. Em código novo, não se usa mais.",
+      "Cuidado com o mal-entendido mais comum: `const` **não** deixa o valor imutável. Ele só impede que o nome aponte para outra coisa. Um objeto ou array declarado com `const` continua podendo ter seu conteúdo alterado.",
+      "Diferente de C#, aqui não se escreve o tipo. A variável aceita qualquer valor, e o tipo é do valor, não do nome."
+    ],
+    "exemplo": [
+      "const meta = 10;      // o nome `meta` vale 10 para sempre",
+      "let acertos = 0;      // vai mudar durante a sessão",
+      "acertos = acertos + 1;",
+      "",
+      "const cores = ['roxo'];",
+      "cores.push('dourado'); // permitido: o array mudou, o nome não",
+      "// cores = [];         // erro: isso reaponta o nome"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "const",
+      "definicao": "O nome não pode ser reapontado. Não torna o valor imutável: um array declarado com `const` continua aceitando `push`.",
+      "exemplo": "const meta = 10;"
+    },
+    {
+      "termo": "let",
+      "definicao": "O nome pode receber um valor novo depois. Use só quando a reatribuição for mesmo necessária.",
+      "exemplo": "let acertos = 0;"
+    },
+    {
+      "termo": "var",
+      "definicao": "A forma antiga. Vaza do bloco para a função inteira e pode ser redeclarada sem reclamação. Não se usa em código novo.",
+      "exemplo": "var vazou = true;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-dec-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `const` garante?",
+      "codigo": [
+        "const meta = 10;"
+      ],
+      "alternativas": [
+        "Que o nome `meta` não pode ser reapontado para outro valor.",
+        "Que o valor guardado nunca pode mudar de forma alguma.",
+        "Que `meta` fica visível no arquivo inteiro.",
+        "Que `meta` só aceita números."
+      ],
+      "correta": 0,
+      "explicacao": "`const` amarra o nome, não o conteúdo. É por isso que `const lista = []; lista.push(1);` funciona sem problema."
+    },
+    {
+      "id": "js-dec-02",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que acontece ao rodar este código?",
+      "codigo": [
+        "const cores = ['roxo'];",
+        "cores.push('dourado');",
+        "console.log(cores.length);"
+      ],
+      "alternativas": [
+        "Imprime `2` — alterar o conteúdo do array é permitido.",
+        "Lança erro, porque `cores` é `const`.",
+        "Imprime `1`, porque `const` bloqueia o `push`.",
+        "Imprime `undefined`."
+      ],
+      "correta": 0,
+      "explicacao": "Este é o card que mais gente erra. `const` protege a ligação entre o nome e o array — não protege o array. Para travar o conteúdo existe `Object.freeze`."
+    },
+    {
+      "id": "js-dec-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Por que este código usa `let` em vez de `const`?",
+      "codigo": [
+        "let acertos = 0;",
+        "",
+        "for (const card of cards) {",
+        "  if (card.correto) {",
+        "    acertos = acertos + 1;",
+        "  }",
+        "}"
+      ],
+      "alternativas": [
+        "Porque `acertos` recebe um valor novo a cada acerto, e `const` proibiria isso.",
+        "Porque `let` é mais rápido dentro de laços.",
+        "Porque `const` não funciona com números.",
+        "Porque `acertos` precisa existir fora da função."
+      ],
+      "correta": 0,
+      "explicacao": "Repare que `card`, dentro do `for`, é `const`: ele recebe um valor novo a cada volta, mas cada volta cria sua própria variável. Reatribuição é o único motivo real para escolher `let`."
+    },
+    {
+      "id": "js-dec-04",
+      "tipo": "lacuna",
+      "nivel": 1,
+      "enunciado": "Complete: o primeiro nunca é reatribuído, o segundo é um contador.",
+      "codigo": [
+        "___ meta = 10;",
+        "___ acertos = 0;",
+        "",
+        "acertos += 1;"
+      ],
+      "respostas": [
+        "const",
+        "let"
+      ],
+      "tokens": [
+        "const",
+        "let",
+        "var",
+        "function"
+      ],
+      "explicacao": "A regra de bolso: escreva `const` sempre. Quando o editor reclamar de uma reatribuição, aí sim troque aquela única declaração para `let`."
+    },
+    {
+      "id": "js-dec-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare uma variável chamada `xp` que começa em 0 e vai ser somada durante a sessão.",
+      "dica": "vai mudar de valor, então não é `const`",
+      "resposta": "let xp = 0;",
+      "explicacao": "Sem tipo antes do nome — isso é a maior diferença visual entre JavaScript e C#. Quem escreve `int xp = 0;` aqui está trazendo o hábito da linguagem errada."
+    },
+    {
+      "id": "js-dec-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a declaração de uma constante `META_DIARIA` valendo 10.",
+      "partes": [
+        "const",
+        "META_DIARIA",
+        "=",
+        "10",
+        ";"
+      ],
+      "explicacao": "MAIÚSCULA_COM_UNDERLINE é a convenção para valores fixos que servem de configuração do programa. Não é obrigatório, mas comunica na hora que aquilo não muda."
+    },
+    {
+      "id": "js-dec-07",
+      "tipo": "ache-o-erro",
+      "nivel": 2,
+      "enunciado": "Uma linha lança erro em tempo de execução. Clique nela.",
+      "codigo": [
+        "const jogador = { nome: 'Gabriel', xp: 0 };",
+        "",
+        "jogador.xp = 50;",
+        "",
+        "jogador = { nome: 'Gabriel', xp: 50 };"
+      ],
+      "linhaErrada": 4,
+      "explicacao": "A linha 3 muda uma propriedade de dentro do objeto — permitido. A linha 5 tenta apontar o nome `jogador` para um objeto novo — é isso que `const` proíbe, com `TypeError: Assignment to constant variable`."
+    },
+    {
+      "id": "js-dec-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o trecho e responda.",
+      "codigo": [
+        "function montarSessao(cards, meta) {",
+        "  const selecionados = [];",
+        "  let restantes = meta;",
+        "",
+        "  for (const card of cards) {",
+        "    if (restantes === 0) {",
+        "      break;",
+        "    }",
+        "",
+        "    selecionados.push(card);",
+        "    restantes -= 1;",
+        "  }",
+        "",
+        "  return selecionados;",
+        "}"
+      ],
+      "pergunta": "Por que `selecionados` pode ser `const` mesmo recebendo itens dentro do laço?",
+      "alternativas": [
+        "Porque `push` altera o array existente, sem reapontar o nome `selecionados`.",
+        "Porque `const` só vale fora de funções.",
+        "Porque arrays são exceção à regra do `const`.",
+        "Porque o array é reatribuído só no `return`."
+      ],
+      "correta": 0,
+      "explicacao": "É o mesmo princípio do card do `push`, agora dentro de código de verdade. `restantes` precisa de `let` porque a linha `restantes -= 1` reaponta o nome para um número novo — números não têm como ser alterados por dentro."
+    },
+    {
+      "id": "js-dec-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Em duas linhas: declare `META_DIARIA` valendo 10, que nunca é reatribuída, e `xp` começando em 0, que vai crescer durante a sessão.",
+      "dica": "uma das duas é `const`; a outra não pode ser",
+      "resposta": "const META_DIARIA = 10; let xp = 0;",
+      "explicacao": "A escolha entre as duas palavras não é estilo: ela avisa quem lê se aquele nome vai mudar mais adiante no arquivo. Trocar `let` por `const` em `xp` quebraria o programa na primeira soma."
+    }
+  ]
+}

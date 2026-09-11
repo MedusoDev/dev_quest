@@ -1,0 +1,205 @@
+{
+  "id": "java-mapas",
+  "linguagem": "java",
+  "trilha": "java-colecoes",
+  "titulo": "Mapas",
+  "resumo": "HashMap, put, get, containsKey e percorrer entradas.",
+  "conceito": {
+    "texto": [
+      "`HashMap<K, V>` guarda pares de **chave** e **valor**: em vez de acessar por posição como numa lista, você acessa pelo valor da chave. `K` é o tipo da chave, `V` é o tipo do valor.",
+      "`.put(chave, valor)` guarda um par no mapa. Se a chave já existir, o valor antigo é substituído pelo novo — cada chave aparece no máximo uma vez.",
+      "`.get(chave)` devolve o valor associado àquela chave, ou `null` se a chave não existir no mapa.",
+      "`.containsKey(chave)` devolve `true` ou `false`, dizendo se aquela chave está no mapa — é a forma segura de checar antes de usar `.get`, evitando trabalhar com um `null` inesperado.",
+      "Para percorrer todos os pares, `.entrySet()` devolve o conjunto de entradas, cada uma com `.getKey()` e `.getValue()`. Um mapa não garante ordem de inserção — a ordem em que os pares aparecem ao percorrer pode não ser a ordem em que foram colocados."
+    ],
+    "exemplo": [
+      "Map<String, Integer> idades = new HashMap<>();",
+      "idades.put(\"Ana\", 28);",
+      "idades.put(\"Bea\", 34);",
+      "",
+      "System.out.println(idades.get(\"Ana\"));           // 28",
+      "System.out.println(idades.containsKey(\"Caio\"));  // false",
+      "",
+      "for (Map.Entry<String, Integer> par : idades.entrySet())",
+      "{",
+      "    System.out.println(par.getKey() + \": \" + par.getValue());",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "HashMap",
+      "definicao": "Coleção que guarda pares de chave e valor, acessados pela chave, não por posição.",
+      "exemplo": "Map<String, Integer> idades = new HashMap<>();"
+    },
+    {
+      "termo": "put",
+      "definicao": "Guarda um par chave-valor no mapa, substituindo o valor se a chave já existir.",
+      "exemplo": "idades.put(\"Ana\", 28);"
+    },
+    {
+      "termo": "get (em mapa)",
+      "definicao": "Devolve o valor associado a uma chave, ou `null` se a chave não existir.",
+      "exemplo": "idades.get(\"Ana\")"
+    },
+    {
+      "termo": "containsKey",
+      "definicao": "Devolve `true` ou `false`, dizendo se uma chave existe no mapa.",
+      "exemplo": "idades.containsKey(\"Caio\")"
+    },
+    {
+      "termo": "entrySet",
+      "definicao": "Devolve o conjunto de pares chave-valor do mapa, usado para percorrê-lo.",
+      "exemplo": "for (Map.Entry<String, Integer> par : idades.entrySet())"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-map-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `.put(\"Ana\", 28)` faz num `HashMap<String, Integer>`?",
+      "codigo": ["idades.put(\"Ana\", 28);"],
+      "alternativas": [
+        "Associa a chave \"Ana\" ao valor 28 no mapa.",
+        "Acrescenta \"Ana\" e 28 como dois itens separados.",
+        "Remove a chave \"Ana\", se ela existir.",
+        "Verifica se \"Ana\" já está no mapa."
+      ],
+      "correta": 0,
+      "explicacao": "`.put(chave, valor)` é a operação que grava o par no mapa. \"Ana\" é a chave, 28 é o valor associado a ela."
+    },
+    {
+      "id": "java-map-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `.get(\"Caio\")` devolve se \"Caio\" nunca foi colocado no mapa?",
+      "codigo": ["Map<String, Integer> idades = new HashMap<>();", "idades.put(\"Ana\", 28);", "idades.get(\"Caio\");"],
+      "alternativas": ["null", "0", "Lança uma exceção", "\"\" (texto vazio)"],
+      "correta": 0,
+      "explicacao": "Quando a chave não existe, `.get` devolve `null`, não lança exceção nem inventa um valor padrão. É por isso que checar com `.containsKey` antes é uma prática comum."
+    },
+    {
+      "id": "java-map-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "Map<String, Integer> idades = new HashMap<>();",
+        "idades.put(\"Ana\", 28);",
+        "System.out.println(idades.containsKey(\"Ana\"));"
+      ],
+      "alternativas": ["true", "false", "28", "null"],
+      "correta": 0,
+      "explicacao": "\"Ana\" foi colocada no mapa com `.put`, então `.containsKey(\"Ana\")` devolve `true`."
+    },
+    {
+      "id": "java-map-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece quando você faz `.put` duas vezes com a mesma chave?",
+      "codigo": ["Map<String, Integer> idades = new HashMap<>();", "idades.put(\"Ana\", 28);", "idades.put(\"Ana\", 29);"],
+      "alternativas": [
+        "O valor associado a \"Ana\" é substituído: passa a ser 29.",
+        "O mapa passa a ter duas entradas para \"Ana\", com 28 e 29.",
+        "A segunda chamada é ignorada, porque a chave já existe.",
+        "Lança uma exceção de chave duplicada."
+      ],
+      "correta": 0,
+      "explicacao": "Cada chave aparece no máximo uma vez num `HashMap`. Um segundo `.put` com a mesma chave simplesmente substitui o valor antigo."
+    },
+    {
+      "id": "java-map-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "Map<String, Integer> estoque = new HashMap<>();",
+        "estoque.put(\"maçã\", 10);",
+        "estoque.put(\"pera\", 5);",
+        "",
+        "int total = 0;",
+        "for (Map.Entry<String, Integer> par : estoque.entrySet())",
+        "{",
+        "    total += par.getValue();",
+        "}",
+        "System.out.println(total);"
+      ],
+      "alternativas": ["15", "2", "10", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "O laço soma os valores de todas as entradas: `par.getValue()` devolve 10 e depois 5, totalizando 15. A ordem de percurso pode variar, mas a soma não."
+    },
+    {
+      "id": "java-map-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a declaração de um mapa de texto para inteiro, chamado `estoque`, já criado vazio.",
+      "codigo": ["Map<String, Integer> estoque = ___ HashMap<>();"],
+      "respostas": ["new"],
+      "tokens": ["new", "this", "static", "final"],
+      "explicacao": "`new HashMap<>()` cria o mapa vazio. O diamante `<>` reaproveita os tipos já declarados à esquerda."
+    },
+    {
+      "id": "java-map-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a chamada que verifica se a chave \"Caio\" existe no mapa `idades`.",
+      "partes": ["idades", ".", "containsKey", "(", "\"Caio\"", ")"],
+      "explicacao": "`.containsKey(chave)` é a forma segura de checar a presença de uma chave antes de usar `.get`, evitando lidar com um `null` inesperado."
+    },
+    {
+      "id": "java-map-08",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha que associa a chave \"Bea\" ao valor 34 no mapa `idades`.",
+      "dica": "objeto, ponto, put, chave e valor entre parênteses",
+      "resposta": "idades.put(\"Bea\", 34);",
+      "explicacao": "`.put(chave, valor)` sempre recebe dois argumentos, nessa ordem: primeiro a chave, depois o valor associado a ela."
+    },
+    {
+      "id": "java-map-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código compila, mas não faz o que o programador esperava. Clique na linha do problema.",
+      "codigo": [
+        "Map<String, Integer> idades = new HashMap<>();",
+        "idades.put(\"Ana\", 28);",
+        "",
+        "int idade = idades.get(\"Caio\");",
+        "System.out.println(idade);"
+      ],
+      "linhaErrada": 3,
+      "explicacao": "\"Caio\" não está no mapa, então `.get(\"Caio\")` devolve `null`. Atribuir `null` a um `int` (que não pode ser `null`) causa um `NullPointerException` ao desembrulhar o `Integer`, em tempo de execução."
+    },
+    {
+      "id": "java-map-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "Map<String, Integer> estoque = new HashMap<>();",
+        "estoque.put(\"maçã\", 10);",
+        "",
+        "if (estoque.containsKey(\"pera\"))",
+        "{",
+        "    estoque.put(\"pera\", estoque.get(\"pera\") + 1);",
+        "}",
+        "else",
+        "{",
+        "    estoque.put(\"pera\", 1);",
+        "}",
+        "",
+        "System.out.println(estoque.get(\"pera\"));"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": [
+        "1",
+        "0",
+        "null",
+        "Erro de compilação"
+      ],
+      "correta": 0,
+      "explicacao": "\"pera\" ainda não existe no mapa, então `containsKey(\"pera\")` é `false`, e o `else` executa: `estoque.put(\"pera\", 1)`. Esse padrão — checar antes de incrementar — evita somar 1 a um `null`."
+    }
+  ]
+}

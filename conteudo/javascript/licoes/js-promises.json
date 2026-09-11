@@ -1,0 +1,171 @@
+{
+  "id": "js-promises",
+  "linguagem": "javascript",
+  "trilha": "js-async",
+  "titulo": "Promise",
+  "resumo": "O que é uma Promise, resolve/reject e .then/.catch.",
+  "conceito": {
+    "texto": [
+      "Uma `Promise` representa um valor que ainda não existe, mas vai existir — ou vai falhar — no futuro. É o jeito do JavaScript lidar com coisas que demoram, como buscar dados de um servidor, sem travar o resto do programa esperando.",
+      "Uma Promise tem três estados: pendente (ainda não terminou), cumprida (deu certo, tem um valor) e rejeitada (deu erro). Ela só passa por um desses estados finais uma vez, e não muda mais depois.",
+      "`.then(callback)` roda quando a Promise é cumprida, recebendo o valor resolvido. `.catch(callback)` roda quando ela é rejeitada, recebendo o erro.",
+      "Dá pra encadear vários `.then()` em sequência: cada um recebe o valor devolvido pelo `.then()` anterior, e o resultado passa adiante — como uma esteira.",
+      "Uma Promise não trava o código: `.then()` roda depois, quando o valor estiver pronto, e o resto do programa continua rodando enquanto isso."
+    ],
+    "exemplo": [
+      "function buscarUsuario(id) {",
+      "  return new Promise((resolve, reject) => {",
+      "    if (id > 0) {",
+      "      resolve({ id, nome: \"Ana\" });",
+      "    } else {",
+      "      reject(new Error(\"id inválido\"));",
+      "    }",
+      "  });",
+      "}",
+      "",
+      "buscarUsuario(1)",
+      "  .then(usuario => console.log(usuario.nome))",
+      "  .catch(erro => console.log(\"falhou:\", erro.message));",
+      "// \"Ana\""
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "Promise",
+      "definicao": "Representa um valor que ainda não existe, mas vai existir (ou falhar) no futuro.",
+      "exemplo": "new Promise((resolve, reject) => { ... })"
+    },
+    {
+      "termo": "resolve",
+      "definicao": "Função chamada dentro da Promise quando o resultado deu certo.",
+      "exemplo": "resolve({ nome: \"Ana\" })"
+    },
+    {
+      "termo": "reject",
+      "definicao": "Função chamada dentro da Promise quando algo deu errado.",
+      "exemplo": "reject(new Error(\"falhou\"))"
+    },
+    {
+      "termo": "then / catch",
+      "definicao": "`.then()` roda com o valor resolvido; `.catch()` roda com o erro, se a Promise for rejeitada.",
+      "exemplo": "promessa.then(v => ...).catch(e => ...)"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-prom-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que uma `Promise` representa?",
+      "codigo": ["const p = new Promise((resolve, reject) => { /* ... */ });"],
+      "alternativas": [
+        "Um valor que ainda não existe, mas vai existir ou falhar no futuro.",
+        "Um valor que já existe, só que escondido.",
+        "Uma função que roda imediatamente e sempre dá certo.",
+        "Um tipo de array especial."
+      ],
+      "correta": 0,
+      "explicacao": "A Promise é uma promessa mesmo: um espaço reservado pro valor que vai chegar (ou pro erro que vai acontecer)."
+    },
+    {
+      "id": "js-prom-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que `.then()` faz?",
+      "codigo": ["promessa.then(valor => console.log(valor));"],
+      "alternativas": [
+        "Roda quando a Promise é cumprida, recebendo o valor resolvido.",
+        "Roda imediatamente, antes da Promise terminar.",
+        "Cancela a Promise.",
+        "Só roda se a Promise for rejeitada."
+      ],
+      "correta": 0,
+      "explicacao": "`.then()` é o callback do caminho feliz: só roda depois que a Promise resolve, com o valor que ela entregou."
+    },
+    {
+      "id": "js-prom-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": ["function dobrar(n) {", "  return new Promise(resolve => resolve(n * 2));", "}", "", "dobrar(5).then(resultado => console.log(resultado));"],
+      "alternativas": ["10", "5", "Promise { 10 }", "undefined"],
+      "correta": 0,
+      "explicacao": "`.then()` recebe o valor passado para `resolve` — aqui, `5 * 2`, que é `10`."
+    },
+    {
+      "id": "js-prom-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que roda se a Promise for rejeitada?",
+      "codigo": ["promessa.then(v => console.log(v)).catch(e => console.log('erro:', e));"],
+      "alternativas": [
+        "O `.catch()`, recebendo o erro passado para `reject`.",
+        "O `.then()`, com o erro no lugar do valor.",
+        "Os dois rodam sempre, na ordem.",
+        "Nada roda — a Promise trava o programa."
+      ],
+      "correta": 0,
+      "explicacao": "Uma Promise rejeitada pula o `.then()` e vai direto pro `.catch()` mais próximo na cadeia."
+    },
+    {
+      "id": "js-prom-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete: dentro da Promise, avise que deu certo, passando o valor 42.",
+      "codigo": ["const p = new Promise((resolve, reject) => {", "    ___(42);", "});"],
+      "respostas": ["resolve"],
+      "tokens": ["resolve", "reject", "return", "then", "catch"],
+      "explicacao": "`resolve(valor)` marca a Promise como cumprida, entregando `valor` pra quem chamar `.then()`."
+    },
+    {
+      "id": "js-prom-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva a chamada que registra um `.then()` em `promessa`, imprimindo o valor recebido.",
+      "dica": "promessa.then, arrow function, console.log",
+      "resposta": "promessa.then(valor => console.log(valor));",
+      "explicacao": "`.then()` recebe uma função; essa função recebe o valor resolvido como parâmetro."
+    },
+    {
+      "id": "js-prom-07",
+      "tipo": "montar-linha",
+      "nivel": 3,
+      "enunciado": "Monte a linha que registra um `.then()` em `promessa`, imprimindo o valor recebido.",
+      "partes": ["promessa", ".then", "(", "valor", "=>", "console.log(valor)", ")", ";"],
+      "explicacao": "`.then()` recebe a arrow function que roda quando a Promise resolve, com o valor entregue como argumento."
+    },
+    {
+      "id": "js-prom-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Clique na linha que lança `TypeError` ao rodar.",
+      "codigo": [
+        "function buscarUsuario(id) {",
+        "  return new Promise(resolve => resolve({ id, nome: \"Ana\" }));",
+        "}",
+        "",
+        "let usuarioAtual;",
+        "buscarUsuario(1).then(usuario => { usuarioAtual = usuario; });",
+        "console.log(usuarioAtual.nome);"
+      ],
+      "linhaErrada": 6,
+      "explicacao": "`.then()` roda depois, quando a Promise resolve — não na hora. Na linha 7, `usuarioAtual` ainda é `undefined`, porque o `.then()` da linha 6 ainda não rodou. Ler `.nome` de `undefined` lança `TypeError`."
+    },
+    {
+      "id": "js-prom-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": ["function buscarNumero() {", "  return new Promise(resolve => resolve(5));", "}", "", "buscarNumero()", "  .then(n => n * 2)", "  .then(n => n + 1)", "  .then(resultado => console.log(resultado));"],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "11 — 5 vira 10 no primeiro .then, depois 11 no segundo.",
+        "5 — só o valor original passa adiante.",
+        "10 — só o primeiro .then tem efeito.",
+        "Erro: não dá pra encadear mais de um .then()."
+      ],
+      "correta": 0,
+      "explicacao": "Cada `.then()` recebe o valor devolvido pelo anterior: `5 → 10 → 11`. O último `.then()` imprime o resultado final."
+    }
+  ]
+}

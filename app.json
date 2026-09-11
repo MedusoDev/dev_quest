@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "Ouroboros",
+    "slug": "ouroboros-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": [
+      "ouroboros",
+      "com.googleusercontent.apps.753915977876-o978cm6auc2pdfhvv21g1qp447tlh6jd"
+    ],
+    "userInterfaceStyle": "dark",
+    "android": {
+      "package": "com.ouroboros.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#08090b",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#070e18",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 96
+        }
+      ],
+      "expo-sqlite",
+      "expo-web-browser",
+      [
+        "expo-notifications",
+        {
+          "color": "#c7f74e"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "extra": {
+      "googleWebClientId": "753915977876-dihumtk6e3eamhmfh2jeoiqb594akf6m.apps.googleusercontent.com",
+      "googleAndroidClientId": "753915977876-o978cm6auc2pdfhvv21g1qp447tlh6jd.apps.googleusercontent.com",
+      "router": {},
+      "eas": {
+        "projectId": "e113b612-6193-4a08-a36b-fbeafe227986"
+      }
+    },
+    "owner": "medusa6991",
+    "updates": {
+      "url": "https://u.expo.dev/e113b612-6193-4a08-a36b-fbeafe227986"
+    },
+    "ios": {}
+  }
+}

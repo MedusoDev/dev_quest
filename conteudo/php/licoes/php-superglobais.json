@@ -1,0 +1,188 @@
+{
+  "id": "php-superglobais",
+  "linguagem": "php",
+  "trilha": "php-erros",
+  "titulo": "Superglobais",
+  "resumo": "`$_GET`, `$_POST`, `$_SERVER` — dados que chegam de fora, sempre disponíveis.",
+  "conceito": {
+    "texto": [
+      "**Superglobais** são arrays que o PHP preenche automaticamente e que ficam disponíveis em qualquer lugar do código, dentro ou fora de funções — sem precisar de `global`.",
+      "`$_GET` guarda os parâmetros que vieram na própria URL da requisição, depois do `?`: uma URL como `pagina.php?id=7` deixa `$_GET[\"id\"]` valendo `\"7\"`.",
+      "`$_POST` guarda os dados enviados no corpo de uma requisição, tipicamente de um formulário HTML enviado com `method=\"post\"`.",
+      "`$_SERVER` guarda informações sobre o próprio servidor e a requisição atual, como `$_SERVER[\"REQUEST_METHOD\"]` (se foi GET ou POST) ou `$_SERVER[\"HTTP_HOST\"]` (o domínio acessado).",
+      "Um ponto essencial: tudo que vem de `$_GET` e `$_POST` é **dado de fora**, digitado ou manipulado por quem está acessando o site — nunca deve ser confiado cegamente. Antes de exibir em HTML, o valor deveria passar por algo como `htmlspecialchars()`; antes de usar num cálculo, deveria ser validado ou convertido com cuidado.",
+      "Como toda superglobal já vem no formato de array associativo, checar se uma chave existe antes de usá-la evita avisos — `isset($_GET[\"id\"])` responde se `\"id\"` foi realmente enviado."
+    ],
+    "exemplo": [
+      "<?php",
+      "// URL: pagina.php?id=7",
+      "if (isset($_GET[\"id\"])) {",
+      "    $id = $_GET[\"id\"];",
+      "    echo \"Produto: \" . htmlspecialchars($id);",
+      "}",
+      "",
+      "if ($_SERVER[\"REQUEST_METHOD\"] === \"POST\") {",
+      "    $nome = $_POST[\"nome\"] ?? \"\";",
+      "    echo \"Recebido: \" . htmlspecialchars($nome);",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "superglobal",
+      "definicao": "Array preenchido automaticamente pelo PHP, disponível em qualquer lugar do código.",
+      "exemplo": "$_GET, $_POST, $_SERVER"
+    },
+    {
+      "termo": "$_GET",
+      "definicao": "Parâmetros enviados na própria URL da requisição.",
+      "exemplo": "$_GET[\"id\"] // de pagina.php?id=7"
+    },
+    {
+      "termo": "$_POST",
+      "definicao": "Dados enviados no corpo de uma requisição, geralmente de um formulário.",
+      "exemplo": "$_POST[\"nome\"]"
+    },
+    {
+      "termo": "$_SERVER",
+      "definicao": "Informações sobre o servidor e a requisição atual.",
+      "exemplo": "$_SERVER[\"REQUEST_METHOD\"]"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-sup-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "De onde vem o valor de `$_GET[\"id\"]` numa URL `pagina.php?id=7`?",
+      "codigo": ["$id = $_GET[\"id\"];"],
+      "alternativas": [
+        "Do próprio texto da URL, depois do `?`.",
+        "De um formulário enviado por POST.",
+        "De uma variável definida antes, no próprio script.",
+        "Do banco de dados do servidor."
+      ],
+      "correta": 0,
+      "explicacao": "`$_GET` é preenchido a partir dos parâmetros que aparecem na URL depois do `?`. Em `pagina.php?id=7`, `$_GET[\"id\"]` vale `\"7\"`."
+    },
+    {
+      "id": "php-sup-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que torna `$_POST` uma superglobal?",
+      "codigo": ["$_POST[\"nome\"]"],
+      "alternativas": [
+        "Estar disponível em qualquer parte do código, sem precisar de `global`.",
+        "Só funcionar dentro de funções marcadas como `public`.",
+        "Ser uma constante que nunca muda de valor.",
+        "Precisar ser declarada com `global $_POST;` antes de usar."
+      ],
+      "correta": 0,
+      "explicacao": "Superglobais são acessíveis em qualquer escopo — dentro de uma função, fora dela, em qualquer arquivo — sem a necessidade de `global`, ao contrário de variáveis comuns."
+    },
+    {
+      "id": "php-sup-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que `$_SERVER[\"REQUEST_METHOD\"]` costuma indicar?",
+      "codigo": ["if ($_SERVER[\"REQUEST_METHOD\"] === \"POST\") { ... }"],
+      "alternativas": [
+        "Se a requisição atual foi feita por GET, POST, ou outro método HTTP.",
+        "O nome do servidor onde o script está rodando.",
+        "Quantas requisições o servidor já recebeu.",
+        "Se o usuário está autenticado ou não."
+      ],
+      "correta": 0,
+      "explicacao": "`REQUEST_METHOD` é uma das chaves mais usadas de `$_SERVER`: informa qual verbo HTTP originou a requisição atual, permitindo decidir o que fazer com base nisso."
+    },
+    {
+      "id": "php-sup-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "Supondo que a URL acessada seja `perfil.php?usuario=joao`, o que este código imprime?",
+      "codigo": ["echo $_GET[\"usuario\"] ?? \"anônimo\";"],
+      "alternativas": ["joao", "anônimo", "usuario", "Erro: variável indefinida"],
+      "correta": 0,
+      "explicacao": "Como `\"usuario\"` existe em `$_GET`, o operador `??` nem chega a ser usado — ele só entraria em ação se a chave não existisse."
+    },
+    {
+      "id": "php-sup-05",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Por que este código usa `htmlspecialchars()` antes de exibir o dado?",
+      "codigo": ["echo htmlspecialchars($_GET[\"comentario\"]);"],
+      "alternativas": [
+        "Porque `$_GET` vem de fora do sistema e não deve ser exibido cru em HTML, por segurança.",
+        "Porque `$_GET` sempre contém HTML inválido que precisa ser corrigido.",
+        "Porque sem isso o PHP recusaria imprimir a variável.",
+        "Porque `htmlspecialchars` converte o texto para maiúsculas."
+      ],
+      "correta": 0,
+      "explicacao": "Dados de superglobais vêm de quem acessa o site, e podem conter código malicioso. `htmlspecialchars()` transforma caracteres especiais de HTML em texto seguro para exibir, prevenindo ataques como injeção de script."
+    },
+    {
+      "id": "php-sup-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para checar se `\"id\"` foi enviado por GET antes de usá-lo.",
+      "codigo": ["if (___($_GET[\"id\"])) {", "    $id = $_GET[\"id\"];", "}"],
+      "respostas": ["isset"],
+      "tokens": ["isset", "exists", "count", "empty"],
+      "explicacao": "`isset()` responde se a chave existe e não é `null`. É a forma comum de evitar avisos ao acessar uma chave de superglobal que pode não ter sido enviada."
+    },
+    {
+      "id": "php-sup-07",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Guarde em `$nome` o valor de `$_POST[\"nome\"]`, ou uma string vazia caso não exista.",
+      "dica": "variável, igual, superglobal com chave, operador de coalescência, string vazia",
+      "resposta": "$nome = $_POST[\"nome\"] ?? \"\";",
+      "aceitas": ["$nome = $_POST['nome'] ?? '';"],
+      "explicacao": "`??` devolve o valor à esquerda se ele existir e não for `null`; caso contrário, usa o valor à direita — aqui, uma string vazia como padrão seguro."
+    },
+    {
+      "id": "php-sup-08",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a condição que verifica se a requisição atual foi feita por POST.",
+      "partes": ["$_SERVER[\"REQUEST_METHOD\"]", "===", "\"POST\""],
+      "explicacao": "Comparar `$_SERVER[\"REQUEST_METHOD\"]` com a string `\"POST\"` usando `===` é o jeito padrão de checar o verbo HTTP da requisição, sem juggling de tipos."
+    },
+    {
+      "id": "php-sup-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código tem um risco de segurança grave. Clique na linha que causa o problema.",
+      "codigo": [
+        "$comentario = $_POST[\"comentario\"] ?? \"\";",
+        "",
+        "echo \"<div>\" . $comentario . \"</div>\";"
+      ],
+      "linhaErrada": 2,
+      "explicacao": "O comentário vem direto de `$_POST`, ou seja, de quem enviou o formulário, e é impresso sem tratamento. Sem `htmlspecialchars()`, um valor malicioso poderia injetar HTML ou script na página."
+    },
+    {
+      "id": "php-sup-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda, supondo uma requisição POST com `nome=Ana` no corpo.",
+      "codigo": [
+        "if ($_SERVER[\"REQUEST_METHOD\"] === \"POST\") {",
+        "    $nome = $_POST[\"nome\"] ?? \"visitante\";",
+        "    echo \"Bem-vindo, \" . htmlspecialchars($nome) . \"!\";",
+        "} else {",
+        "    echo \"Envie o formulário.\";",
+        "}"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "Bem-vindo, Ana!",
+        "Envie o formulário.",
+        "Bem-vindo, visitante!",
+        "Erro, porque `$_POST` não pode ser usado dentro de um `if`."
+      ],
+      "correta": 0,
+      "explicacao": "Como a requisição é POST, a condição é verdadeira. `$_POST[\"nome\"]` existe e vale `\"Ana\"`, então o valor padrão `\"visitante\"` nem entra em jogo."
+    }
+  ]
+}

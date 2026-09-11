@@ -1,0 +1,220 @@
+{
+  "id": "js-funcoes",
+  "linguagem": "javascript",
+  "trilha": "js-fundamentos",
+  "titulo": "Funções",
+  "resumo": "Declaração, arrow function, parâmetros e return.",
+  "conceito": {
+    "texto": [
+      "Função é um bloco de código com nome e endereço: você escreve uma vez e chama quantas vezes quiser.",
+      "A forma clássica é `function nome(parametros) { ... }`. A forma curta é a **arrow function**: `const nome = (parametros) => { ... }`.",
+      "Em JavaScript não se declara o tipo do que entra nem do que sai. Uma função que não escreve `return` devolve `undefined` — é o `void` do C#, só que implícito e com um valor de verdade dentro.",
+      "A arrow function tem um atalho: quando o corpo é uma expressão só, você tira as chaves e o `return` some junto. `const dobro = (n) => n * 2;` devolve `n * 2`.",
+      "Cuidado com a pegadinha: `const soma = (a, b) => { a + b; };` devolve `undefined`. Assim que aparecem as chaves, o `return` volta a ser obrigatório.",
+      "Parâmetro é o nome escrito na declaração. Argumento é o valor passado na chamada. Parâmetro não recebido vale `undefined`, e é para isso que existe o valor padrão: `(n = 1) => ...`."
+    ],
+    "exemplo": [
+      "function somar(a, b) {",
+      "  return a + b;",
+      "}",
+      "",
+      "const dobro = (n) => n * 2;          // return implícito",
+      "",
+      "const saudar = (nome = 'visitante') => {",
+      "  return `Olá, ${nome}!`;            // com chaves, return obrigatório",
+      "};",
+      "",
+      "somar(2, 3);      // 5",
+      "dobro(4);         // 8",
+      "saudar();         // 'Olá, visitante!'"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "arrow function",
+      "definicao": "Forma curta de escrever função. Sem chaves, o `return` é implícito; assim que aparecem chaves, ele volta a ser obrigatório.",
+      "exemplo": "const dobro = (n) => n * 2;"
+    },
+    {
+      "termo": "undefined",
+      "definicao": "O que uma função devolve quando não tem `return`, e o valor de um parâmetro que não foi passado.",
+      "exemplo": "const soma = (a, b) => { a + b; };   // devolve undefined"
+    },
+    {
+      "termo": "valor padrão",
+      "definicao": "Valor que o parâmetro assume quando o argumento não vem. Sem ele, contas com o parâmetro viram `NaN`.",
+      "exemplo": "const saudar = (nome = 'visitante') => nome;"
+    },
+    {
+      "termo": "parâmetro e argumento",
+      "definicao": "Parâmetro é o nome escrito na declaração; argumento é o valor passado na chamada.",
+      "exemplo": "function somar(a, b) {}   // a e b sao parametros"
+    }
+  ],
+  "cards": [
+    {
+      "id": "js-fun-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que esta função devolve?",
+      "codigo": [
+        "const dobro = (n) => n * 2;"
+      ],
+      "alternativas": [
+        "O resultado de `n * 2` — sem chaves, o `return` é implícito.",
+        "`undefined`, porque não há `return` escrito.",
+        "A própria função, para ser chamada depois.",
+        "Nada; a linha só declara `n`."
+      ],
+      "correta": 0,
+      "explicacao": "Arrow function sem chaves devolve a expressão direto. É a forma mais compacta de escrever uma função em JavaScript."
+    },
+    {
+      "id": "js-fun-02",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "const soma = (a, b) => { a + b; };",
+        "",
+        "console.log(soma(2, 3));"
+      ],
+      "alternativas": [
+        "undefined",
+        "5",
+        "null",
+        "NaN"
+      ],
+      "correta": 0,
+      "explicacao": "As chaves transformam o corpo num bloco comum, e bloco exige `return` explícito. A conta `a + b` é feita e o resultado é jogado fora. Consertar é tirar as chaves ou escrever `return a + b;`."
+    },
+    {
+      "id": "js-fun-03",
+      "tipo": "palavra-chave",
+      "nivel": 2,
+      "enunciado": "O que `return` faz dentro de uma função?",
+      "codigo": [
+        "function primeiroPar(numeros) {",
+        "  for (const n of numeros) {",
+        "    if (n % 2 === 0) {",
+        "      return n;",
+        "    }",
+        "  }",
+        "",
+        "  return null;",
+        "}"
+      ],
+      "alternativas": [
+        "Entrega o valor e encerra a função na hora, saindo inclusive do laço.",
+        "Entrega o valor mas deixa o restante da função rodar.",
+        "Sai apenas do laço `for`, continuando a função.",
+        "Guarda o valor para ser lido depois com outra chamada."
+      ],
+      "correta": 0,
+      "explicacao": "É a diferença entre `return` e `break`: `break` sai só do laço, `return` sai da função inteira. Por isso o `return null;` do fim só é alcançado quando nenhum par foi encontrado."
+    },
+    {
+      "id": "js-fun-04",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "const saudar = (nome = 'visitante') => `Olá, ${nome}!`;",
+        "",
+        "console.log(saudar());"
+      ],
+      "alternativas": [
+        "Olá, visitante!",
+        "Olá, undefined!",
+        "Olá, nome!",
+        "Olá, !"
+      ],
+      "correta": 0,
+      "explicacao": "Sem argumento, o parâmetro cai no valor padrão. Sem esse padrão, `nome` seria `undefined` e o texto sairia como `Olá, undefined!` — um dos bugs mais comuns de quem está começando."
+    },
+    {
+      "id": "js-fun-05",
+      "tipo": "lacuna",
+      "nivel": 1,
+      "enunciado": "Complete a arrow function que devolve o dobro de `n`.",
+      "codigo": [
+        "const dobro = (n) ___ n * 2;"
+      ],
+      "respostas": [
+        "=>"
+      ],
+      "tokens": [
+        "=>",
+        "->",
+        "=",
+        ":",
+        "function"
+      ],
+      "explicacao": "A seta é `=>`, com o sinal de igual antes. `->` é de outras linguagens e aqui nem é sintaxe válida."
+    },
+    {
+      "id": "js-fun-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva uma arrow function chamada `somar` que recebe `a` e `b` e devolve a soma, usando a forma curta sem chaves.",
+      "dica": "const, nome, =, parâmetros entre parênteses, seta, expressão",
+      "resposta": "const somar = (a, b) => a + b;",
+      "aceitas": [
+        "const somar = (a, b) => a + b"
+      ],
+      "explicacao": "Sem chaves e sem `return`. Essa é a assinatura que você mais vai ver em código JavaScript moderno."
+    },
+    {
+      "id": "js-fun-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a primeira linha de uma função clássica que recebe `a` e `b`.",
+      "partes": [
+        "function",
+        "somar",
+        "(a, b)",
+        "{"
+      ],
+      "explicacao": "Na forma clássica, a palavra `function` vem primeiro e o nome depois. Na arrow function é o contrário: o nome vem primeiro, porque quem está sendo declarado é uma constante que guarda a função."
+    },
+    {
+      "id": "js-fun-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o trecho e responda.",
+      "codigo": [
+        "function calcularXp(cards) {",
+        "  let total = 0;",
+        "",
+        "  for (const card of cards) {",
+        "    if (!card.acertou) {",
+        "      continue;",
+        "    }",
+        "",
+        "    total += card.errouAntes ? 4 : 10;",
+        "  }",
+        "",
+        "  return total;",
+        "}"
+      ],
+      "pergunta": "Uma lista tem 3 cards: um acertado de primeira, um acertado depois de errar, e um não acertado. Quanto `calcularXp` devolve?",
+      "alternativas": [
+        "14",
+        "24",
+        "10",
+        "18"
+      ],
+      "correta": 0,
+      "explicacao": "10 do acerto de primeira, mais 4 do que errou antes. O terceiro cai no `continue`, que pula para a próxima volta sem somar nada. `continue` pula uma volta; `break` encerra o laço; `return` encerra a função."
+    },
+    {
+      "id": "js-fun-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva uma arrow function `somar` em que `a` e `b` valham 0 quando não forem passados, devolvendo a soma na forma curta, sem chaves.",
+      "dica": "o valor padrão vai dentro dos parênteses, em cada parâmetro",
+      "resposta": "const somar = (a = 0, b = 0) => a + b;",
+      "explicacao": "Sem os padrões, `somar()` devolveria `NaN` — `undefined + undefined` não dá zero. Valor padrão é como uma função continua respondendo algo útil quando o argumento não vem."
+    }
+  ]
+}

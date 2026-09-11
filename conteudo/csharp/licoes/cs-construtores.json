@@ -1,0 +1,217 @@
+{
+  "id": "cs-construtores",
+  "linguagem": "csharp",
+  "trilha": "cs-oo",
+  "titulo": "Construtores",
+  "resumo": "O método que roda na criação do objeto: parâmetros, this e sobrecarga.",
+  "conceito": {
+    "texto": [
+      "O construtor é um método especial que roda automaticamente toda vez que alguém escreve `new NomeDaClasse(...)`. Ele tem o mesmo nome da classe e nunca declara tipo de retorno, nem `void`.",
+      "Sem nenhum construtor escrito, C# fornece um construtor padrão vazio de graça. No momento em que você escreve qualquer construtor com parâmetros, esse padrão desaparece — se ainda quiser criar o objeto sem argumentos, precisa escrever esse construtor você mesmo.",
+      "`this` dentro do construtor se refere ao objeto que está sendo criado agora. É o que separa um parâmetro de um campo que tem o mesmo nome: `this.Nome = nome;` deixa claro qual é qual.",
+      "Uma classe pode ter mais de um construtor — isso é sobrecarga. C# escolhe qual construtor rodar olhando a quantidade e o tipo dos argumentos passados em `new`.",
+      "É no construtor que campos `readonly` recebem valor, quando esse valor depende de algo que só existe na hora de criar o objeto — como o nome escolhido pela pessoa."
+    ],
+    "exemplo": [
+      "public class Jogador",
+      "{",
+      "    public string Nome;",
+      "    public int Vida;",
+      "",
+      "    public Jogador(string nome)",
+      "    {",
+      "        this.Nome = nome;",
+      "        Vida = 100;",
+      "    }",
+      "",
+      "    public Jogador(string nome, int vidaInicial)",
+      "    {",
+      "        this.Nome = nome;",
+      "        Vida = vidaInicial;",
+      "    }",
+      "}",
+      "",
+      "var ana = new Jogador(\"Ana\");             // Vida começa em 100",
+      "var chefe = new Jogador(\"Dragão\", 500);   // Vida começa em 500"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "construtor",
+      "definicao": "Método com o mesmo nome da classe, sem tipo de retorno, que roda automaticamente em todo `new`.",
+      "exemplo": "public Jogador(string nome) { ... }"
+    },
+    {
+      "termo": "this",
+      "definicao": "Referência ao próprio objeto sendo construído — usada para diferenciar um campo de um parâmetro com o mesmo nome.",
+      "exemplo": "this.Nome = nome;"
+    },
+    {
+      "termo": "sobrecarga (overload)",
+      "definicao": "Ter mais de uma versão do mesmo método ou construtor, diferenciadas pelos parâmetros.",
+      "exemplo": "Jogador(string nome) e Jogador(string nome, int vidaInicial)"
+    },
+    {
+      "termo": "construtor padrão",
+      "definicao": "O construtor vazio, sem parâmetros, que C# cria sozinho — só existe se você não escrever nenhum outro.",
+      "exemplo": "new Jogador() sem nenhum construtor declarado na classe"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-con-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Qual característica identifica um construtor?",
+      "codigo": ["public Jogador(string nome)", "{", "    Nome = nome;", "}"],
+      "alternativas": [
+        "Tem o mesmo nome da classe e não declara tipo de retorno, nem `void`.",
+        "Sempre se chama `Construtor`.",
+        "Precisa ser `static`.",
+        "Só pode ter um parâmetro."
+      ],
+      "correta": 0,
+      "explicacao": "É o nome idêntico ao da classe, sem nenhum tipo antes dele — nem `void` — que o compilador reconhece como construtor."
+    },
+    {
+      "id": "cs-con-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Quando o código dentro deste construtor roda?",
+      "codigo": ["public Jogador(string nome)", "{", "    Nome = nome;", "    Vida = 100;", "}"],
+      "alternativas": [
+        "Automaticamente, toda vez que alguém escreve `new Jogador(...)`.",
+        "Só quando alguém chama `jogador.Construtor()` manualmente.",
+        "Uma vez só, na primeira instância criada.",
+        "Nunca — construtores são só documentação."
+      ],
+      "correta": 0,
+      "explicacao": "Não existe chamada manual: `new` já dispara o construtor sozinho, sempre, em toda instância nova."
+    },
+    {
+      "id": "cs-con-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "public class Ponto",
+        "{",
+        "    public int X;",
+        "    public int Y;",
+        "",
+        "    public Ponto(int x, int y)",
+        "    {",
+        "        X = x;",
+        "        Y = y;",
+        "    }",
+        "}",
+        "",
+        "var p = new Ponto(3, 4);",
+        "Console.WriteLine(p.X + p.Y);"
+      ],
+      "alternativas": ["7", "34", "0", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "O construtor guarda `3` em `X` e `4` em `Y`. `p.X + p.Y` é `3 + 4`, que é `7`."
+    },
+    {
+      "id": "cs-con-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete o construtor usando `this` para diferenciar o parâmetro do campo.",
+      "codigo": ["public class Jogador", "{", "    public string Nome;", "", "    public Jogador(string nome)", "    {", "        ___.Nome = nome;", "    }", "}"],
+      "respostas": ["this"],
+      "tokens": ["this", "base", "new", "void", "Jogador"],
+      "explicacao": "Parâmetro e campo se chamam igual (`nome` e `Nome`, mas em C# maiúscula importa). `this.Nome` deixa explícito que o lado esquerdo é o campo do objeto, não o parâmetro."
+    },
+    {
+      "id": "cs-con-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva a assinatura (sem corpo) de um construtor da classe `Retangulo`, que recebe `largura` e `altura`, ambos inteiros.",
+      "dica": "public + nome da classe + parênteses com os dois parâmetros",
+      "resposta": "public Retangulo(int largura, int altura)",
+      "explicacao": "O construtor leva o nome exato da classe, e cada parâmetro precisa do tipo antes do nome — igual em qualquer outro método."
+    },
+    {
+      "id": "cs-con-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que cria um jogador chamado \"Ana\".",
+      "partes": ["var", "ana", "=", "new", "Jogador", "(", "\"Ana\"", ")", ";"],
+      "explicacao": "`new Jogador(\"Ana\")` chama o construtor de um parâmetro, passando `\"Ana\"` como o `nome`."
+    },
+    {
+      "id": "cs-con-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este construtor não compila. Clique na linha errada.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    public string Nome;",
+        "    public int Vida;",
+        "",
+        "    public Jogador(string nome)",
+        "    {",
+        "        Nome = nome;",
+        "        Vida = 100;",
+        "    }",
+        "",
+        "    public Jogador(string nome)",
+        "    {",
+        "        Nome = nome;",
+        "        Vida = 50;",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 11,
+      "explicacao": "Duas versões do construtor com exatamente os mesmos parâmetros não são sobrecarga — são a mesma assinatura duas vezes, e isso não compila. Sobrecarga real muda a quantidade ou o tipo dos parâmetros, como em `Jogador(string nome, int vidaInicial)`."
+    },
+    {
+      "id": "cs-con-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe e responda.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    public string Nome;",
+        "    public int Vida;",
+        "",
+        "    public Jogador(string nome)",
+        "    {",
+        "        Nome = nome;",
+        "        Vida = 100;",
+        "    }",
+        "",
+        "    public Jogador(string nome, int vidaInicial)",
+        "    {",
+        "        Nome = nome;",
+        "        Vida = vidaInicial;",
+        "    }",
+        "}",
+        "",
+        "var ana = new Jogador(\"Ana\");",
+        "var chefe = new Jogador(\"Dragão\", 500);"
+      ],
+      "pergunta": "Qual `Vida` inicial cada jogador recebe?",
+      "alternativas": [
+        "ana: 100, chefe: 500 — C# escolhe o construtor pela quantidade de argumentos.",
+        "Os dois recebem 100, porque só o primeiro construtor roda de verdade.",
+        "O código não compila: uma classe não pode ter dois construtores.",
+        "ana: 500, chefe: 100 — o último construtor declarado sempre vence."
+      ],
+      "correta": 0,
+      "explicacao": "`new Jogador(\"Ana\")` tem um argumento, então roda o construtor de um parâmetro. `new Jogador(\"Dragão\", 500)` tem dois, então roda o de dois parâmetros."
+    },
+    {
+      "id": "cs-con-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha que cria um jogador chamado \"Rex\" com 300 de vida, usando o construtor de dois parâmetros.",
+      "dica": "var, nome da variável, =, new, nome da classe, os dois argumentos entre parênteses",
+      "resposta": "var rex = new Jogador(\"Rex\", 300);",
+      "explicacao": "C# olha os dois argumentos — texto e número — e escolhe automaticamente o construtor `Jogador(string nome, int vidaInicial)`, não o de um parâmetro só."
+    }
+  ]
+}

@@ -1,0 +1,229 @@
+{
+  "id": "cs-modificadores",
+  "linguagem": "csharp",
+  "trilha": "cs-fundamentos",
+  "titulo": "Modificadores de acesso",
+  "resumo": "Quem enxerga o quê: private, public, protected, internal.",
+  "conceito": {
+    "texto": [
+      "Todo membro de uma classe carrega um modificador que responde a uma pergunta só: **quem pode usar isto?**",
+      "`private` — só o código de dentro da própria classe. É o que vale quando você não escreve modificador nenhum.",
+      "`public` — qualquer código, de qualquer lugar do programa.",
+      "`protected` — a própria classe e as classes que herdam dela.",
+      "`internal` — qualquer código do mesmo projeto, mas nada de fora dele.",
+      "A regra prática do dia a dia: comece tudo `private` e só abra o que realmente precisa ser usado de fora. Cada membro `public` é uma promessa que você passa a ter que manter."
+    ],
+    "exemplo": [
+      "public class Jogador",
+      "{",
+      "    private int _vidas = 3;           // só a própria classe mexe",
+      "",
+      "    public string Nome { get; set; }  // qualquer um lê e escreve",
+      "",
+      "    protected void Renascer()         // a classe e as filhas dela",
+      "    {",
+      "        _vidas = 3;",
+      "    }",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "private",
+      "definicao": "Só o código de dentro da própria classe enxerga o membro. É o que vale quando nenhum modificador é escrito.",
+      "exemplo": "private int _vidas = 3;"
+    },
+    {
+      "termo": "public",
+      "definicao": "Qualquer código, de qualquer lugar do programa, pode usar. Cada `public` é uma promessa que você passa a ter que manter.",
+      "exemplo": "public string Nome { get; set; }"
+    },
+    {
+      "termo": "protected",
+      "definicao": "A própria classe e as classes que herdam dela. Fecha para o mundo, abre para a herança.",
+      "exemplo": "protected void Renascer()"
+    },
+    {
+      "termo": "internal",
+      "definicao": "Qualquer código do mesmo projeto, nada de fora dele. É o padrão de uma classe de nível superior.",
+      "exemplo": "internal class RepositorioDeSaves"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-mod-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `private` garante neste campo?",
+      "codigo": [
+        "private int _vidas = 3;"
+      ],
+      "alternativas": [
+        "Que só o código de dentro da própria classe consegue usar `_vidas`.",
+        "Que o valor 3 nunca mais pode ser alterado.",
+        "Que o campo existe uma vez só, compartilhado por todos os objetos.",
+        "Que o campo fica escondido do depurador."
+      ],
+      "correta": 0,
+      "explicacao": "`private` fala sobre visibilidade, não sobre o valor. `_vidas` continua podendo mudar à vontade — só que apenas por dentro da classe."
+    },
+    {
+      "id": "cs-mod-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Você escreveu um campo dentro de uma classe e não colocou modificador nenhum. Qual acesso ele tem?",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    int _vidas = 3;",
+        "}"
+      ],
+      "alternativas": [
+        "private",
+        "public",
+        "protected",
+        "internal"
+      ],
+      "correta": 0,
+      "explicacao": "Membro de classe sem modificador é `private` por padrão. Muita gente escreve `private` mesmo assim — não muda nada para o compilador, mas deixa a intenção explícita para quem lê."
+    },
+    {
+      "id": "cs-mod-03",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que este método permite?",
+      "codigo": [
+        "public class Inimigo",
+        "{",
+        "    protected void Renascer()",
+        "    {",
+        "        // ...",
+        "    }",
+        "}"
+      ],
+      "alternativas": [
+        "Que `Inimigo` e qualquer classe que herde de `Inimigo` chamem `Renascer`.",
+        "Que qualquer código do programa chame `Renascer`.",
+        "Que só `Inimigo` chame `Renascer`, nem as filhas.",
+        "Que `Renascer` seja chamado automaticamente ao criar o objeto."
+      ],
+      "correta": 0,
+      "explicacao": "`protected` é o meio-termo entre `private` e `public`: fecha para o mundo, abre para a herança. De fora da hierarquia, `Renascer` não existe."
+    },
+    {
+      "id": "cs-mod-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para que o campo fique visível só dentro da classe e a propriedade fique aberta para todos.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    ___ int _vidas = 3;",
+        "",
+        "    ___ string Nome { get; set; }",
+        "}"
+      ],
+      "respostas": [
+        "private",
+        "public"
+      ],
+      "tokens": [
+        "private",
+        "public",
+        "protected",
+        "internal",
+        "static"
+      ],
+      "explicacao": "Esse par é o padrão mais comum em C#: o dado guardado fica `private`, e o acesso controlado a ele fica `public`."
+    },
+    {
+      "id": "cs-mod-05",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Declare um campo inteiro chamado `_vidas`, visível apenas dentro da própria classe, começando com o valor 3.",
+      "dica": "modificador, tipo, nome, `=`, valor, ponto e vírgula",
+      "resposta": "private int _vidas = 3;",
+      "explicacao": "A ordem em C# é sempre a mesma: quem pode ver, de que tipo é, como se chama, e só então o valor."
+    },
+    {
+      "id": "cs-mod-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a declaração de uma classe que só pode ser usada dentro do próprio projeto.",
+      "partes": [
+        "internal",
+        "class",
+        "RepositorioDeSaves"
+      ],
+      "explicacao": "`internal` é o modificador padrão de uma classe de nível superior. Ele serve para dizer: isto é detalhe interno do meu projeto, não faz parte do que eu ofereço para fora."
+    },
+    {
+      "id": "cs-mod-07",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o erro.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    private int _vidas = 3;",
+        "}",
+        "",
+        "public class Partida",
+        "{",
+        "    public void Iniciar(Jogador jogador)",
+        "    {",
+        "        jogador._vidas = 5;",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 9,
+      "explicacao": "`_vidas` é `private`, então só existe para o código de dentro de `Jogador`. A classe `Partida` é código de fora — para ela, esse campo é inacessível."
+    },
+    {
+      "id": "cs-mod-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe inteira e responda.",
+      "codigo": [
+        "public class Inventario",
+        "{",
+        "    private readonly List<string> _itens = new();",
+        "",
+        "    public int Total => _itens.Count;",
+        "",
+        "    public void Adicionar(string item)",
+        "    {",
+        "        _itens.Add(item);",
+        "        Ordenar();",
+        "    }",
+        "",
+        "    private void Ordenar()",
+        "    {",
+        "        _itens.Sort();",
+        "    }",
+        "}"
+      ],
+      "pergunta": "Um código de fora criou um `Inventario`. O que ele consegue usar?",
+      "alternativas": [
+        "Apenas `Total` e `Adicionar`.",
+        "`_itens`, `Total` e `Adicionar`.",
+        "`Total`, `Adicionar` e `Ordenar`.",
+        "Tudo, porque a classe é `public`."
+      ],
+      "correta": 0,
+      "explicacao": "A classe ser `public` só abre a porta da classe. Cada membro tem a própria fechadura: `_itens` e `Ordenar` são `private` e continuam invisíveis de fora, mesmo que `Adicionar` chame `Ordenar` por dentro."
+    },
+    {
+      "id": "cs-mod-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare um campo `_itens` do tipo `List<string>`, que só a própria classe enxerga, que não pode ser trocado por outra lista depois de criado, e que já nasce vazio.",
+      "dica": "acesso, `readonly`, tipo, nome, e a criação da lista",
+      "resposta": "private readonly List<string> _itens = new();",
+      "aceitas": [
+        "private readonly List<string> _itens = new List<string>();"
+      ],
+      "explicacao": "`readonly` trava o campo, não a lista: continua dando para adicionar e remover itens. O que fica proibido é apontar `_itens` para outra lista. O `new()` sem repetir o tipo é o *target-typed new*, do C# 9 em diante."
+    }
+  ]
+}

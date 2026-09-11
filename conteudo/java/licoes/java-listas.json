@@ -1,0 +1,204 @@
+{
+  "id": "java-listas",
+  "linguagem": "java",
+  "trilha": "java-colecoes",
+  "titulo": "Listas",
+  "resumo": "ArrayList, add, get, size, remove e o for-each.",
+  "conceito": {
+    "texto": [
+      "`ArrayList<T>` é uma lista que cresce e encolhe conforme você adiciona ou remove itens — diferente de um array comum, que tem tamanho fixo. O `T` entre `<>` diz o tipo dos itens que a lista guarda, como `ArrayList<String>` para uma lista de textos.",
+      "`.add(item)` acrescenta um item no fim da lista. `.get(indice)` devolve o item numa posição, contando do zero — `.get(0)` é o primeiro. `.size()` devolve quantos itens a lista tem agora.",
+      "`.remove(indice)` tira o item daquela posição e desloca os seguintes para preencher o buraco — depois de remover, os índices dos itens seguintes mudam.",
+      "Para percorrer todos os itens, o **for-each** (`for (Tipo item : lista)`) é o jeito mais direto: ele passa por cada item da lista, um de cada vez, sem você precisar controlar um índice manualmente.",
+      "Tentar `.get(indice)` com um índice que não existe (igual ou maior que `.size()`, ou negativo) lança uma exceção em tempo de execução — o compilador não pega esse erro, só a JVM ao rodar."
+    ],
+    "exemplo": [
+      "List<String> nomes = new ArrayList<>();",
+      "nomes.add(\"Ana\");",
+      "nomes.add(\"Bea\");",
+      "nomes.add(\"Caio\");",
+      "",
+      "System.out.println(nomes.get(0));  // Ana",
+      "System.out.println(nomes.size());  // 3",
+      "",
+      "for (String nome : nomes)",
+      "{",
+      "    System.out.println(nome);",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "ArrayList",
+      "definicao": "Lista que cresce e encolhe dinamicamente, ao contrário de um array de tamanho fixo.",
+      "exemplo": "List<String> nomes = new ArrayList<>();"
+    },
+    {
+      "termo": "add",
+      "definicao": "Acrescenta um item no fim da lista.",
+      "exemplo": "nomes.add(\"Ana\");"
+    },
+    {
+      "termo": "get",
+      "definicao": "Devolve o item numa posição da lista, contando do zero.",
+      "exemplo": "nomes.get(0)"
+    },
+    {
+      "termo": "size",
+      "definicao": "Devolve quantos itens a lista tem no momento.",
+      "exemplo": "nomes.size()"
+    },
+    {
+      "termo": "for-each",
+      "definicao": "Laço que percorre cada item de uma lista, um de cada vez, sem controlar índice manualmente.",
+      "exemplo": "for (String nome : nomes) { ... }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-lst-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `.add(\"Ana\")` faz numa `ArrayList<String>` vazia?",
+      "codigo": ["List<String> nomes = new ArrayList<>();", "nomes.add(\"Ana\");"],
+      "alternativas": [
+        "Acrescenta \"Ana\" como primeiro item da lista.",
+        "Substitui todos os itens da lista por \"Ana\".",
+        "Remove o item \"Ana\" da lista, se existir.",
+        "Cria uma nova lista chamada \"Ana\"."
+      ],
+      "correta": 0,
+      "explicacao": "`.add(item)` sempre acrescenta no fim da lista. Como a lista começou vazia, \"Ana\" vira o item de índice 0."
+    },
+    {
+      "id": "java-lst-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Qual índice `.get(0)` devolve numa lista?",
+      "codigo": ["nomes.get(0)"],
+      "alternativas": ["O primeiro item da lista.", "O último item da lista.", "O tamanho da lista.", "Sempre `null`."],
+      "correta": 0,
+      "explicacao": "Listas em Java são indexadas a partir de zero: `.get(0)` é sempre o primeiro item, não o zero-ésimo em algum outro sentido."
+    },
+    {
+      "id": "java-lst-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "List<String> nomes = new ArrayList<>();",
+        "nomes.add(\"Ana\");",
+        "nomes.add(\"Bea\");",
+        "System.out.println(nomes.size());"
+      ],
+      "alternativas": ["2", "1", "0", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "Dois itens foram adicionados (\"Ana\" e \"Bea\"), então `.size()` devolve 2."
+    },
+    {
+      "id": "java-lst-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "O que acontece com os índices dos itens depois de `.remove(0)`?",
+      "codigo": ["List<String> nomes = new ArrayList<>();", "nomes.add(\"Ana\");", "nomes.add(\"Bea\");", "nomes.add(\"Caio\");", "nomes.remove(0);"],
+      "alternativas": [
+        "\"Bea\" passa a ser o índice 0, e \"Caio\" passa a ser o índice 1.",
+        "Os índices não mudam; o índice 0 fica vazio.",
+        "A lista inteira é reordenada alfabeticamente.",
+        "\"Ana\" continua no índice 0, só marcada como removida."
+      ],
+      "correta": 0,
+      "explicacao": "`.remove` desloca os itens seguintes para preencher o espaço deixado. Depois de remover o índice 0, todo mundo \"anda uma casa para trás\"."
+    },
+    {
+      "id": "java-lst-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "List<Integer> numeros = new ArrayList<>();",
+        "numeros.add(10);",
+        "numeros.add(20);",
+        "numeros.add(30);",
+        "",
+        "int soma = 0;",
+        "for (int n : numeros)",
+        "{",
+        "    soma += n;",
+        "}",
+        "System.out.println(soma);"
+      ],
+      "alternativas": ["60", "30", "3", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "O for-each percorre 10, 20 e 30, somando cada um a `soma`: 10 + 20 + 30 = 60."
+    },
+    {
+      "id": "java-lst-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a declaração de uma lista de textos chamada `tarefas`, já criada vazia.",
+      "codigo": ["List<String> tarefas = ___ ArrayList<>();"],
+      "respostas": ["new"],
+      "tokens": ["new", "this", "static", "final"],
+      "explicacao": "`new ArrayList<>()` é o que efetivamente cria a lista vazia. O diamante `<>` reaproveita o tipo já declarado à esquerda (`String`)."
+    },
+    {
+      "id": "java-lst-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte o laço for-each que percorre a lista `nomes`, guardando cada item em `nome`.",
+      "partes": ["for", "(", "String", "nome", ":", "nomes", ")"],
+      "explicacao": "A sintaxe do for-each é `for (Tipo variavel : colecao)`. Os dois-pontos separam a variável que recebe cada item da coleção percorrida."
+    },
+    {
+      "id": "java-lst-08",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare uma lista de inteiros chamada `numeros`, já criada vazia.",
+      "dica": "List, tipo genérico, nome, igual, new, ArrayList com diamante",
+      "resposta": "List<Integer> numeros = new ArrayList<>();",
+      "aceitas": ["List<Integer> numeros = new ArrayList<Integer>();"],
+      "explicacao": "Listas de tipos primitivos usam a versão \"embrulhada\" — `Integer` no lugar de `int` — porque os genéricos de Java não aceitam primitivos diretamente."
+    },
+    {
+      "id": "java-lst-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código compila, mas lança uma exceção ao rodar. Clique na linha que causa o problema.",
+      "codigo": [
+        "List<String> nomes = new ArrayList<>();",
+        "nomes.add(\"Ana\");",
+        "nomes.add(\"Bea\");",
+        "System.out.println(nomes.get(2));"
+      ],
+      "linhaErrada": 3,
+      "explicacao": "A lista tem só dois itens, nos índices 0 e 1. Pedir `.get(2)` está fora dos limites e lança `IndexOutOfBoundsException` em tempo de execução — o compilador não detecta esse tipo de erro."
+    },
+    {
+      "id": "java-lst-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "List<String> fila = new ArrayList<>();",
+        "fila.add(\"Ana\");",
+        "fila.add(\"Bea\");",
+        "fila.add(\"Caio\");",
+        "",
+        "fila.remove(\"Bea\");",
+        "fila.add(\"Duda\");",
+        "",
+        "System.out.println(fila.get(1));"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": [
+        "Caio",
+        "Bea",
+        "Duda",
+        "Erro de compilação"
+      ],
+      "correta": 0,
+      "explicacao": "`.remove(\"Bea\")` remove pelo valor, não pelo índice — sobra [\"Ana\", \"Caio\"]. `.add(\"Duda\")` acrescenta no fim: [\"Ana\", \"Caio\", \"Duda\"]. O índice 1 agora é \"Caio\"."
+    }
+  ]
+}

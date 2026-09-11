@@ -1,0 +1,216 @@
+{
+  "id": "java-metodos",
+  "linguagem": "java",
+  "trilha": "java-fundamentos",
+  "titulo": "Métodos",
+  "resumo": "Declarar, parametrizar e sobrecarregar comportamento reutilizável.",
+  "conceito": {
+    "texto": [
+      "Um **método** é um bloco de código com nome, que pode ser chamado quantas vezes for preciso. Em Java, todo método vive dentro de uma classe — não existe método solto, fora de classe nenhuma.",
+      "A assinatura de um método declara, nessa ordem: o tipo de retorno, o nome, e os parâmetros entre parênteses. Se o método não devolve nada, o tipo de retorno é `void`.",
+      "Parâmetros são as variáveis que o método recebe para trabalhar. Cada um precisa do próprio tipo declarado: `somar(int a, int b)` recebe dois inteiros chamados `a` e `b`.",
+      "Quando o método tem um tipo de retorno diferente de `void`, ele precisa terminar com `return valor;` — e esse valor precisa bater com o tipo declarado.",
+      "Java permite **sobrecarga de métodos** (*overloading*): vários métodos com o mesmo nome, desde que a lista de parâmetros seja diferente (em quantidade ou em tipo). O compilador escolhe qual chamar olhando os argumentos passados.",
+      "Sobrecarregar é diferente de sobrescrever: sobrecarga acontece na mesma classe, com o mesmo nome e parâmetros diferentes; nada a ver com herança."
+    ],
+    "exemplo": [
+      "public class Calculadora",
+      "{",
+      "    public int somar(int a, int b)",
+      "    {",
+      "        return a + b;",
+      "    }",
+      "",
+      "    public double somar(double a, double b)",
+      "    {",
+      "        return a + b;",
+      "    }",
+      "",
+      "    public void mostrarResultado(int valor)",
+      "    {",
+      "        System.out.println(\"Resultado: \" + valor);",
+      "    }",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "método",
+      "definicao": "Bloco de código nomeado, dentro de uma classe, que pode ser chamado várias vezes.",
+      "exemplo": "public int somar(int a, int b) { return a + b; }"
+    },
+    {
+      "termo": "parâmetro",
+      "definicao": "Variável que o método recebe para trabalhar, declarada entre parênteses na assinatura.",
+      "exemplo": "somar(int a, int b)"
+    },
+    {
+      "termo": "void",
+      "definicao": "Tipo de retorno usado quando o método não devolve nenhum valor.",
+      "exemplo": "public void mostrarResultado(int valor) { ... }"
+    },
+    {
+      "termo": "sobrecarga (overloading)",
+      "definicao": "Vários métodos com o mesmo nome na mesma classe, diferindo na lista de parâmetros.",
+      "exemplo": "somar(int a, int b) e somar(double a, double b)"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-met-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `void` indica na assinatura deste método?",
+      "codigo": ["public void mostrarResultado(int valor)", "{", "    System.out.println(valor);", "}"],
+      "alternativas": [
+        "Que o método não devolve nenhum valor.",
+        "Que o método não recebe parâmetros.",
+        "Que o método é privado.",
+        "Que o valor de `valor` nunca muda."
+      ],
+      "correta": 0,
+      "explicacao": "`void` é o tipo de retorno usado quando o método só executa uma ação (aqui, imprimir) e não devolve nada para quem o chamou."
+    },
+    {
+      "id": "java-met-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que esta assinatura de método diz sobre os parâmetros dele?",
+      "codigo": ["public int somar(int a, int b)"],
+      "alternativas": [
+        "Recebe dois inteiros, chamados `a` e `b`.",
+        "Recebe um inteiro e devolve dois.",
+        "Recebe qualquer quantidade de inteiros.",
+        "Recebe dois textos que representam números."
+      ],
+      "correta": 0,
+      "explicacao": "Cada parâmetro é declarado com seu próprio tipo e nome. Aqui há exatamente dois parâmetros `int`, `a` e `b`."
+    },
+    {
+      "id": "java-met-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "public static int dobro(int numero)",
+        "{",
+        "    return numero * 2;",
+        "}",
+        "",
+        "System.out.println(dobro(5));"
+      ],
+      "alternativas": ["10", "5", "52", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "`dobro(5)` executa `5 * 2` e devolve `10`, que é o que `println` imprime."
+    },
+    {
+      "id": "java-met-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Estas duas declarações, na mesma classe, causam erro de compilação?",
+      "codigo": [
+        "public int somar(int a, int b) { return a + b; }",
+        "public double somar(double a, double b) { return a + b; }"
+      ],
+      "alternativas": [
+        "Não — é sobrecarga válida, porque os tipos dos parâmetros são diferentes.",
+        "Sim — dois métodos não podem ter o mesmo nome na mesma classe.",
+        "Não, mas só porque um devolve `int` e o outro `double`.",
+        "Sim — sobrecarga só é permitida com nomes diferentes."
+      ],
+      "correta": 0,
+      "explicacao": "Sobrecarga é decidida pela lista de parâmetros, não pelo tipo de retorno. Como `(int, int)` e `(double, double)` são assinaturas diferentes, o compilador aceita as duas."
+    },
+    {
+      "id": "java-met-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "Dado o código do conceito (a classe `Calculadora`), o que este trecho imprime?",
+      "codigo": [
+        "Calculadora calc = new Calculadora();",
+        "int resultado = calc.somar(3, 4);",
+        "System.out.println(resultado);"
+      ],
+      "alternativas": ["7", "3.0", "34", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "Como os dois argumentos são `int`, o compilador escolhe a sobrecarga `somar(int, int)`, que devolve `3 + 4 = 7`."
+    },
+    {
+      "id": "java-met-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a assinatura de um método que recebe um texto e devolve o tamanho dele como número inteiro.",
+      "codigo": ["public ___ contarLetras(___ texto)", "{", "    return texto.length();", "}"],
+      "respostas": ["int", "String"],
+      "tokens": ["int", "String", "void", "double", "char"],
+      "explicacao": "O método devolve um `int` (o tamanho) e recebe um `String` (o texto). `texto.length()` já devolve um `int`, então bate com o tipo de retorno declarado."
+    },
+    {
+      "id": "java-met-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a assinatura de um método público, sem retorno, chamado `saudar`, que recebe um `String` chamado `nome`.",
+      "partes": ["public", "void", "saudar", "(", "String", "nome", ")"],
+      "explicacao": "A ordem em Java é sempre: modificador, tipo de retorno, nome do método, e os parâmetros entre parênteses com tipo antes do nome."
+    },
+    {
+      "id": "java-met-08",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha de retorno de um método que devolve o dobro do parâmetro `numero`.",
+      "dica": "return, a expressão, ponto e vírgula",
+      "resposta": "return numero * 2;",
+      "explicacao": "`return` devolve um valor e encerra a execução do método ali mesmo. O valor devolvido precisa ser compatível com o tipo de retorno declarado na assinatura."
+    },
+    {
+      "id": "java-met-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o problema.",
+      "codigo": [
+        "public class Calculadora",
+        "{",
+        "    public int somar(int a, int b)",
+        "    {",
+        "        System.out.println(a + b);",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 4,
+      "explicacao": "O método declara retorno `int`, mas nunca executa um `return`. Todo caminho de um método com retorno declarado precisa terminar devolvendo um valor daquele tipo — imprimir não é o mesmo que devolver."
+    },
+    {
+      "id": "java-met-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "public class Formatador",
+        "{",
+        "    public String formatar(int valor)",
+        "    {",
+        "        return \"Valor: \" + valor;",
+        "    }",
+        "",
+        "    public String formatar(String valor)",
+        "    {",
+        "        return \"Texto: \" + valor;",
+        "    }",
+        "}",
+        "",
+        "Formatador f = new Formatador();",
+        "System.out.println(f.formatar(10));",
+        "System.out.println(f.formatar(\"10\"));"
+      ],
+      "pergunta": "O que estas duas últimas linhas imprimem, na ordem?",
+      "alternativas": [
+        "\"Valor: 10\" e depois \"Texto: 10\"",
+        "\"Texto: 10\" duas vezes",
+        "Erro de compilação, porque há dois métodos `formatar`",
+        "\"Valor: 10\" duas vezes"
+      ],
+      "correta": 0,
+      "explicacao": "O compilador escolhe a sobrecarga pelo tipo do argumento na chamada: `10` (um `int` literal) casa com `formatar(int)`, e `\"10\"` (um `String`) casa com `formatar(String)`. Cada chamada usa sua própria versão do método."
+    }
+  ]
+}

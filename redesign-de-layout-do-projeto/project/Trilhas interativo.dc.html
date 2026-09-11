@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    background: #0b0c0e;
+    --fundo: #08090b; --superficie: #0f1115; --linha: #1e2128;
+    --acento: #c7f74e; --acentoFundo: #0d1006; --acentoLinha: #2b3417; --acentoTexto: #7e8a5c;
+    --textoForte: #f2f4f7; --texto: #c3c9d2; --textoFraco: #9aa1ad; --legenda: #6f7683;
+    --desativado: #4a505b; --desativado2: #31363f;
+    --erro: #f87171; --erroFundo: #170b0b; --erroLinha: #4a2020;
+    --ok: #34d399;
+  }
+  a { color: var(--acento); text-decoration: none; }
+  a:hover { color: var(--textoForte); }
+  @keyframes ouro-cursor { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @keyframes ouro-sobe { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes ouro-entra { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#08090b">
+  <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="200" cy="200" r="110" fill="none" stroke="#1e2128" stroke-width="4" stroke-dasharray="6 12"></circle>
+    <circle cx="200" cy="200" r="110" fill="none" stroke="#c7f74e" stroke-width="32" stroke-linecap="round" stroke-dasharray="230 691" transform="rotate(-90 200 200)"></circle>
+    <circle cx="308" cy="181" r="18" fill="#c7f74e"></circle>
+    <circle cx="314" cy="185" r="5" fill="#08090b"></circle>
+  </svg>
+</template>
+<div style="min-height:100vh;background:#0b0c0e;padding:36px 40px 60px;font-family:'Space Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased;display:flex;gap:44px;align-items:flex-start">
+
+  <div style="width:390px;flex:none">
+    <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;color:var(--acento)">protótipo clicável</div>
+    <div style="font:700 30px/31px 'Space Grotesk',sans-serif;letter-spacing:-1.3px;color:var(--textoForte);margin-top:9px">Trilhas, do toque à lição fechada</div>
+    <div style="font:400 12.5px/21px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:12px">Toque num ponto do ciclo, faça a lição até o fim e volte: o corpo da cobra cresce mais 40° e a cabeça anda para o ponto seguinte.</div>
+
+    <div style="margin-top:22px;border-left:2px solid var(--acento);background:var(--acentoFundo);padding:14px 16px">
+      <div style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:1.6px;color:var(--acento)">O QUE DÁ PARA TOCAR</div>
+      <div style="font:400 12px/21px 'JetBrains Mono',monospace;color:var(--acentoTexto);margin-top:8px">nome da linguagem ▾ — abre o seletor<br>ponto ou linha liberada — abre a lição<br>ponto travado — diz o que falta<br>glossário — sobe do rodapé<br>abas — fora do escopo, avisam</div>
+    </div>
+
+    <div onClick="{{ reiniciar }}" style="margin-top:14px;min-height:44px;border:1px solid var(--linha);display:flex;align-items:center;justify-content:center;cursor:pointer;font:600 14px 'Space Grotesk',sans-serif;color:var(--legenda)">Recomeçar o protótipo</div>
+
+    <div style="margin-top:22px;font:400 11px/19px 'JetBrains Mono',monospace;color:var(--desativado)">A sessão roda os cards reais de <span style="color:var(--legenda)">conteudo/csharp/licoes/cs-metodos.json</span>. Lições, resumos e termos do glossário saem dos mesmos arquivos.</div>
+  </div>
+
+  <!-- ═══════════ o aparelho ═══════════ -->
+  <div style="width:390px;height:844px;flex:none;overflow:hidden;position:relative;background:var(--fundo);border:1px solid var(--linha);display:flex;flex-direction:column">
+
+    <!-- ── TRILHAS ── -->
+    <sc-if value="{{ emTrilhas }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding-top:46px"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 22px;border-bottom:1px solid var(--linha)">
+          <div onClick="{{ abrirSeletor }}" style="display:flex;align-items:center;gap:9px;min-height:44px;margin-left:-11px;padding:0 11px;border:1px solid var(--acentoLinha);background:var(--acentoFundo);cursor:pointer">
+            <div style="font:600 16px/19px 'Space Grotesk',sans-serif;color:var(--textoForte)">{{ linguagemNome }}</div>
+            <div style="font:400 11px 'JetBrains Mono',monospace;color:var(--acentoTexto)">{{ contagemAtual }}</div>
+            <svg width="10" height="7" viewBox="0 0 10 7" style="display:block"><path d="M1 1.4 5 5.6 9 1.4" fill="none" stroke="var(--acento)" stroke-width="1.6" stroke-linecap="square"></path></svg>
+          </div>
+          <div onClick="{{ abrirGlossario }}" style="display:flex;align-items:center;min-height:44px;padding-left:14px;font:400 11px 'JetBrains Mono',monospace;color:var(--legenda);cursor:pointer">glossário</div>
+        </div>
+
+        <div style="flex:1;overflow:auto">
+          <div style="position:relative;width:280px;height:280px;margin:14px auto 0">
+            <svg width="280" height="280" viewBox="0 0 100 100" style="display:block;overflow:visible">
+              <circle cx="50" cy="50" r="34" fill="none" stroke="var(--linha)" stroke-width="1" stroke-dasharray="1.6 3.2"></circle>
+              <sc-for list="{{ pontos }}" as="p" hint-placeholder-count="9">
+                <rect x="{{ p.x }}" y="{{ p.y }}" width="4.6" height="4.6" fill="{{ p.fill }}" stroke="{{ p.stroke }}" stroke-width="1.2" onClick="{{ p.aoTocar }}" style="cursor:pointer"></rect>
+              </sc-for>
+              <circle cx="50" cy="50" r="34" fill="none" stroke="var(--acento)" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{ dashCorpo }}" transform="rotate(-90 50 50)" style="transition:stroke-dasharray .9s cubic-bezier(.2,.9,.3,1);pointer-events:none"></circle>
+              <circle cx="{{ cabecaX }}" cy="{{ cabecaY }}" r="5.6" fill="var(--acento)" style="transition:cx .9s cubic-bezier(.2,.9,.3,1),cy .9s cubic-bezier(.2,.9,.3,1);pointer-events:none"></circle>
+              <circle cx="{{ olhoX }}" cy="{{ olhoY }}" r="1.5" fill="var(--fundo)" style="transition:cx .9s cubic-bezier(.2,.9,.3,1),cy .9s cubic-bezier(.2,.9,.3,1);pointer-events:none"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 62px;pointer-events:none">
+              <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;color:var(--acento)">{{ centroRotulo }}</div>
+              <div style="font:600 17px/21px 'Space Grotesk',sans-serif;color:var(--textoForte);margin-top:8px">{{ centroTitulo }}</div>
+              <div style="font:400 11px/16px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:6px">{{ centroNota }}</div>
+            </div>
+            <div onClick="{{ abrirAtual }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,34px);display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 10px">
+              <div style="font:700 13px/13px 'Space Grotesk',sans-serif;letter-spacing:-0.2px;color:var(--acento)">{{ centroAcao }}</div>
+              <div style="font:700 12px/13px 'JetBrains Mono',monospace;color:var(--acento);animation:ouro-cursor 1.1s steps(1) infinite">▌</div>
+            </div>
+          </div>
+
+          <div style="text-align:center;font:400 11px 'JetBrains Mono',monospace;color:var(--desativado);margin-top:2px">{{ legendaCiclo }}</div>
+
+          <div style="padding:14px 22px 22px">
+            <sc-for list="{{ secoes }}" as="s" hint-placeholder-count="3">
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0 6px">
+                  <div style="{{ s.rotuloEstilo }}">{{ s.rotulo }}</div>
+                  <div style="font:400 11px 'JetBrains Mono',monospace;color:var(--legenda)">{{ s.contagem }}</div>
+                </div>
+                <sc-for list="{{ s.licoes }}" as="l" hint-placeholder-count="3">
+                  <div onClick="{{ l.aoTocar }}" style="{{ l.linhaEstilo }}">
+                    <div style="{{ l.noEstilo }}">{{ l.noTexto }}</div>
+                    <div style="flex:1;min-width:0;font:600 14px/17px 'Space Grotesk',sans-serif;color:{{ l.corTitulo }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ l.titulo }}</div>
+                    <div style="font:400 11px 'JetBrains Mono',monospace;color:{{ l.corNota }}">{{ l.nota }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;background:var(--fundo);border-top:1px solid var(--linha)">
+          <div onClick="{{ foraDoEscopo }}" style="flex:1;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-top:2px solid transparent;margin-top:-1px;color:var(--desativado);cursor:pointer">
+            <svg width="17" height="17" viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-dasharray="196 17.6" transform="rotate(-96 50 50)"></circle></svg>
+            <div style="font:700 9px/9px 'JetBrains Mono',monospace;letter-spacing:1.4px">HOJE</div>
+          </div>
+          <div style="flex:1;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-top:2px solid var(--acento);margin-top:-1px;color:var(--acento)">
+            <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-start"><div style="width:17px;height:3px;background:currentColor"></div><div style="width:11px;height:3px;background:currentColor"></div><div style="width:17px;height:3px;background:currentColor"></div></div>
+            <div style="font:700 9px/9px 'JetBrains Mono',monospace;letter-spacing:1.4px">TRILHAS</div>
+          </div>
+          <div onClick="{{ foraDoEscopo }}" style="flex:1;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-top:2px solid transparent;margin-top:-1px;color:var(--desativado);cursor:pointer">
+            <div style="width:13px;height:13px;background:currentColor;transform:rotate(45deg)"></div>
+            <div style="font:700 9px/9px 'JetBrains Mono',monospace;letter-spacing:1.4px">RELÂMP</div>
+          </div>
+          <div onClick="{{ foraDoEscopo }}" style="flex:1;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-top:2px solid transparent;margin-top:-1px;color:var(--desativado);cursor:pointer">
+            <div style="width:15px;height:15px;border:3px solid currentColor;box-sizing:border-box"></div>
+            <div style="font:700 9px/9px 'JetBrains Mono',monospace;letter-spacing:1.4px">LIGA</div>
+          </div>
+          <div onClick="{{ foraDoEscopo }}" style="flex:1;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-top:2px solid transparent;margin-top:-1px;color:var(--desativado);cursor:pointer">
+            <div style="width:15px;height:15px;border:3px solid currentColor;border-radius:999px;box-sizing:border-box"></div>
+            <div style="font:700 9px/9px 'JetBrains Mono',monospace;letter-spacing:1.4px">PERFIL</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ── LIÇÃO ── -->
+    <sc-if value="{{ emLicao }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;animation:ouro-entra .3s cubic-bezier(.2,.85,.25,1)">
+        <div style="padding-top:46px"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 22px;border-bottom:1px solid var(--linha)">
+          <div onClick="{{ voltarTrilhas }}" style="font:400 11px 'JetBrains Mono',monospace;color:var(--legenda);cursor:pointer">‹ trilhas</div>
+          <div style="font:400 11px 'JetBrains Mono',monospace;color:var(--legenda)">{{ licaoPosicao }}</div>
+        </div>
+
+        <div style="flex:1;overflow:auto;padding:18px 22px 0">
+          <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;text-transform:uppercase;color:var(--acento)">{{ licaoTrilha }}</div>
+          <div style="font:700 30px/33px 'Space Grotesk',sans-serif;letter-spacing:-1.3px;color:var(--textoForte);margin-top:9px">{{ licaoTitulo }}</div>
+          <div style="font:400 12.5px/21px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:11px">{{ licaoResumo }}</div>
+
+          <div style="margin-top:22px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-top:1px solid var(--linha)">
+              <div style="font:400 12.5px 'JetBrains Mono',monospace;color:var(--legenda)">cards</div>
+              <div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--textoForte)">{{ licaoCards }}</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-top:1px solid var(--linha)">
+              <div style="font:400 12.5px 'JetBrains Mono',monospace;color:var(--legenda)">dificuldade</div>
+              <div style="display:flex;align-items:baseline;gap:10px;font:400 11px 'JetBrains Mono',monospace;color:var(--legenda)">
+                <span><b style="font:700 12px 'Space Grotesk',sans-serif;color:var(--ok)">{{ licaoLeves }}</b> leves</span>
+                <span><b style="font:700 12px 'Space Grotesk',sans-serif;color:var(--acento)">{{ licaoMedios }}</b> médios</span>
+                <span><b style="font:700 12px 'Space Grotesk',sans-serif;color:var(--erro)">{{ licaoDificeis }}</b> difíceis</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)">
+              <div style="font:400 12.5px 'JetBrains Mono',monospace;color:var(--legenda)">estado</div>
+              <div style="font:700 15px 'Space Grotesk',sans-serif;color:{{ licaoEstadoCor }}">{{ licaoEstado }}</div>
+            </div>
+          </div>
+
+          <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;text-transform:uppercase;color:var(--legenda);margin-top:26px">o que entra</div>
+          <div style="font:400 12px/20px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:12px">{{ licaoConceito }}</div>
+        </div>
+
+        <div style="padding:14px 22px 30px">
+          <div onClick="{{ comecarSessao }}" style="min-height:60px;background:var(--acento);display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer">
+            <div style="font:700 18px/18px 'Space Grotesk',sans-serif;letter-spacing:-0.3px;color:var(--acentoFundo)">{{ licaoBotao }}</div>
+            <div style="font:700 14px/18px 'JetBrains Mono',monospace;color:var(--acentoFundo);animation:ouro-cursor 1.1s steps(1) infinite">▌</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ── SESSÃO ── -->
+    <sc-if value="{{ emSessao }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;animation:ouro-entra .4s cubic-bezier(.2,.85,.25,1)">
+        <div style="display:flex;align-items:center;gap:14px;padding:54px 22px 0">
+          <div onClick="{{ voltarTrilhas }}" style="font:600 18px/22px 'Space Grotesk',sans-serif;color:var(--legenda);cursor:pointer">✕</div>
+          <div style="flex:1;height:3px;background:var(--linha)"><div style="height:100%;background:var(--acento);width:{{ sessaoBarra }};transition:width .42s cubic-bezier(.2,.9,.3,1)"></div></div>
+          <div style="font:400 11px 'JetBrains Mono',monospace;color:var(--legenda)">{{ sessaoContador }}</div>
+          <div style="display:flex;align-items:baseline;gap:3px">
+            <div style="font:700 14px 'Space Grotesk',sans-serif;color:var(--acento)">{{ sessaoXp }}</div>
+            <div style="font:400 10px 'JetBrains Mono',monospace;color:var(--acentoTexto)">XP</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:9px;padding:16px 22px 0">
+          <div style="font:400 10px/12px 'JetBrains Mono',monospace;letter-spacing:1.2px;color:var(--acento)">{{ cardSigla }}</div>
+          <div style="width:1px;height:11px;background:var(--linha)"></div>
+          <div style="font:400 10px/12px 'JetBrains Mono',monospace;letter-spacing:1.2px;color:{{ cardNivelCor }}">{{ cardNivel }}</div>
+          <div style="width:1px;height:11px;background:var(--linha)"></div>
+          <div style="font:400 10px/12px 'JetBrains Mono',monospace;letter-spacing:1.2px;color:var(--legenda)">card novo</div>
+        </div>
+
+        <div style="flex:1;overflow:auto;padding:22px 22px 300px;display:flex;flex-direction:column;gap:18px">
+          <div style="font:600 21px/28px 'Space Grotesk',sans-serif;letter-spacing:-0.4px;color:var(--textoForte)">{{ cardEnunciado }}</div>
+
+          <div style="background:var(--acentoFundo);border-left:2px solid var(--acento);padding:16px 0">
+            <div style="padding:0 18px;font:400 14px/26px 'JetBrains Mono',monospace;color:var(--textoFraco);white-space:pre">{{ cardCodigo }}</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <sc-for list="{{ alternativas }}" as="a" hint-placeholder-count="4">
+              <div onClick="{{ a.aoTocar }}" style="{{ a.caixa }}">
+                <div style="{{ a.letraEstilo }}">{{ a.letra }}</div>
+                <div style="flex:1;font:500 15px/22px 'Space Grotesk',sans-serif;color:{{ a.corTexto }}">{{ a.texto }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ semFeedback }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:14px 22px 30px;border-top:1px solid var(--linha);background:var(--fundo)">
+            <div onClick="{{ verificar }}" style="{{ botaoVerificar }}">
+              <div style="font:700 18px/18px 'Space Grotesk',sans-serif;letter-spacing:-0.3px">{{ rotuloVerificar }}</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ comFeedback }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ painelFeedback }}">
+            <div style="display:flex;align-items:baseline;gap:11px">
+              <div style="font:700 20px/24px 'Space Grotesk',sans-serif;letter-spacing:-0.5px;color:{{ corResultado }}">{{ tituloResultado }}</div>
+              <div style="font:400 11px 'JetBrains Mono',monospace;color:{{ corResultado }}">{{ deltaResultado }}</div>
+            </div>
+            <div style="font:400 14.5px/24px 'Space Grotesk',sans-serif;color:var(--texto);margin-top:11px">{{ explicacao }}</div>
+            <div onClick="{{ seguir }}" style="{{ botaoSeguir }}">
+              <div style="font:700 17px/17px 'Space Grotesk',sans-serif;letter-spacing:-0.3px">{{ rotuloSeguir }}</div>
+              <div style="font:700 14px/18px 'JetBrains Mono',monospace;animation:ouro-cursor 1.1s steps(1) infinite">▌</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ── RESUMO ── -->
+    <sc-if value="{{ emResumo }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;animation:ouro-entra .4s cubic-bezier(.2,.85,.25,1)">
+        <div style="flex:1;overflow:auto;padding:54px 22px 0">
+          <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;text-transform:uppercase;color:var(--acento)">sessão fechada</div>
+          <div style="display:flex;align-items:flex-end;gap:12px;margin-top:12px">
+            <div style="font:700 96px/79px 'Space Grotesk',sans-serif;letter-spacing:-5px;color:var(--textoForte)">{{ resumoXp }}</div>
+            <div style="font:400 14px 'JetBrains Mono',monospace;color:var(--acentoTexto);padding-bottom:14px">XP</div>
+          </div>
+
+          <div style="margin-top:24px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--linha)">
+              <div style="font:400 12.5px 'JetBrains Mono',monospace;color:var(--legenda)">acertos</div>
+              <div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--acento)">{{ resumoAcertos }}</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--linha)">
+              <div style="font:400 12.5px 'JetBrains Mono',monospace;color:var(--legenda)">lição</div>
+              <div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--textoForte)">{{ resumoLicao }}</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)">
+              <div style="font:400 12.5px 'JetBrains Mono',monospace;color:var(--legenda)">ciclo</div>
+              <div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--textoForte)">{{ resumoCiclo }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:22px;border-left:2px solid var(--acento);background:var(--acentoFundo);padding:16px 18px">
+            <div style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:1.6px;color:var(--acento)">DESBLOQUEOU</div>
+            <div style="font:600 16px/19px 'Space Grotesk',sans-serif;color:var(--textoForte);margin-top:8px">{{ desbloqueouTitulo }}</div>
+            <div style="font:400 12px/18px 'JetBrains Mono',monospace;color:var(--acentoTexto);margin-top:5px">{{ desbloqueouNota }}</div>
+          </div>
+        </div>
+
+        <div style="padding:14px 22px 30px">
+          <div onClick="{{ fecharCiclo }}" style="min-height:60px;background:var(--acento);display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer">
+            <div style="font:700 18px/18px 'Space Grotesk',sans-serif;letter-spacing:-0.3px;color:var(--acentoFundo)">Voltar ao ciclo</div>
+            <div style="font:700 14px/18px 'JetBrains Mono',monospace;color:var(--acentoFundo);animation:ouro-cursor 1.1s steps(1) infinite">▌</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ── GLOSSÁRIO ── -->
+    <sc-if value="{{ verGlossario }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:var(--fundo);z-index:5;display:flex;flex-direction:column;animation:ouro-sobe .3s cubic-bezier(.2,.85,.25,1)">
+        <div style="flex:1;overflow:auto;padding:54px 22px 34px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;text-transform:uppercase;color:var(--acento)">glossário</div>
+            <div onClick="{{ fecharGlossario }}" style="font:600 18px/22px 'Space Grotesk',sans-serif;color:var(--legenda);cursor:pointer">✕</div>
+          </div>
+          <div style="font:700 30px/31px 'Space Grotesk',sans-serif;letter-spacing:-1.3px;color:var(--textoForte);margin-top:9px">A colinha</div>
+          <div style="font:400 11.5px/18px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:11px">os termos da lição em curso</div>
+
+          <div style="margin-top:22px">
+            <sc-for list="{{ termos }}" as="t" hint-placeholder-count="5">
+              <div style="padding-bottom:16px">
+                <div style="height:1px;background:var(--linha)"></div>
+                <div style="display:flex;align-items:baseline;gap:10px;margin-top:16px">
+                  <div style="font:700 14px/17px 'JetBrains Mono',monospace;color:var(--acento)">{{ t.termo }}</div>
+                  <div style="font:400 10px/12px 'JetBrains Mono',monospace;letter-spacing:1.2px;color:var(--acento)">C#</div>
+                </div>
+                <div style="font:400 13.5px/22px 'Space Grotesk',sans-serif;color:var(--textoFraco);margin-top:9px">{{ t.definicao }}</div>
+                <div style="margin-top:9px;background:var(--acentoFundo);border-left:2px solid var(--acento);padding:14px 18px;font:400 14px/24px 'JetBrains Mono',monospace;color:var(--textoFraco);white-space:pre">{{ t.exemplo }}</div>
+              </div>
+            </sc-for>
+            <div style="height:1px;background:var(--linha)"></div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ── SELETOR DE LINGUAGEM ── -->
+    <sc-if value="{{ verSeletor }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ fecharSeletor }}" style="position:absolute;inset:0;z-index:7;background:rgba(4,5,6,.72);display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer">
+        <div style="background:var(--fundo);border-top:1px solid var(--linha);padding:18px 22px 30px;animation:ouro-sobe .28s cubic-bezier(.2,.85,.25,1);cursor:default">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font:700 11px 'JetBrains Mono',monospace;letter-spacing:2.6px;text-transform:uppercase;color:var(--acento)">linguagem</div>
+            <div onClick="{{ fecharSeletor }}" style="font:600 18px/22px 'Space Grotesk',sans-serif;color:var(--legenda);cursor:pointer">✕</div>
+          </div>
+          <div style="margin-top:14px">
+            <sc-for list="{{ linguagens }}" as="l" hint-placeholder-count="2">
+              <div onClick="{{ l.aoTocar }}" style="{{ l.linha }}">
+                <div style="{{ l.marca }}"></div>
+                <div style="flex:1;min-width:0">
+                  <div style="font:600 15px/18px 'Space Grotesk',sans-serif;color:{{ l.corNome }}">{{ l.nome }}</div>
+                  <div style="font:400 11px/15px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:3px">{{ l.nota }}</div>
+                </div>
+                <div style="width:52px;flex:none">
+                  <div style="height:3px;background:var(--linha)"><div style="height:100%;background:{{ l.corBarra }};width:{{ l.barra }}"></div></div>
+                  <div style="font:400 10px 'JetBrains Mono',monospace;color:var(--legenda);margin-top:5px;text-align:right">{{ l.contagem }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ── AVISO ── -->
+    <sc-if value="{{ temAviso }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:22px;right:22px;bottom:96px;z-index:9;border-left:2px solid var(--acento);background:var(--acentoFundo);padding:12px 14px;animation:ouro-entra .2s ease-out">
+        <div style="font:400 12px/19px 'JetBrains Mono',monospace;color:var(--acentoTexto)">{{ aviso }}</div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:920,&quot;height&quot;:940}}">
+const LINGUAGENS = {
+  csharp: {
+    sigla: 'C#', nome: 'C#', descricao: 'A linguagem do .NET, do WPF e do Unity.',
+    trilhas: [
+      { rotulo: 'C# · fundamentos', licoes: ['cs-modificadores', 'cs-tipos', 'cs-metodos'] },
+      { rotulo: 'C# · orientação a objetos', licoes: ['cs-classes', 'cs-construtores', 'cs-propriedades'] },
+      { rotulo: 'C# · coleções', licoes: ['cs-listas', 'cs-dicionarios', 'cs-foreach'] }
+    ]
+  },
+  javascript: {
+    sigla: 'js', nome: 'JavaScript', descricao: 'A linguagem que roda no navegador.',
+    trilhas: [
+      { rotulo: 'js · fundamentos', licoes: ['js-declaracoes', 'js-funcoes', 'js-escopo'] },
+      { rotulo: 'js · objetos e arrays', licoes: ['js-desestruturacao', 'js-map', 'js-filter'] },
+      { rotulo: 'js · assíncrono', licoes: ['js-promises', 'js-async-await', 'js-erros-assincronos'] }
+    ]
+  }
+};
+
+const LICOES = {
+  'cs-modificadores': { titulo: 'Modificadores de acesso', resumo: 'Quem enxerga o quê: private, public, protected, internal.', cards: 6, niveis: [3, 2, 1], conceito: 'private, public, protected e internal — e o que um campo sem modificador nenhum na frente vira.' },
+  'cs-tipos': { titulo: 'Tipos e variáveis', resumo: 'int, string, bool, var, const e readonly.', cards: 5, niveis: [3, 2, 0], conceito: 'Os tipos que aparecem em toda linha, mais var, const e readonly.' },
+  'cs-metodos': { titulo: 'Métodos e void', resumo: 'Assinatura, parâmetros, return, void e static.', cards: 9, niveis: [2, 5, 2], conceito: 'A assinatura lida sempre na mesma ordem: quem pode chamar, o que devolve, como se chama, o que recebe. void, return e static.' },
+  'cs-classes': { titulo: 'Classes e objetos', resumo: 'Declarar uma classe, criar objetos com new, e por que cada instância tem seus próprios campos.', cards: 7, niveis: [3, 3, 1], conceito: 'class, new e a diferença entre a classe e cada objeto dela.' },
+  'cs-construtores': { titulo: 'Construtores', resumo: 'O método que roda na criação do objeto: parâmetros, this e sobrecarga.', cards: 5, niveis: [2, 2, 1], conceito: 'O método que roda na criação do objeto, this e sobrecarga.' },
+  'cs-propriedades': { titulo: 'Propriedades', resumo: 'get, set, auto-property e propriedade só de leitura.', cards: 6, niveis: [2, 3, 1], conceito: 'get, set, auto-property e a propriedade só de leitura.' },
+  'cs-listas': { titulo: 'Listas (List<T>)', resumo: 'Criar, adicionar, remover e percorrer uma List<T>.', cards: 6, niveis: [3, 2, 1], conceito: 'List<T>: criar, adicionar, remover e percorrer.' },
+  'cs-dicionarios': { titulo: 'Dictionary<TKey, TValue>', resumo: 'Guardar pares chave-valor: declarar, adicionar, ler e checar existência.', cards: 6, niveis: [2, 3, 1], conceito: 'Pares chave-valor: declarar, adicionar, ler e checar existência.' },
+  'cs-foreach': { titulo: 'Iterar coleções', resumo: 'for, foreach, break e por que não dá pra alterar uma lista enquanto ela é percorrida.', cards: 7, niveis: [2, 3, 2], conceito: 'for, foreach, break — e por que alterar a lista no meio do laço estoura.' },
+  'js-declaracoes': { titulo: 'let, const e var', resumo: 'As três formas de declarar — e por que só duas se usam hoje.', cards: 5, niveis: [3, 2, 0], conceito: 'let, const e var: o que muda entre elas na prática.' },
+  'js-funcoes': { titulo: 'Funções', resumo: 'Declaração, arrow function, parâmetros e return.', cards: 6, niveis: [3, 2, 1], conceito: 'Declaração, arrow function, parâmetros e return.' },
+  'js-escopo': { titulo: 'Escopo', resumo: 'Onde uma variável existe, e por que var estraga isso.', cards: 6, niveis: [2, 3, 1], conceito: 'Onde uma variável existe, e por que var estraga isso.' },
+  'js-desestruturacao': { titulo: 'Desestruturação', resumo: 'Tirar valores de dentro de objetos e arrays numa linha só.', cards: 5, niveis: [2, 2, 1], conceito: 'Tirar valores de dentro de objetos e arrays numa linha só.' },
+  'js-map': { titulo: 'Map', resumo: 'Transformar cada item de um array num array novo, sem tocar no original.', cards: 6, niveis: [3, 2, 1], conceito: 'Transformar cada item de um array num array novo.' },
+  'js-filter': { titulo: 'Filter', resumo: 'Selecionar só os itens que passam num teste, sem tocar no array original.', cards: 5, niveis: [2, 2, 1], conceito: 'Selecionar só os itens que passam num teste.' },
+  'js-promises': { titulo: 'Promise', resumo: 'O que é uma Promise, resolve/reject e .then/.catch.', cards: 6, niveis: [2, 3, 1], conceito: 'O que é uma Promise, resolve/reject e .then/.catch.' },
+  'js-async-await': { titulo: 'async e await', resumo: 'Escrever código assíncrono que parece síncrono.', cards: 6, niveis: [2, 3, 1], conceito: 'Escrever código assíncrono que parece síncrono.' },
+  'js-erros-assincronos': { titulo: 'Erros assíncronos', resumo: 'try/catch com await, e por que uma função async sempre devolve uma Promise.', cards: 7, niveis: [1, 4, 2], conceito: 'try/catch com await, e por que uma função async sempre devolve uma Promise.' }
+};
+
+/** Cards reais de conteudo/csharp/licoes/cs-metodos.json. */
+const CARDS = [
+  {
+    id: 'cs-met-01', nivel: 1,
+    enunciado: 'O que void diz sobre este método?',
+    codigo: 'public void Zerar()',
+    alternativas: [
+      'Que ele não devolve valor nenhum para quem o chamou.',
+      'Que ele não recebe nenhum parâmetro.',
+      'Que ele não faz nada, é um método vazio.',
+      'Que ele pode ser chamado sem criar um objeto.'
+    ],
+    correta: 0,
+    explicacao: 'void fala só do retorno. Zerar() pode fazer bastante coisa por dentro — só não entrega resposta. Quem confunde void com "sem parâmetros" está olhando o lugar errado da assinatura: parâmetros são os parênteses.'
+  },
+  {
+    id: 'cs-met-02', nivel: 1,
+    enunciado: 'O que este método devolve?',
+    codigo: 'public int Somar(int a, int b)\n{\n    return a + b;\n}',
+    alternativas: [
+      'Um int, o resultado de a + b.',
+      'Nada; ele só calcula e guarda.',
+      'Dois int, a e b.',
+      'Um int, mas só se a e b forem positivos.'
+    ],
+    correta: 0,
+    explicacao: 'O tipo escrito antes do nome é uma promessa: todo caminho possível dentro do método tem que terminar entregando um int. Se algum caminho não devolver nada, o código não compila.'
+  },
+  {
+    id: 'cs-met-03', nivel: 2,
+    enunciado: 'O que aparece no console?',
+    codigo: 'public int Testar()\n{\n    Console.WriteLine("A");\n    return 1;\n    Console.WriteLine("B");\n}',
+    alternativas: [
+      'Só A — e o compilador ainda avisa que a última linha é inalcançável.',
+      'A e depois B.',
+      'Só B.',
+      'Nada, porque o método não compila.'
+    ],
+    correta: 0,
+    explicacao: 'return encerra o método imediatamente. A linha depois dele nunca roda, e o compilador marca isso como código inalcançável — um aviso, não um erro.'
+  }
+];
+
+/** Glossário de cs-metodos.json. */
+const TERMOS = [
+  { termo: 'void', definicao: 'Ocupa o lugar do tipo de retorno e significa que o método não devolve nada. Fala do retorno, não dos parâmetros.', exemplo: 'public void Zerar()' },
+  { termo: 'return', definicao: 'Entrega o valor e encerra o método na hora, saindo inclusive de dentro de laços. Nenhuma linha depois dele roda.', exemplo: 'return a + b;' },
+  { termo: 'static', definicao: 'O membro pertence à classe, não a um objeto dela. Chamada sem instanciar nada.', exemplo: 'Calculadora.Dobro(4);' },
+  { termo: 'assinatura', definicao: 'A primeira linha do método, sempre na mesma ordem: quem pode chamar, o que devolve, como se chama, o que recebe.', exemplo: 'public int Somar(int a, int b)' },
+  { termo: 'early return', definicao: 'Sair do método logo no começo quando a entrada não interessa, em vez de aninhar o resto dentro de um else.', exemplo: 'if (valor <= 0) { return; }' }
+];
+
+const INICIAIS = ['cs-modificadores', 'cs-tipos', 'js-declaracoes'];
+const NOMES_NIVEL = ['leve', 'médio', 'difícil'];
+const LETRAS = ['A', 'B', 'C', 'D'];
+const R = 34;
+const VOLTA = 2 * Math.PI * R;
+
+class Component extends DCLogic {
+  state = {
+    tela: 'trilhas',
+    linguagem: 'csharp',
+    concluidas: INICIAIS.slice(),
+    licaoAberta: null,
+    indice: 0,
+    escolhida: null,
+    revelado: false,
+    xp: 0,
+    acertos: 0,
+    glossario: false,
+    seletor: false,
+    aviso: null,
+    fechou: null
+  };
+
+  componentWillUnmount() { clearTimeout(this.relogio); }
+
+  ordem(linguagem) {
+    return LINGUAGENS[linguagem].trilhas.reduce((tudo, t) => tudo.concat(t.licoes), []);
+  }
+
+  feitasEm(linguagem) {
+    return this.ordem(linguagem).filter((id) => this.state.concluidas.includes(id)).length;
+  }
+
+  /** Sequencial: a lição abre quando a anterior da linguagem fechou. */
+  liberada(id) {
+    const fila = this.ordem(this.state.linguagem);
+    const pos = fila.indexOf(id);
+    if (pos <= 0) return true;
+    return this.state.concluidas.includes(fila[pos - 1]);
+  }
+
+  atualDe(linguagem) {
+    const fila = this.ordem(linguagem);
+    return fila.find((id) => !this.state.concluidas.includes(id)) || null;
+  }
+
+  avisar(texto) {
+    clearTimeout(this.relogio);
+    this.setState({ aviso: texto });
+    this.relogio = setTimeout(() => this.setState({ aviso: null }), 2600);
+  }
+
+  abrir(id) {
+    if (!this.liberada(id)) {
+      const fila = this.ordem(this.state.linguagem);
+      const anterior = LICOES[fila[fila.indexOf(id) - 1]];
+      this.avisar('Travada. Termine "' + anterior.titulo + '" e este ponto acende.');
+      return;
+    }
+    this.setState({ tela: 'licao', licaoAberta: id });
+  }
+
+  ponto(k) {
+    const ang = (k * 40 * Math.PI) / 180;
+    return { x: 50 + R * Math.sin(ang), y: 50 - R * Math.cos(ang) };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const linguagem = s.linguagem;
+    const fila = this.ordem(linguagem);
+    const feitas = this.feitasEm(linguagem);
+    const atual = this.atualDe(linguagem);
+    const cabeçaAng = (feitas * 40 * Math.PI) / 180;
+    const cx = 50 + R * Math.sin(cabeçaAng);
+    const cy = 50 - R * Math.cos(cabeçaAng);
+    const frente = { x: Math.cos(cabeçaAng), y: Math.sin(cabeçaAng) };
+    const fora = { x: Math.sin(cabeçaAng), y: -Math.cos(cabeçaAng) };
+
+    const pontos = fila.map((id, k) => {
+      const p = this.ponto(k);
+      const feita = s.concluidas.includes(id);
+      const ehAtual = id === atual;
+      return {
+        x: (p.x - 2.3).toFixed(2),
+        y: (p.y - 2.3).toFixed(2),
+        fill: feita ? 'var(--acento)' : ehAtual ? 'none' : 'var(--linha)',
+        stroke: ehAtual ? 'var(--acento)' : 'none',
+        aoTocar: () => this.abrir(id)
+      };
+    });
+
+    const secoes = LINGUAGENS[linguagem].trilhas.map((t) => {
+      const feitasNa = t.licoes.filter((id) => s.concluidas.includes(id)).length;
+      const emFoco = t.licoes.some((id) => id === atual);
+      return {
+        rotulo: t.rotulo,
+        contagem: feitasNa + '/' + t.licoes.length,
+        rotuloEstilo: 'font:700 11px "JetBrains Mono",monospace;letter-spacing:2.6px;text-transform:uppercase;color:'
+          + (emFoco ? 'var(--acento)' : 'var(--legenda)'),
+        licoes: t.licoes.map((id) => {
+          const licao = LICOES[id];
+          const feita = s.concluidas.includes(id);
+          const livre = this.liberada(id);
+          const ehAtual = id === atual;
+          return {
+            titulo: licao.titulo,
+            nota: feita ? 'feita' : ehAtual ? 'aqui →' : livre ? licao.cards + ' cards' : 'travada',
+            corTitulo: livre ? 'var(--textoForte)' : 'var(--desativado)',
+            corNota: ehAtual ? 'var(--acento)' : livre ? 'var(--legenda)' : 'var(--desativado)',
+            linhaEstilo: 'display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--linha);cursor:pointer',
+            noTexto: feita ? '✓' : ehAtual ? String(fila.indexOf(id) + 1) : '',
+            noEstilo: 'width:18px;height:18px;flex:none;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font:700 11px "Space Grotesk",sans-serif;'
+              + (feita
+                ? 'background:var(--acento);color:var(--acentoFundo);'
+                : ehAtual
+                  ? 'border:2px solid var(--acento);color:var(--acento);'
+                  : 'border:1px solid var(--linha);'),
+            aoTocar: () => this.abrir(id)
+          };
+        })
+      };
+    });
+
+    const linguagens = Object.keys(LINGUAGENS).map((id) => {
+      const meta = LINGUAGENS[id];
+      const feitasNa = this.feitasEm(id);
+      const ativa = id === linguagem;
+      return {
+        nome: meta.nome,
+        nota: meta.descricao,
+        contagem: feitasNa + '/9',
+        barra: Math.round((feitasNa / 9) * 100) + '%',
+        corBarra: ativa ? 'var(--acento)' : 'var(--legenda)',
+        corNome: ativa ? 'var(--acento)' : 'var(--textoForte)',
+        marca: 'width:10px;height:10px;flex:none;box-sizing:border-box;'
+          + (ativa ? 'background:var(--acento);' : 'border:1px solid var(--linha);'),
+        linha: 'display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--linha);cursor:pointer',
+        aoTocar: () => this.setState({ linguagem: id, seletor: false, licaoAberta: null })
+      };
+    });
+
+    const aberta = s.licaoAberta ? LICOES[s.licaoAberta] : null;
+    const trilhaDaAberta = s.licaoAberta
+      ? LINGUAGENS[linguagem].trilhas.find((t) => t.licoes.includes(s.licaoAberta))
+      : null;
+    const abertaFeita = s.licaoAberta ? s.concluidas.includes(s.licaoAberta) : false;
+
+    const card = CARDS[Math.min(s.indice, CARDS.length - 1)];
+    const acertou = s.revelado && s.escolhida === card.correta;
+    const ultimo = s.indice >= CARDS.length - 1;
+
+    const alternativas = card.alternativas.map((texto, i) => {
+      let fundo = 'var(--superficie)';
+      let borda = 'var(--linha)';
+      let corLetra = 'var(--legenda)';
+      let corTexto = 'var(--texto)';
+
+      if (!s.revelado) {
+        if (s.escolhida === i) { borda = 'var(--acento)'; corLetra = 'var(--acento)'; corTexto = 'var(--textoForte)'; }
+      } else if (i === card.correta) {
+        fundo = 'var(--acentoFundo)'; borda = 'var(--acento)'; corLetra = 'var(--acento)'; corTexto = 'var(--textoForte)';
+      } else if (s.escolhida === i) {
+        fundo = 'var(--erroFundo)'; borda = 'var(--erro)'; corLetra = 'var(--erro)';
+      } else {
+        corLetra = 'var(--desativado2)'; corTexto = 'var(--desativado)';
+      }
+
+      return {
+        letra: LETRAS[i],
+        texto,
+        corTexto,
+        caixa: 'display:flex;align-items:center;gap:13px;min-height:58px;padding:13px 16px;background:' + fundo
+          + ';border:1px solid ' + borda + ';cursor:' + (s.revelado ? 'default' : 'pointer') + ';transition:background .18s,border-color .18s',
+        letraEstilo: 'width:22px;font:700 12px "JetBrains Mono",monospace;color:' + corLetra,
+        aoTocar: () => { if (!s.revelado) this.setState({ escolhida: i }); }
+      };
+    });
+
+    const proxima = s.fechou ? fila[fila.indexOf(s.fechou) + 1] : null;
+
+    return {
+      emTrilhas: s.tela === 'trilhas',
+      emLicao: s.tela === 'licao',
+      emSessao: s.tela === 'sessao',
+      emResumo: s.tela === 'resumo',
+      verGlossario: s.glossario,
+      temAviso: Boolean(s.aviso),
+      aviso: s.aviso || '',
+
+      linguagemNome: LINGUAGENS[linguagem].nome,
+      contagemAtual: feitas + '/9 lições',
+      linguagens,
+      verSeletor: s.seletor,
+      abrirSeletor: () => this.setState({ seletor: true }),
+      fecharSeletor: () => this.setState({ seletor: false }),
+
+      dashCorpo: ((VOLTA * feitas) / 9).toFixed(2) + ' ' + VOLTA.toFixed(2),
+      cabecaX: cx.toFixed(2),
+      cabecaY: cy.toFixed(2),
+      olhoX: (cx + 1.6 * frente.x + 1.8 * fora.x).toFixed(2),
+      olhoY: (cy + 1.6 * frente.y + 1.8 * fora.y).toFixed(2),
+      pontos,
+
+      centroRotulo: atual ? 'LIÇÃO ' + String(fila.indexOf(atual) + 1).padStart(2, '0') : 'CICLO FECHADO',
+      centroTitulo: atual ? LICOES[atual].titulo : 'A cabeça achou a cauda',
+      centroNota: atual
+        ? LICOES[atual].cards + ' cards · ' + feitas + ' de 9 feitas'
+        : '9 de 9 feitas',
+      centroAcao: atual ? 'continuar' : 'rever',
+      abrirAtual: () => (atual ? this.abrir(atual) : this.avisar('Tudo fechado nesta linguagem. Troque de ciclo lá em cima.')),
+      legendaCiclo: atual
+        ? 'o corpo fecha o ciclo em ' + (9 - feitas) + ' liç' + (9 - feitas === 1 ? 'ão' : 'ões')
+        : 'o ciclo está inteiro',
+
+      secoes,
+      abrirGlossario: () => this.setState({ glossario: true }),
+      fecharGlossario: () => this.setState({ glossario: false }),
+      termos: TERMOS,
+      foraDoEscopo: () => this.avisar('Este protótipo é só a aba Trilhas.'),
+      voltarTrilhas: () => this.setState({ tela: 'trilhas', escolhida: null, revelado: false }),
+      reiniciar: () => this.setState({
+        tela: 'trilhas', linguagem: 'csharp', concluidas: INICIAIS.slice(), licaoAberta: null,
+        indice: 0, escolhida: null, revelado: false, xp: 0, acertos: 0, glossario: false, seletor: false, aviso: null, fechou: null
+      }),
+
+      licaoTitulo: aberta ? aberta.titulo : '',
+      licaoResumo: aberta ? aberta.resumo : '',
+      licaoConceito: aberta ? aberta.conceito : '',
+      licaoCards: aberta ? String(aberta.cards) : '',
+      licaoLeves: aberta ? String(aberta.niveis[0]) : '',
+      licaoMedios: aberta ? String(aberta.niveis[1]) : '',
+      licaoDificeis: aberta ? String(aberta.niveis[2]) : '',
+      licaoTrilha: trilhaDaAberta ? trilhaDaAberta.rotulo : '',
+      licaoPosicao: s.licaoAberta ? 'lição ' + (fila.indexOf(s.licaoAberta) + 1) + ' de 9' : '',
+      licaoEstado: abertaFeita ? 'feita' : 'aberta agora',
+      licaoEstadoCor: abertaFeita ? 'var(--acento)' : 'var(--textoForte)',
+      licaoBotao: abertaFeita ? 'Rever a lição' : 'Começar lição',
+      comecarSessao: () => this.setState({ tela: 'sessao', indice: 0, escolhida: null, revelado: false, xp: 0, acertos: 0 }),
+
+      sessaoBarra: Math.round((s.indice / CARDS.length) * 100) + '%',
+      sessaoContador: (s.indice + 1) + '/' + CARDS.length,
+      sessaoXp: String(s.xp),
+      cardSigla: LINGUAGENS[linguagem].sigla,
+      cardNivel: NOMES_NIVEL[card.nivel - 1],
+      cardNivelCor: card.nivel === 1 ? 'var(--ok)' : card.nivel === 2 ? 'var(--acento)' : 'var(--erro)',
+      cardEnunciado: card.enunciado,
+      cardCodigo: card.codigo,
+      alternativas,
+      semFeedback: !s.revelado,
+      comFeedback: s.revelado,
+      rotuloVerificar: s.escolhida === null ? 'Escolha uma resposta' : 'Verificar',
+      botaoVerificar: 'min-height:60px;display:flex;align-items:center;justify-content:center;gap:9px;'
+        + (s.escolhida === null
+          ? 'background:var(--linha);color:var(--desativado);cursor:default;'
+          : 'background:var(--acento);color:var(--acentoFundo);cursor:pointer;'),
+      verificar: () => { if (s.escolhida !== null) this.setState({ revelado: true }); },
+
+      painelFeedback: 'position:absolute;left:0;right:0;bottom:0;padding:22px 22px 30px;border-top:2px solid '
+        + (acertou ? 'var(--acento)' : 'var(--erro)') + ';background:'
+        + (acertou ? 'var(--acentoFundo)' : 'var(--erroFundo)') + ';animation:ouro-sobe .3s cubic-bezier(.2,.85,.25,1)',
+      corResultado: acertou ? 'var(--acento)' : 'var(--erro)',
+      tituloResultado: acertou ? 'Certo' : 'Não é essa',
+      deltaResultado: acertou ? '+10 XP' : 'volta pra fila',
+      explicacao: card.explicacao,
+      rotuloSeguir: ultimo ? 'Fechar sessão' : acertou ? 'Seguir' : 'Volta pra fila',
+      botaoSeguir: 'margin-top:20px;min-height:56px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;'
+        + (acertou
+          ? 'background:var(--acento);color:var(--acentoFundo);'
+          : 'background:var(--erro);color:var(--erroFundo);'),
+      seguir: () => {
+        const ganho = acertou ? 10 : 0;
+        if (ultimo) {
+          const fechada = s.licaoAberta;
+          this.setState({
+            tela: 'resumo',
+            xp: s.xp + ganho,
+            acertos: s.acertos + (acertou ? 1 : 0),
+            fechou: fechada,
+            concluidas: s.concluidas.includes(fechada) ? s.concluidas : s.concluidas.concat([fechada]),
+            revelado: false,
+            escolhida: null
+          });
+          return;
+        }
+        this.setState({
+          indice: s.indice + 1,
+          xp: s.xp + ganho,
+          acertos: s.acertos + (acertou ? 1 : 0),
+          revelado: false,
+          escolhida: null
+        });
+      },
+
+      resumoXp: String(s.xp + 20),
+      resumoAcertos: s.acertos + ' de ' + CARDS.length,
+      resumoLicao: s.fechou ? LICOES[s.fechou].titulo : '',
+      resumoCiclo: feitas + ' de 9',
+      desbloqueouTitulo: proxima ? LICOES[proxima].titulo : 'O ciclo fechou',
+      desbloqueouNota: proxima ? LICOES[proxima].resumo : 'a cabeça encontrou a cauda nesta linguagem',
+      fecharCiclo: () => this.setState({ tela: 'trilhas', licaoAberta: null })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

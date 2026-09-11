@@ -1,0 +1,174 @@
+{
+  "id": "py-variaveis",
+  "linguagem": "python",
+  "trilha": "py-fundamentos",
+  "titulo": "Variáveis e tipos",
+  "resumo": "Guardar valores, os tipos básicos e a tipagem dinâmica de Python.",
+  "conceito": {
+    "texto": [
+      "Uma **variável** em Python nasce no momento em que você atribui um valor a ela, com `=`. Não existe declaração separada: `idade = 25` já cria `idade` e guarda `25` nela.",
+      "Python é **dinamicamente tipado**: a variável não trava num tipo. `x = 10` faz `x` guardar um inteiro; se depois você escrever `x = \"dez\"`, o mesmo nome passa a apontar para uma string. Quem tem tipo é o valor, não a variável.",
+      "Os tipos básicos mais comuns são `int` (inteiro, como `10`), `float` (decimal, como `3.14`), `str` (texto, como `\"Ana\"`) e `bool` (`True` ou `False`). A função `type()` mostra o tipo atual de um valor.",
+      "Para montar texto com valores dentro, a forma moderna é a **f-string**: `f\"Olá, {nome}\"` insere o valor de `nome` diretamente no texto, sem precisar concatenar com `+`.",
+      "Python converte entre tipos com funções como `int()`, `float()` e `str()`. Isso é necessário, por exemplo, quando um número vem como texto (de um `input()`) e precisa virar número de verdade para ser somado."
+    ],
+    "exemplo": [
+      "nome = \"Ana\"",
+      "idade = 28",
+      "altura = 1.65",
+      "ativo = True",
+      "",
+      "print(f\"{nome} tem {idade} anos e {altura}m de altura.\")",
+      "",
+      "idade = idade + 1  # a variável pode receber outro valor a qualquer momento",
+      "print(type(idade))  # <class 'int'>"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "variável",
+      "definicao": "Um nome que passa a apontar para um valor, criado na primeira atribuição com `=`.",
+      "exemplo": "idade = 25"
+    },
+    {
+      "termo": "tipagem dinâmica",
+      "definicao": "A mesma variável pode apontar para valores de tipos diferentes ao longo do programa.",
+      "exemplo": "x = 10\nx = \"dez\""
+    },
+    {
+      "termo": "f-string",
+      "definicao": "Texto prefixado com `f` que insere valores de variáveis dentro de `{}`.",
+      "exemplo": "f\"Olá, {nome}\""
+    },
+    {
+      "termo": "conversão de tipo",
+      "definicao": "Transformar um valor de um tipo em outro, com funções como `int()`, `float()` e `str()`.",
+      "exemplo": "int(\"10\") + 5"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-var-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que esta linha faz?",
+      "codigo": ["idade = 25"],
+      "alternativas": [
+        "Cria a variável `idade` e guarda o valor 25 nela.",
+        "Compara `idade` com 25.",
+        "Declara `idade` sem valor nenhum.",
+        "Cria uma constante que nunca muda."
+      ],
+      "correta": 0,
+      "explicacao": "Em Python, `=` é atribuição. A primeira atribuição a um nome já é o que cria a variável — não existe um passo de declaração separado."
+    },
+    {
+      "id": "py-var-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Qual é o tipo do valor guardado em `preco`?",
+      "codigo": ["preco = 19.90"],
+      "alternativas": [
+        "`float`",
+        "`int`",
+        "`str`",
+        "`bool`"
+      ],
+      "correta": 0,
+      "explicacao": "Qualquer número com casa decimal, mesmo `19.90`, é um `float` em Python. `int` é reservado para números inteiros, sem ponto decimal."
+    },
+    {
+      "id": "py-var-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["nome = \"Bea\"", "print(f\"Oi, {nome}!\")"],
+      "alternativas": [
+        "Oi, Bea!",
+        "Oi, {nome}!",
+        "Oi, nome!",
+        "Erro: f-string inválida"
+      ],
+      "correta": 0,
+      "explicacao": "A f-string substitui `{nome}` pelo valor atual da variável `nome`, que é `\"Bea\"`. O resultado é o texto já com o valor inserido."
+    },
+    {
+      "id": "py-var-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["x = 10", "x = \"dez\"", "print(type(x))"],
+      "alternativas": [
+        "<class 'str'>",
+        "<class 'int'>",
+        "Erro: não dá para trocar o tipo de x",
+        "10"
+      ],
+      "correta": 0,
+      "explicacao": "Python é dinamicamente tipado: `x` não fica preso ao `int` da primeira atribuição. Depois de `x = \"dez\"`, `x` aponta para uma string, e é isso que `type(x)` reporta."
+    },
+    {
+      "id": "py-var-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a f-string para exibir o nome e a idade juntos.",
+      "codigo": ["nome = \"Caio\"", "idade = 30", "print(___\"{nome} tem {idade} anos\")"],
+      "respostas": ["f"],
+      "tokens": ["f", "r", "b", "u", "str"],
+      "explicacao": "O prefixo `f` antes das aspas é o que ativa a interpolação de `{}` dentro do texto. Sem ele, Python trataria `{nome}` como texto literal."
+    },
+    {
+      "id": "py-var-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que converte o texto \"42\" em número inteiro e guarda em `numero`.",
+      "partes": ["numero", "=", "int", "(", "\"42\"", ")"],
+      "explicacao": "`int()` recebe um texto que parece um número e devolve o valor como `int` de verdade, pronto para contas."
+    },
+    {
+      "id": "py-var-07",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Crie a variável `ativo` guardando o valor booleano verdadeiro.",
+      "dica": "nome, igual, True (com T maiúsculo)",
+      "resposta": "ativo = True",
+      "aceitas": ["ativo=True"],
+      "explicacao": "Em Python os literais booleanos são `True` e `False`, sempre com a primeira letra maiúscula — diferente de outras linguagens que usam `true`/`false` em minúsculas."
+    },
+    {
+      "id": "py-var-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código quebra ao rodar. Clique na linha que causa o erro.",
+      "codigo": [
+        "idade_texto = \"25\"",
+        "idade_futura = idade_texto + 1",
+        "print(idade_futura)"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "`idade_texto` é uma `str`, e Python não soma texto com número diretamente — isso levanta `TypeError`. Seria preciso converter primeiro, com `int(idade_texto) + 1`."
+    },
+    {
+      "id": "py-var-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "saldo = 100",
+        "saldo = saldo - 30",
+        "mensagem = f\"Saldo atual: {saldo}\"",
+        "saldo = mensagem",
+        "print(type(saldo))"
+      ],
+      "pergunta": "O que aparece no terminal?",
+      "alternativas": [
+        "<class 'str'>",
+        "<class 'int'>",
+        "70",
+        "Erro: saldo já era int"
+      ],
+      "correta": 0,
+      "explicacao": "Nada impede reatribuir `saldo` a um valor de outro tipo. Depois de `saldo = mensagem`, `saldo` passa a apontar para uma `str`, e é esse o tipo que `type()` devolve — o histórico de `int` da variável não importa mais."
+    }
+  ]
+}

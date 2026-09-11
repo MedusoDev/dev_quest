@@ -1,0 +1,207 @@
+{
+  "id": "php-escopo",
+  "linguagem": "php",
+  "trilha": "php-fundamentos",
+  "titulo": "Escopo de variáveis",
+  "resumo": "O que uma função enxerga de fora, `global` e variáveis `static`.",
+  "conceito": {
+    "texto": [
+      "Em PHP, cada função tem o próprio **escopo local**: uma variável criada dentro de uma função não existe fora dela, e vice-versa.",
+      "Isso é diferente de várias outras linguagens: uma variável global declarada fora de qualquer função **não** fica automaticamente visível dentro das funções. Tentar usá-la de dentro gera um aviso e o valor some.",
+      "Para acessar de propósito uma variável do escopo global dentro de uma função, usa-se a palavra-chave `global`: `global $contador;` dentro da função conecta o nome local ao valor global.",
+      "`static` dentro de uma função faz uma variável **lembrar o valor entre chamadas**, em vez de recomeçar do zero toda vez. `static $vezes = 0;` só é inicializada na primeira chamada; nas próximas, mantém o valor de antes.",
+      "Escopo existe para proteger: cada função só deveria depender do que recebe como parâmetro, não de variáveis soltas por aí. `global` e `static` são exceções úteis, mas usadas com moderação."
+    ],
+    "exemplo": [
+      "<?php",
+      "$contador = 0;",
+      "",
+      "function incrementarGlobal()",
+      "{",
+      "    global $contador;",
+      "    $contador++;",
+      "}",
+      "",
+      "function contarChamadas()",
+      "{",
+      "    static $vezes = 0;",
+      "    $vezes++;",
+      "    return $vezes;",
+      "}",
+      "",
+      "incrementarGlobal();",
+      "echo $contador;            // 1",
+      "echo contarChamadas();     // 1",
+      "echo contarChamadas();     // 2"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "escopo local",
+      "definicao": "O conjunto de variáveis visíveis apenas dentro de uma função.",
+      "exemplo": "function f() { $x = 1; } // $x só existe aqui dentro"
+    },
+    {
+      "termo": "escopo global",
+      "definicao": "Variáveis declaradas fora de qualquer função, no nível principal do script.",
+      "exemplo": "$contador = 0;"
+    },
+    {
+      "termo": "global",
+      "definicao": "Palavra-chave que conecta uma variável local ao valor de uma variável global de mesmo nome.",
+      "exemplo": "global $contador;"
+    },
+    {
+      "termo": "static (variável local)",
+      "definicao": "Faz uma variável de função manter o valor de uma chamada para a próxima, em vez de reiniciar.",
+      "exemplo": "static $vezes = 0;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "php-esc-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que acontece com `$mensagem` fora da função?",
+      "codigo": ["function criar()", "{", "    $mensagem = \"oi\";", "}", "", "criar();", "echo $mensagem;"],
+      "alternativas": [
+        "Gera um aviso: `$mensagem` não existe fora da função onde foi criada.",
+        "Imprime \"oi\" normalmente.",
+        "Imprime uma string vazia sem aviso.",
+        "Trava a execução do script inteiro."
+      ],
+      "correta": 0,
+      "explicacao": "`$mensagem` é local à função `criar`. Fora dela, essa variável simplesmente não existe — usá-la gera um aviso de variável indefinida."
+    },
+    {
+      "id": "php-esc-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Para que serve `global` dentro de uma função?",
+      "codigo": ["global $contador;"],
+      "alternativas": [
+        "Conectar a variável local `$contador` à variável global de mesmo nome.",
+        "Criar uma nova variável visível só dentro da função.",
+        "Tornar `$contador` uma constante.",
+        "Apagar o valor global de `$contador`."
+      ],
+      "correta": 0,
+      "explicacao": "Sem `global`, a função enxergaria `$contador` como uma variável local nova e vazia. Com `global`, ela passa a ler e escrever na variável do escopo global."
+    },
+    {
+      "id": "php-esc-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "$total = 10;",
+        "",
+        "function dobrar()",
+        "{",
+        "    global $total;",
+        "    $total = $total * 2;",
+        "}",
+        "",
+        "dobrar();",
+        "echo $total;"
+      ],
+      "alternativas": ["20", "10", "0", "Erro: $total não definida"],
+      "correta": 0,
+      "explicacao": "`global $total` faz a função operar diretamente sobre a variável global. Ela dobra `10` para `20`, e essa mudança persiste depois da função retornar."
+    },
+    {
+      "id": "php-esc-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "function contar()",
+        "{",
+        "    static $vezes = 0;",
+        "    $vezes++;",
+        "    return $vezes;",
+        "}",
+        "",
+        "echo contar();",
+        "echo contar();",
+        "echo contar();"
+      ],
+      "alternativas": ["123", "111", "333", "Erro na segunda chamada"],
+      "correta": 0,
+      "explicacao": "`static $vezes = 0;` só roda na primeira chamada. Nas chamadas seguintes, `$vezes` mantém o valor anterior, então ele cresce a cada chamada: 1, 2, 3."
+    },
+    {
+      "id": "php-esc-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para que a função lembre quantas vezes foi chamada, entre uma chamada e outra.",
+      "codigo": ["function contar()", "{", "    ___ $vezes = 0;", "    $vezes++;", "    return $vezes;", "}"],
+      "respostas": ["static"],
+      "tokens": ["static", "global", "const", "final"],
+      "explicacao": "`static` é o que faz `$vezes` manter o valor de uma chamada para a próxima, em vez de ser recriada com 0 toda vez que a função roda."
+    },
+    {
+      "id": "php-esc-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Dentro de uma função, declare que ela vai usar a variável global `$config`.",
+      "dica": "palavra-chave, nome da variável, ponto e vírgula",
+      "resposta": "global $config;",
+      "explicacao": "`global` seguido do nome da variável conecta o escopo local ao global para aquele nome específico."
+    },
+    {
+      "id": "php-esc-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que declara uma variável `static` chamada `$cache`, iniciando como array vazio.",
+      "partes": ["static", "$cache", "=", "[];"],
+      "explicacao": "`static $cache = [];` inicializa `$cache` como array vazio apenas na primeira chamada da função; depois disso, o valor acumulado é preservado."
+    },
+    {
+      "id": "php-esc-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não atualiza o total esperado. Clique na linha que causa o erro.",
+      "codigo": [
+        "$total = 0;",
+        "",
+        "function somar($valor)",
+        "{",
+        "    $total = $total + $valor;",
+        "}",
+        "",
+        "somar(5);",
+        "echo $total;"
+      ],
+      "linhaErrada": 4,
+      "explicacao": "Dentro de `somar`, `$total` é tratado como variável local nova (que começa indefinida), sem ligação com o `$total` global. Faltou `global $total;` para conectar os dois."
+    },
+    {
+      "id": "php-esc-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "function gerarId()",
+        "{",
+        "    static $ultimoId = 100;",
+        "    $ultimoId++;",
+        "    return $ultimoId;",
+        "}",
+        "",
+        "$a = gerarId();",
+        "$b = gerarId();",
+        "echo \"$a - $b\";"
+      ],
+      "pergunta": "O que aparece no console?",
+      "alternativas": [
+        "101 - 102 — cada chamada incrementa o valor lembrado da chamada anterior.",
+        "101 - 101 — porque `static` reinicia a cada chamada.",
+        "100 - 100 — porque o incremento acontece depois do `return`.",
+        "Erro, porque `$ultimoId` não existe fora da função."
+      ],
+      "correta": 0,
+      "explicacao": "`static $ultimoId = 100;` inicializa só uma vez. A primeira chamada leva `$ultimoId` a 101 e devolve 101; a segunda chamada continua de onde parou, indo a 102."
+    }
+  ]
+}

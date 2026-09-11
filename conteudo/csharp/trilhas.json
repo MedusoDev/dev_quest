@@ -1,0 +1,26 @@
+{
+  "id": "csharp",
+  "nome": "C#",
+  "cor": "#a78bfa",
+  "descricao": "A linguagem do .NET, do WPF e do Unity.",
+  "trilhas": [
+    {
+      "id": "cs-fundamentos",
+      "titulo": "Fundamentos",
+      "descricao": "As palavras que aparecem em toda linha de C#.",
+      "licoes": ["cs-modificadores", "cs-tipos", "cs-metodos"]
+    },
+    {
+      "id": "cs-oo",
+      "titulo": "Orientação a Objetos",
+      "descricao": "Classe, construtor, readonly e propriedades.",
+      "licoes": ["cs-classes", "cs-construtores", "cs-propriedades"]
+    },
+    {
+      "id": "cs-colecoes",
+      "titulo": "Coleções",
+      "descricao": "List, Dictionary e foreach.",
+      "licoes": ["cs-listas", "cs-dicionarios", "cs-foreach"]
+    }
+  ]
+}

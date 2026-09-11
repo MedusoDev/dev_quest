@@ -1,0 +1,172 @@
+{
+  "id": "java-tipos",
+  "linguagem": "java",
+  "trilha": "java-fundamentos",
+  "titulo": "Tipos primitivos",
+  "resumo": "int, double, boolean, char, long: os blocos mais básicos de Java.",
+  "conceito": {
+    "texto": [
+      "Java é uma linguagem de **tipagem estática**: toda variável precisa declarar de que tipo ela é, e esse tipo não muda depois. O compilador confere isso antes mesmo do programa rodar.",
+      "`int` guarda números inteiros (sem casas decimais) e é o tipo mais usado para contagens, índices e quantidades. `long` também guarda inteiros, mas aceita números muito maiores — usa-se quando `int` não é suficiente, e a literal leva um `L` no final, como `10000000000L`.",
+      "`double` guarda números com casas decimais, como `3.14`. É o tipo padrão para valores fracionários em Java.",
+      "`boolean` guarda só dois valores possíveis: `true` ou `false`. É o que comanda decisões, como um `if`.",
+      "`char` guarda um único caractere, entre aspas simples, como `'A'`. Não confunda com `String`, que guarda texto entre aspas duplas e não é um tipo primitivo.",
+      "Como o tipo é fixo, converter entre eles às vezes exige um **cast** explícito: `(int) 3.9` descarta a parte decimal e vira `3`. Sem o cast, o compilador recusa a conversão quando ela pode perder informação."
+    ],
+    "exemplo": [
+      "int idade = 28;",
+      "double altura = 1.75;",
+      "boolean estaAtivo = true;",
+      "char inicial = 'A';",
+      "long populacao = 8000000000L;",
+      "",
+      "int arredondado = (int) altura; // 1, a parte decimal é descartada"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "int",
+      "definicao": "Tipo primitivo para números inteiros, dentro de uma faixa de cerca de -2 bilhões a 2 bilhões.",
+      "exemplo": "int idade = 28;"
+    },
+    {
+      "termo": "double",
+      "definicao": "Tipo primitivo para números com casas decimais.",
+      "exemplo": "double altura = 1.75;"
+    },
+    {
+      "termo": "boolean",
+      "definicao": "Tipo primitivo com só dois valores possíveis: true ou false.",
+      "exemplo": "boolean estaAtivo = true;"
+    },
+    {
+      "termo": "char",
+      "definicao": "Tipo primitivo para um único caractere, entre aspas simples.",
+      "exemplo": "char inicial = 'A';"
+    },
+    {
+      "termo": "cast",
+      "definicao": "Conversão explícita de um tipo para outro, escrita entre parênteses antes do valor.",
+      "exemplo": "int arredondado = (int) 3.9;"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-tip-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Qual tipo é o certo para guardar a idade de uma pessoa, em anos completos?",
+      "codigo": ["___ idade = 28;"],
+      "alternativas": ["int", "double", "boolean", "char"],
+      "correta": 0,
+      "explicacao": "Idade em anos completos é um número inteiro, sem casas decimais — `int` é a escolha natural."
+    },
+    {
+      "id": "java-tip-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Qual desses é um valor válido para uma variável `char`?",
+      "codigo": ["char letra = ___;"],
+      "alternativas": ["'A'", "\"A\"", "A", "65.0"],
+      "correta": 0,
+      "explicacao": "`char` usa aspas simples e um único caractere. Aspas duplas (`\"A\"`) são de `String`, e um valor sem aspas nenhuma não compila."
+    },
+    {
+      "id": "java-tip-03",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que esta linha faz?",
+      "codigo": ["boolean estaAtivo = true;"],
+      "alternativas": [
+        "Declara uma variável que só pode valer true ou false, e a inicia como true.",
+        "Declara um número que vale 1.",
+        "Declara um texto com o conteúdo \"true\".",
+        "Declara uma constante que nunca muda de valor."
+      ],
+      "correta": 0,
+      "explicacao": "`boolean` é o tipo lógico de Java: só existem dois valores possíveis, `true` e `false`, e nada além disso."
+    },
+    {
+      "id": "java-tip-04",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": ["double preco = 19.9;", "int precoInteiro = (int) preco;", "System.out.println(precoInteiro);"],
+      "alternativas": ["19", "20", "19.9", "19.0"],
+      "correta": 0,
+      "explicacao": "O cast `(int)` para `double` trunca — descarta a parte decimal sem arredondar. `19.9` vira `19`, não `20`."
+    },
+    {
+      "id": "java-tip-05",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a declaração de uma variável de casas decimais chamada `altura`, valendo 1.75.",
+      "codigo": ["___ altura = 1.75;"],
+      "respostas": ["double"],
+      "tokens": ["double", "int", "boolean", "char", "long"],
+      "explicacao": "Números com casas decimais em Java usam `double`. `int` não aceita `1.75` — o compilador recusaria essa atribuição."
+    },
+    {
+      "id": "java-tip-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete a declaração de um número inteiro grande, que passa do limite de `int`.",
+      "codigo": ["___ populacao = 8000000000___;"],
+      "respostas": ["long", "L"],
+      "tokens": ["long", "L", "int", "double", "d"],
+      "explicacao": "`long` guarda inteiros muito maiores que `int`, e a literal precisa do sufixo `L` para o compilador saber que é um `long`, não um `int` estourando a faixa."
+    },
+    {
+      "id": "java-tip-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a declaração de uma variável `char` chamada `inicial`, valendo a letra A.",
+      "partes": ["char", "inicial", "=", "'A'", ";"],
+      "explicacao": "`char` sempre usa aspas simples com exatamente um caractere dentro."
+    },
+    {
+      "id": "java-tip-08",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Declare uma variável `double` chamada `quantidadeDecimal`, recebendo o valor de uma variável `int` já existente chamada `quantidade`.",
+      "dica": "tipo, nome, igual, o nome da variável int",
+      "resposta": "double quantidadeDecimal = quantidade;",
+      "aceitas": ["double quantidadeDecimal = (double) quantidade;"],
+      "explicacao": "De `int` para `double` a conversão é automática (nunca perde informação, só ganha casas decimais), então o cast é opcional. Já o caminho contrário, de `double` para `int`, sempre exige cast explícito."
+    },
+    {
+      "id": "java-tip-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o erro.",
+      "codigo": [
+        "double preco = 19.9;",
+        "int precoInteiro = preco;",
+        "System.out.println(precoInteiro);"
+      ],
+      "linhaErrada": 1,
+      "explicacao": "Atribuir um `double` diretamente a um `int` perde informação (a parte decimal), então Java exige um cast explícito: `int precoInteiro = (int) preco;`. Sem ele, o compilador recusa."
+    },
+    {
+      "id": "java-tip-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "int a = 7;",
+        "int b = 2;",
+        "double resultado = a / b;",
+        "System.out.println(resultado);"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": [
+        "3.0",
+        "3.5",
+        "4.0",
+        "Erro de compilação"
+      ],
+      "correta": 0,
+      "explicacao": "`a / b` é uma divisão entre dois `int`, então Java faz divisão inteira antes de guardar o resultado: 7 / 2 dá 3. Só depois esse 3 é convertido para `double` ao ser atribuído, virando 3.0. Para obter 3.5 seria preciso converter `a` ou `b` para `double` antes da divisão."
+    }
+  ]
+}

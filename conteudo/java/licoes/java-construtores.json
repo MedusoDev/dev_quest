@@ -1,0 +1,234 @@
+{
+  "id": "java-construtores",
+  "linguagem": "java",
+  "trilha": "java-poo",
+  "titulo": "Construtores",
+  "resumo": "Inicializar objetos ao criá-los, com sobrecarga e this(...).",
+  "conceito": {
+    "texto": [
+      "Um **construtor** é um método especial, chamado automaticamente quando um objeto é criado com `new`. Ele existe para deixar o objeto já pronto para uso, com os campos preenchidos.",
+      "O construtor tem exatamente o mesmo nome da classe e não declara tipo de retorno — nem `void`. `public Jogador(String nome)` é o construtor de `Jogador` que recebe um nome.",
+      "Se você não escrever nenhum construtor, Java gera um **construtor padrão** sem parâmetros, de graça. No momento em que você escreve qualquer construtor próprio, esse padrão automático deixa de existir.",
+      "Assim como métodos, construtores podem ser **sobrecarregados**: várias versões, com listas de parâmetros diferentes, oferecendo formas alternativas de criar o objeto.",
+      "Um construtor pode chamar outro construtor da mesma classe usando `this(...)`, como primeira linha do corpo. Isso evita repetir a mesma lógica de inicialização em vários construtores — um chama o outro e só acrescenta o que for diferente."
+    ],
+    "exemplo": [
+      "public class Jogador",
+      "{",
+      "    String nome;",
+      "    int vidas;",
+      "",
+      "    public Jogador(String nome)",
+      "    {",
+      "        this(nome, 3); // chama o construtor de baixo, com vidas = 3",
+      "    }",
+      "",
+      "    public Jogador(String nome, int vidas)",
+      "    {",
+      "        this.nome = nome;",
+      "        this.vidas = vidas;",
+      "    }",
+      "}",
+      "",
+      "Jogador a = new Jogador(\"Ana\");        // vidas = 3, pelo padrão",
+      "Jogador b = new Jogador(\"Bea\", 10);   // vidas = 10, explícito"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "construtor",
+      "definicao": "Método especial, com o mesmo nome da classe e sem tipo de retorno, chamado ao criar um objeto com `new`.",
+      "exemplo": "public Jogador(String nome) { this.nome = nome; }"
+    },
+    {
+      "termo": "construtor padrão",
+      "definicao": "Construtor sem parâmetros que Java gera sozinho, só quando a classe não declara nenhum construtor próprio.",
+      "exemplo": "public Jogador() { }"
+    },
+    {
+      "termo": "sobrecarga de construtores",
+      "definicao": "Vários construtores na mesma classe, com listas de parâmetros diferentes.",
+      "exemplo": "Jogador(String nome) e Jogador(String nome, int vidas)"
+    },
+    {
+      "termo": "this(...)",
+      "definicao": "Chama outro construtor da mesma classe; precisa ser a primeira linha do construtor que o usa.",
+      "exemplo": "this(nome, 3);"
+    }
+  ],
+  "cards": [
+    {
+      "id": "java-con-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Qual característica identifica um construtor?",
+      "codigo": ["public Jogador(String nome)", "{", "    this.nome = nome;", "}"],
+      "alternativas": [
+        "Tem o mesmo nome da classe e não declara tipo de retorno.",
+        "Sempre se chama `construtor`.",
+        "Sempre é `static`.",
+        "Sempre recebe zero parâmetros."
+      ],
+      "correta": 0,
+      "explicacao": "O que marca um construtor não é o nome `construtor` nem `static` — é ter exatamente o nome da classe e nenhum tipo de retorno, nem `void`."
+    },
+    {
+      "id": "java-con-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que acontece quando você não escreve nenhum construtor numa classe?",
+      "codigo": ["public class Jogador", "{", "    int vidas;", "}"],
+      "alternativas": [
+        "Java gera automaticamente um construtor padrão, sem parâmetros.",
+        "A classe fica impossível de instanciar com `new`.",
+        "Java exige que você declare um construtor antes de compilar.",
+        "Os campos ficam sem valor algum, nem mesmo os padrões de cada tipo."
+      ],
+      "correta": 0,
+      "explicacao": "Sem construtor nenhum escrito, Java fornece de graça um construtor padrão sem parâmetros, que permite `new Jogador()`. Os campos recebem os valores padrão do tipo (0 para `int`, `null` para objetos)."
+    },
+    {
+      "id": "java-con-03",
+      "tipo": "saida",
+      "nivel": 1,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "public class Ponto",
+        "{",
+        "    int x;",
+        "    int y;",
+        "",
+        "    public Ponto(int x, int y)",
+        "    {",
+        "        this.x = x;",
+        "        this.y = y;",
+        "    }",
+        "}",
+        "",
+        "Ponto p = new Ponto(3, 7);",
+        "System.out.println(p.x + \", \" + p.y);"
+      ],
+      "alternativas": ["3, 7", "x, y", "0, 0", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "`new Ponto(3, 7)` chama o construtor, que atribui `x = 3` e `y = 7` aos campos do objeto criado."
+    },
+    {
+      "id": "java-con-04",
+      "tipo": "o-que-faz",
+      "nivel": 2,
+      "enunciado": "Assim que você escreve `public Jogador(String nome) { ... }`, o que acontece com `new Jogador()` (sem argumentos)?",
+      "codigo": ["public class Jogador", "{", "    public Jogador(String nome)", "    {", "        this.nome = nome;", "    }", "", "    String nome;", "}"],
+      "alternativas": [
+        "Passa a dar erro de compilação, porque o construtor padrão sem parâmetros deixou de existir.",
+        "Continua funcionando normalmente, com `nome` valendo `null`.",
+        "Continua funcionando, chamando `Jogador(String nome)` com `nome` vazio.",
+        "Vira aviso, não erro — o código ainda compila."
+      ],
+      "correta": 0,
+      "explicacao": "O construtor padrão só existe enquanto a classe não declara nenhum construtor próprio. Ao escrever `Jogador(String nome)`, o padrão some, e `new Jogador()` deixa de compilar."
+    },
+    {
+      "id": "java-con-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "Usando o código do conceito (a classe `Jogador` com `this(nome, 3)`), o que este trecho imprime?",
+      "codigo": [
+        "Jogador a = new Jogador(\"Ana\");",
+        "System.out.println(a.vidas);"
+      ],
+      "alternativas": ["3", "0", "null", "Erro de compilação"],
+      "correta": 0,
+      "explicacao": "`new Jogador(\"Ana\")` chama o construtor de um parâmetro, que por sua vez chama `this(nome, 3)` — repassando `3` como vidas padrão."
+    },
+    {
+      "id": "java-con-06",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete o construtor de um parâmetro para que ele chame o construtor de dois parâmetros, usando 3 vidas como padrão.",
+      "codigo": ["public Jogador(String nome)", "{", "    ___(nome, 3);", "}"],
+      "respostas": ["this"],
+      "tokens": ["this", "super", "new", "Jogador"],
+      "explicacao": "`this(...)` chama outro construtor da mesma classe. Precisa ser a primeira instrução do corpo do construtor."
+    },
+    {
+      "id": "java-con-07",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a assinatura de um construtor público da classe `Ponto`, recebendo dois inteiros `x` e `y`.",
+      "partes": ["public", "Ponto", "(", "int", "x", ",", "int", "y", ")"],
+      "explicacao": "Construtor não tem tipo de retorno — nem `void`. A assinatura vai direto do modificador para o nome (idêntico ao da classe) e os parâmetros."
+    },
+    {
+      "id": "java-con-08",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva o construtor da classe `Jogador` que recebe `nome` e `vidas`, e atribui os dois aos campos correspondentes do objeto, na mesma linha usando `this`.",
+      "dica": "public, nome da classe, parâmetros, e dentro do corpo duas atribuições com this",
+      "resposta": "public Jogador(String nome, int vidas) { this.nome = nome; this.vidas = vidas; }",
+      "explicacao": "`this.nome` e `this.vidas` são os campos do objeto; `nome` e `vidas` sozinhos são os parâmetros recebidos. `this` diferencia os dois quando os nomes coincidem."
+    },
+    {
+      "id": "java-con-09",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código não compila. Clique na linha que causa o problema.",
+      "codigo": [
+        "public class Jogador",
+        "{",
+        "    String nome;",
+        "    int vidas;",
+        "",
+        "    public Jogador(String nome)",
+        "    {",
+        "        System.out.println(\"Criando jogador\");",
+        "        this(nome, 3);",
+        "    }",
+        "",
+        "    public Jogador(String nome, int vidas)",
+        "    {",
+        "        this.nome = nome;",
+        "        this.vidas = vidas;",
+        "    }",
+        "}"
+      ],
+      "linhaErrada": 8,
+      "explicacao": "`this(...)` precisa ser a primeiríssima instrução do construtor. Colocar qualquer código antes dela — mesmo um `println` inofensivo — é erro de compilação."
+    },
+    {
+      "id": "java-con-10",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "public class Retangulo",
+        "{",
+        "    int largura;",
+        "    int altura;",
+        "",
+        "    public Retangulo(int lado)",
+        "    {",
+        "        this(lado, lado);",
+        "    }",
+        "",
+        "    public Retangulo(int largura, int altura)",
+        "    {",
+        "        this.largura = largura;",
+        "        this.altura = altura;",
+        "    }",
+        "}",
+        "",
+        "Retangulo quadrado = new Retangulo(5);",
+        "System.out.println(quadrado.largura + \" x \" + quadrado.altura);"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": [
+        "5 x 5",
+        "5 x 0",
+        "0 x 0",
+        "Erro de compilação"
+      ],
+      "correta": 0,
+      "explicacao": "`new Retangulo(5)` chama o construtor de um parâmetro, que encaminha `this(5, 5)` para o construtor de dois parâmetros — criando um retângulo com largura e altura iguais, ou seja, um quadrado."
+    }
+  ]
+}

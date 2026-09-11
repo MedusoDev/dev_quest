@@ -1,0 +1,206 @@
+{
+  "id": "py-escopo",
+  "linguagem": "python",
+  "trilha": "py-fundamentos",
+  "titulo": "Escopo e closures",
+  "resumo": "Onde cada variável vive: local, global, e funções que lembram valores.",
+  "conceito": {
+    "texto": [
+      "**Escopo** é a região do código onde um nome existe. Uma variável criada dentro de uma função é **local**: só existe enquanto a função roda, e só é visível de dentro dela.",
+      "Uma variável criada fora de qualquer função, no nível do módulo, é **global**: qualquer função consegue *ler* o valor dela sem precisar de nada especial.",
+      "Mas atenção: dentro de uma função, atribuir um valor a um nome cria automaticamente uma variável local com esse nome — mesmo que já exista uma global de mesmo nome. Para modificar a global de dentro da função, é preciso declarar `global nome` primeiro.",
+      "Uma **closure** é uma função que \"lembra\" das variáveis do escopo onde foi criada, mesmo depois que esse escopo terminou. Isso acontece quando uma função interna usa uma variável da função externa e é devolvida com `return`.",
+      "Closures são úteis para criar funções especializadas: uma função `criar_multiplicador(fator)` pode devolver uma função que sempre multiplica pelo `fator` combinado, sem precisar guardar esse valor em variável global nenhuma."
+    ],
+    "exemplo": [
+      "contador = 0  # variável global",
+      "",
+      "def incrementar():",
+      "    global contador",
+      "    contador += 1",
+      "",
+      "incrementar()",
+      "incrementar()",
+      "print(contador)  # 2",
+      "",
+      "def criar_multiplicador(fator):",
+      "    def multiplicar(numero):",
+      "        return numero * fator  # lembra de 'fator' mesmo depois",
+      "    return multiplicar",
+      "",
+      "dobro = criar_multiplicador(2)",
+      "print(dobro(5))  # 10"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "escopo local",
+      "definicao": "Região dentro de uma função onde as variáveis criadas ali existem, visíveis só de dentro dela.",
+      "exemplo": "def f():\n    x = 1  # local a f"
+    },
+    {
+      "termo": "escopo global",
+      "definicao": "Variáveis criadas fora de qualquer função, no nível do módulo, legíveis por qualquer função.",
+      "exemplo": "contador = 0"
+    },
+    {
+      "termo": "global",
+      "definicao": "Palavra-chave que permite a uma função modificar uma variável global, em vez de criar uma local.",
+      "exemplo": "global contador"
+    },
+    {
+      "termo": "closure",
+      "definicao": "Função que lembra das variáveis do escopo onde foi criada, mesmo depois que esse escopo terminou.",
+      "exemplo": "def multiplicar(numero):\n    return numero * fator"
+    }
+  ],
+  "cards": [
+    {
+      "id": "py-esc-01",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "Onde `total` existe, neste código?",
+      "codigo": ["def calcular():", "    total = 10", "    return total"],
+      "alternativas": [
+        "Só dentro da função `calcular`.",
+        "Em qualquer lugar do programa, depois que a função roda.",
+        "Só antes da função ser definida.",
+        "Em todo o arquivo, a partir da definição de `calcular`."
+      ],
+      "correta": 0,
+      "explicacao": "`total` é criada dentro do corpo de `calcular`, então é uma variável local: existe só enquanto essa chamada da função está rodando, e some depois que ela termina."
+    },
+    {
+      "id": "py-esc-02",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "Para que serve a palavra-chave `global` dentro de uma função?",
+      "codigo": ["def incrementar():", "    global contador", "    contador += 1"],
+      "alternativas": [
+        "Permite que a função modifique a variável global `contador`, em vez de criar uma local.",
+        "Cria uma nova variável global chamada `contador`.",
+        "Torna a função visível para todo o programa.",
+        "Impede que `contador` seja alterada por outra função."
+      ],
+      "correta": 0,
+      "explicacao": "Sem `global`, `contador += 1` criaria uma variável local e daria erro (porque tentaria ler antes de existir). `global` avisa que esse nome se refere à variável de fora."
+    },
+    {
+      "id": "py-esc-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "x = 10",
+        "",
+        "def mostrar():",
+        "    x = 20",
+        "    print(x)",
+        "",
+        "mostrar()",
+        "print(x)"
+      ],
+      "alternativas": [
+        "20\n10",
+        "20\n20",
+        "10\n10",
+        "Erro"
+      ],
+      "correta": 0,
+      "explicacao": "Dentro de `mostrar`, `x = 20` cria uma variável local nova, sem tocar na global. O `print` de dentro mostra 20; depois que a função termina, a global `x` continua sendo 10."
+    },
+    {
+      "id": "py-esc-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete para que a função consiga modificar a variável global `total`.",
+      "codigo": ["total = 0", "", "def somar(valor):", "    ___ total", "    total += valor"],
+      "respostas": ["global"],
+      "tokens": ["global", "local", "nonlocal", "return", "static"],
+      "explicacao": "`global total` avisa ao Python que `total`, dentro dessa função, se refere à variável do escopo global — sem essa linha, `total += valor` daria erro por tentar usar uma local antes de criá-la."
+    },
+    {
+      "id": "py-esc-05",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que este código imprime?",
+      "codigo": [
+        "def criar_multiplicador(fator):",
+        "    def multiplicar(numero):",
+        "        return numero * fator",
+        "    return multiplicar",
+        "",
+        "triplo = criar_multiplicador(3)",
+        "print(triplo(4))"
+      ],
+      "alternativas": [
+        "12",
+        "7",
+        "Erro: fator não existe mais",
+        "None"
+      ],
+      "correta": 0,
+      "explicacao": "`multiplicar` é uma closure: mesmo depois que `criar_multiplicador` termina de rodar, a função devolvida continua lembrando do `fator` que recebeu, que era 3. `triplo(4)` calcula `4 * 3 = 12`."
+    },
+    {
+      "id": "py-esc-06",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a linha que declara `contador` como a variável global, dentro de uma função.",
+      "partes": ["global", "contador"],
+      "explicacao": "`global contador` é a forma exata de declarar que o nome `contador`, usado dali para baixo na função, é a variável do escopo global — não uma nova local."
+    },
+    {
+      "id": "py-esc-07",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva a linha que devolve a função interna `incrementar` como resultado da função externa (a última linha de uma closure).",
+      "dica": "return, nome da função interna",
+      "resposta": "return incrementar",
+      "explicacao": "É esse `return` que transforma a estrutura numa closure de verdade: a função interna é devolvida como valor, e continua existindo — e lembrando das variáveis do escopo externo — mesmo depois que a função externa termina."
+    },
+    {
+      "id": "py-esc-08",
+      "tipo": "ache-o-erro",
+      "nivel": 3,
+      "enunciado": "Este código quebra ao rodar. Clique na linha que causa o erro.",
+      "codigo": [
+        "total = 0",
+        "",
+        "def somar(valor):",
+        "    total += valor",
+        "    return total",
+        "",
+        "print(somar(5))"
+      ],
+      "linhaErrada": 3,
+      "explicacao": "`total += valor` é equivalente a `total = total + valor`. Como há uma atribuição a `total` dentro da função, Python trata `total` como variável local — e tenta ler o valor dela antes de existir, gerando `UnboundLocalError`. Faltou `global total`."
+    },
+    {
+      "id": "py-esc-09",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia o código e responda.",
+      "codigo": [
+        "def criar_saudador(saudacao):",
+        "    def saudar(nome):",
+        "        return f\"{saudacao}, {nome}!\"",
+        "    return saudar",
+        "",
+        "ola = criar_saudador(\"Olá\")",
+        "oi = criar_saudador(\"Oi\")",
+        "print(ola(\"Ana\"))",
+        "print(oi(\"Léo\"))"
+      ],
+      "pergunta": "O que este código imprime?",
+      "alternativas": [
+        "Olá, Ana!\nOi, Léo!",
+        "Olá, Léo!\nOi, Ana!",
+        "Oi, Ana!\nOi, Léo!",
+        "Erro: saudacao já foi usada em ola"
+      ],
+      "correta": 0,
+      "explicacao": "`ola` e `oi` são closures independentes, cada uma lembrando do `saudacao` que recebeu na sua própria chamada de `criar_saudador`. Elas não compartilham nem sobrescrevem o valor uma da outra."
+    }
+  ]
+}

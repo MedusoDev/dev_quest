@@ -1,0 +1,241 @@
+{
+  "id": "cs-metodos",
+  "linguagem": "csharp",
+  "trilha": "cs-fundamentos",
+  "titulo": "Métodos e void",
+  "resumo": "Assinatura, parâmetros, return, void e static.",
+  "conceito": {
+    "texto": [
+      "Um método é um bloco de código com nome. A primeira linha dele se chama **assinatura**, e ela é lida sempre na mesma ordem:",
+      "`public` `int` `Somar` `(int a, int b)` → quem pode chamar, o que devolve, como se chama, o que precisa receber.",
+      "`void` ocupa o lugar do tipo de retorno e significa: **este método não devolve nada**. Ele faz alguma coisa e pronto. Por isso `var x = MetodoVoid();` não compila — não existe valor para guardar.",
+      "`return` faz duas coisas ao mesmo tempo: entrega o valor e encerra o método na hora. Nenhuma linha depois dele roda.",
+      "Em um método `void`, você ainda pode escrever `return;` sozinho, sem valor, só para sair mais cedo.",
+      "`static` diz que o método pertence à classe, não a um objeto dela. Você chama por `Calculadora.Somar(2, 3)`, sem precisar criar nada."
+    ],
+    "exemplo": [
+      "public class Calculadora",
+      "{",
+      "    private int _ultimoResultado;",
+      "",
+      "    public int Somar(int a, int b)      // devolve um int",
+      "    {",
+      "        _ultimoResultado = a + b;",
+      "        return _ultimoResultado;",
+      "    }",
+      "",
+      "    public void Zerar()                 // não devolve nada",
+      "    {",
+      "        _ultimoResultado = 0;",
+      "    }",
+      "",
+      "    public static int Dobro(int n)      // não precisa de objeto",
+      "    {",
+      "        return n * 2;",
+      "    }",
+      "}"
+    ]
+  },
+  "glossario": [
+    {
+      "termo": "void",
+      "definicao": "Ocupa o lugar do tipo de retorno e significa que o método não devolve nada. Fala do retorno, não dos parâmetros.",
+      "exemplo": "public void Zerar()"
+    },
+    {
+      "termo": "return",
+      "definicao": "Entrega o valor e encerra o método na hora, saindo inclusive de dentro de laços. Nenhuma linha depois dele roda.",
+      "exemplo": "return a + b;"
+    },
+    {
+      "termo": "static",
+      "definicao": "O membro pertence à classe, não a um objeto dela. Chamada sem instanciar nada.",
+      "exemplo": "Calculadora.Dobro(4);"
+    },
+    {
+      "termo": "assinatura",
+      "definicao": "A primeira linha do método, sempre na mesma ordem: quem pode chamar, o que devolve, como se chama, o que recebe.",
+      "exemplo": "public int Somar(int a, int b)"
+    },
+    {
+      "termo": "early return",
+      "definicao": "Sair do método logo no começo quando a entrada não interessa, em vez de aninhar o resto dentro de um `else`.",
+      "exemplo": "if (valor <= 0) { return; }"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cs-met-01",
+      "tipo": "palavra-chave",
+      "nivel": 1,
+      "enunciado": "O que `void` diz sobre este método?",
+      "codigo": [
+        "public void Zerar()"
+      ],
+      "alternativas": [
+        "Que ele não devolve valor nenhum para quem o chamou.",
+        "Que ele não recebe nenhum parâmetro.",
+        "Que ele não faz nada, é um método vazio.",
+        "Que ele pode ser chamado sem criar um objeto."
+      ],
+      "correta": 0,
+      "explicacao": "`void` fala só do retorno. `Zerar()` pode fazer bastante coisa por dentro — só não entrega resposta. Quem confunde `void` com \"sem parâmetros\" está olhando o lugar errado da assinatura: parâmetros são os parênteses."
+    },
+    {
+      "id": "cs-met-02",
+      "tipo": "o-que-faz",
+      "nivel": 1,
+      "enunciado": "O que este método devolve?",
+      "codigo": [
+        "public int Somar(int a, int b)",
+        "{",
+        "    return a + b;",
+        "}"
+      ],
+      "alternativas": [
+        "Um `int`, o resultado de `a + b`.",
+        "Nada; ele só calcula e guarda.",
+        "Dois `int`, `a` e `b`.",
+        "Um `int`, mas só se `a` e `b` forem positivos."
+      ],
+      "correta": 0,
+      "explicacao": "O tipo escrito antes do nome é uma promessa: todo caminho possível dentro do método tem que terminar entregando um `int`. Se algum caminho não devolver nada, o código não compila."
+    },
+    {
+      "id": "cs-met-03",
+      "tipo": "saida",
+      "nivel": 2,
+      "enunciado": "O que aparece no console?",
+      "codigo": [
+        "public int Testar()",
+        "{",
+        "    Console.WriteLine(\"A\");",
+        "    return 1;",
+        "    Console.WriteLine(\"B\");",
+        "}"
+      ],
+      "alternativas": [
+        "Só `A` — e o compilador ainda avisa que a última linha é inalcançável.",
+        "`A` e depois `B`.",
+        "Só `B`.",
+        "Nada, porque o método não compila."
+      ],
+      "correta": 0,
+      "explicacao": "`return` encerra o método imediatamente. A linha depois dele nunca roda, e o compilador marca isso como código inalcançável — um aviso, não um erro."
+    },
+    {
+      "id": "cs-met-04",
+      "tipo": "lacuna",
+      "nivel": 2,
+      "enunciado": "Complete os dois retornos: o primeiro entrega um número inteiro, o segundo não entrega nada.",
+      "codigo": [
+        "public ___ Somar(int a, int b)",
+        "{",
+        "    return a + b;",
+        "}",
+        "",
+        "public ___ Zerar()",
+        "{",
+        "    _total = 0;",
+        "}"
+      ],
+      "respostas": [
+        "int",
+        "void"
+      ],
+      "tokens": [
+        "int",
+        "void",
+        "string",
+        "bool",
+        "static"
+      ],
+      "explicacao": "O tipo de retorno é obrigatório em toda assinatura. Quando não há nada a devolver, o lugar não fica vazio — ele recebe `void`."
+    },
+    {
+      "id": "cs-met-05",
+      "tipo": "montar-linha",
+      "nivel": 2,
+      "enunciado": "Monte a assinatura de um método público, que devolve `int`, se chama `Somar` e recebe dois inteiros.",
+      "partes": [
+        "public",
+        "int",
+        "Somar",
+        "(int a, int b)"
+      ],
+      "explicacao": "Sempre nessa ordem: acesso, retorno, nome, parâmetros. Essa mesma ordem se repete em toda assinatura de C# que você for ler."
+    },
+    {
+      "id": "cs-met-06",
+      "tipo": "escreva",
+      "nivel": 2,
+      "enunciado": "Escreva a assinatura de um método público que não devolve nada, se chama `Zerar` e não recebe parâmetros.",
+      "dica": "os parênteses existem mesmo quando estão vazios",
+      "resposta": "public void Zerar()",
+      "explicacao": "Método sem parâmetro ainda leva `()`. Sem os parênteses, você declarou uma propriedade ou um campo, não um método."
+    },
+    {
+      "id": "cs-met-07",
+      "tipo": "ache-o-erro",
+      "nivel": 2,
+      "enunciado": "Clique na linha que impede este código de compilar.",
+      "codigo": [
+        "public void Somar(int a, int b)",
+        "{",
+        "    return a + b;",
+        "}"
+      ],
+      "linhaErrada": 2,
+      "explicacao": "A assinatura promete `void`, ou seja, nenhum valor. Mas o `return` tenta entregar `a + b`. Ou a assinatura vira `int`, ou o `return` perde o valor — as duas coisas não convivem."
+    },
+    {
+      "id": "cs-met-08",
+      "tipo": "estrutura",
+      "nivel": 3,
+      "enunciado": "Leia a classe e responda.",
+      "codigo": [
+        "public class Placar",
+        "{",
+        "    private int _pontos;",
+        "",
+        "    public void Marcar(int valor)",
+        "    {",
+        "        if (valor <= 0)",
+        "        {",
+        "            return;",
+        "        }",
+        "",
+        "        _pontos += valor;",
+        "        Registrar(valor);",
+        "    }",
+        "",
+        "    private void Registrar(int valor)",
+        "    {",
+        "        Console.WriteLine($\"+{valor}\");",
+        "    }",
+        "}"
+      ],
+      "pergunta": "O que acontece ao chamar `Marcar(-5)`?",
+      "alternativas": [
+        "O método sai na hora, `_pontos` não muda e `Registrar` não é chamado.",
+        "`_pontos` diminui em 5 e `Registrar` imprime `+-5`.",
+        "O programa lança uma exceção.",
+        "Nada compila, porque um método `void` não pode ter `return`."
+      ],
+      "correta": 0,
+      "explicacao": "Em método `void`, `return;` sozinho é permitido e serve exatamente para isto: sair cedo quando a entrada não interessa. Esse padrão tem nome — *early return* — e evita aninhar o resto do método dentro de um `else`."
+    },
+    {
+      "id": "cs-met-09",
+      "tipo": "escreva",
+      "nivel": 3,
+      "enunciado": "Escreva um método público que possa ser chamado sem criar objeto, chamado `Dobro`, que recebe um `int n` e devolve o dobro dele. Assinatura e corpo.",
+      "dica": "`static` é o que dispensa o objeto; o corpo cabe em uma linha entre chaves",
+      "resposta": "public static int Dobro(int n) { return n * 2; }",
+      "aceitas": [
+        "public static int Dobro(int n) => n * 2;"
+      ],
+      "explicacao": "`static` prende o método à classe, então a chamada vira `Calculadora.Dobro(4)`, sem instanciar nada. A forma com `=>` é um *expression-bodied member*: mesma coisa escrita curta, e por isso também é aceita aqui."
+    }
+  ]
+}
