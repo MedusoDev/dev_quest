@@ -1,5 +1,13 @@
 # Ouroboros
 
+> **Clone para o projeto de faculdade.** Copiado do projeto pessoal
+> `ouroboros_app` em setembro de 2026. Documentação para começar:
+>
+> - [`docs/VISAO_GERAL.md`](docs/VISAO_GERAL.md) — o que o app é, como está
+>   construído e o que cada parte faz.
+> - [`docs/CONFIGURAR_FIREBASE.md`](docs/CONFIGURAR_FIREBASE.md) — criar um
+>   Firebase próprio para este clone e o que alterar no código.
+
 **Versão 1.0.0**
 
 App de celular para aprender programação por gamificação. Sessões diárias
