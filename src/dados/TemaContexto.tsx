@@ -32,8 +32,8 @@ import { fichasTema, temaDoSistema, temaPadrao, temas, type IdTema, type Paleta 
  * que a pessoa escolha aqui; nada quebra, ela só não muda de cor ainda.
  */
 
-const CHAVE_TEMA = 'ouroboros:tema:escolhido:v1';
-const CHAVE_SEGUIR_SISTEMA = 'ouroboros:tema:seguir-sistema:v1';
+const CHAVE_TEMA = 'devquest:tema:escolhido:v1';
+const CHAVE_SEGUIR_SISTEMA = 'devquest:tema:seguir-sistema:v1';
 
 type Valor = {
   idTema: IdTema;

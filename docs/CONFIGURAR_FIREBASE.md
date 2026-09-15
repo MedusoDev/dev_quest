@@ -22,7 +22,7 @@ O login com Google precisa das partes 4 e 5.
 ## Parte 1 — Criar o projeto no Firebase
 
 1. Acesse https://console.firebase.google.com e clique em **Adicionar projeto**.
-2. Nome sugerido: `ouroboros-faculdade`. Google Analytics pode ficar desativado.
+2. Nome sugerido: `devquest-faculdade`. Google Analytics pode ficar desativado.
 3. Espere criar e entre no projeto.
 
 ## Parte 2 — Ativar Authentication
@@ -59,16 +59,16 @@ O login com Google precisa das partes 4 e 5.
    > Não registre um app Android: isso gera `google-services.json`, que este
    > projeto não usa.
 
-2. Apelido: `ouroboros-app`. Deixe Hosting desmarcado. **Register app**.
+2. Apelido: `devquest-app`. Deixe Hosting desmarcado. **Register app**.
 3. Vai aparecer um objeto `firebaseConfig`. Copie os valores para
    `src/dados/firebase.ts`, substituindo o bloco `config`:
 
    ```ts
    const config = {
      apiKey: 'COLE_AQUI',
-     authDomain: 'ouroboros-faculdade.firebaseapp.com',
-     projectId: 'ouroboros-faculdade',
-     storageBucket: 'ouroboros-faculdade.firebasestorage.app',
+     authDomain: 'devquest-faculdade.firebaseapp.com',
+     projectId: 'devquest-faculdade',
+     storageBucket: 'devquest-faculdade.firebasestorage.app',
      messagingSenderId: 'COLE_AQUI',
      appId: 'COLE_AQUI'
    };
@@ -109,18 +109,18 @@ Escolha o perfil `preview`, depois **Keystore** → a tela mostra o
 
 1. Ao ativar o provedor Google no Firebase (Parte 2), ele já criou um projeto
    no Google Cloud com o mesmo nome. Acesse
-   https://console.cloud.google.com → selecione `ouroboros-faculdade`.
+   https://console.cloud.google.com → selecione `devquest-faculdade`.
 2. **APIs e serviços → Tela de permissão OAuth**: tipo **Externo**, nome do
-   app `Ouroboros`, seu e-mail de suporte, e em *Domínios autorizados* coloque
-   `ouroboros-faculdade.firebaseapp.com`. Salve. Enquanto o app estiver em
+   app `DevQuest`, seu e-mail de suporte, e em *Domínios autorizados* coloque
+   `devquest-faculdade.firebaseapp.com`. Salve. Enquanto o app estiver em
    modo **Testing**, só as contas listadas em *Test users* conseguem entrar —
    adicione o e-mail de cada pessoa da equipe.
 3. **APIs e serviços → Credenciais → Criar credenciais → ID do cliente OAuth**:
-   - **Tipo: Aplicativo da Web**. Nome `Ouroboros Web`. Não precisa de URIs.
+   - **Tipo: Aplicativo da Web**. Nome `DevQuest Web`. Não precisa de URIs.
      Copie o **ID do cliente** → é o `googleWebClientId`.
      (O Firebase geralmente já criou um "Web client (auto created by Google
      Service)" — pode usar esse em vez de criar outro.)
-   - **Tipo: Android**. Nome `Ouroboros Android`.
+   - **Tipo: Android**. Nome `DevQuest Android`.
      Nome do pacote: `com.ouroboros.app` (é o `android.package` do
      `app.json`). Impressão digital SHA-1: a da etapa 5.1.
      Copie o **ID do cliente** → é o `googleAndroidClientId`.
@@ -131,7 +131,7 @@ Substitua os três lugares:
 
 ```jsonc
 "scheme": [
-  "ouroboros",
+  "devquest",
   "com.googleusercontent.apps.NUMERO-HASH_DO_CLIENTE_ANDROID"
 ],
 // ...
@@ -157,14 +157,14 @@ tirar do Testing, o Google exige uma página pública de termos/privacidade.
 A pasta `hosting-legal/` já é essa página:
 
 1. Em `hosting-legal/.firebaserc`, troque `"default": "call-of-ouroboros"`
-   por `"default": "ouroboros-faculdade"`.
+   por `"default": "devquest-faculdade"`.
 2. Ative **Build → Hosting** no console e publique:
    ```bash
    cd hosting-legal
    npx firebase-tools login
    npx firebase-tools deploy --only hosting
    ```
-3. Use a URL gerada (`ouroboros-faculdade.web.app`) na tela de permissão OAuth.
+3. Use a URL gerada (`devquest-faculdade.web.app`) na tela de permissão OAuth.
 
 ---
 

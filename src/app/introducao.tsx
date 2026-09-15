@@ -112,7 +112,7 @@ export default function Introducao() {
       <View style={estilos.topo}>
         <View style={estilos.marca}>
           <Anel tamanho={30} corFundo={cores.fundo} />
-          <Text style={[estilos.nomeMarca, { color: cores.acento }]}>OUROBOROS</Text>
+          <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
         </View>
 
         <Pressable accessibilityRole="button" hitSlop={12} onPress={concluir}>

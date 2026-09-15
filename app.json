@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Ouroboros",
-    "slug": "ouroboros-app",
-    "version": "1.0.0",
+    "name": "DevQuest",
+    "slug": "devquest-app",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": [
-      "ouroboros",
+      "devquest",
       "com.googleusercontent.apps.753915977876-o978cm6auc2pdfhvv21g1qp447tlh6jd"
     ],
     "userInterfaceStyle": "dark",

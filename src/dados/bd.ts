@@ -7,7 +7,7 @@
 
 import * as SQLite from 'expo-sqlite';
 
-const NOME = 'ouroboros.db';
+const NOME = 'devquest.db';
 
 let conexao: SQLite.SQLiteDatabase | null = null;
 let abrindo: Promise<SQLite.SQLiteDatabase> | null = null;

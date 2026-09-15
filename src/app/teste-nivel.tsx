@@ -70,7 +70,7 @@ export default function TesteNivel() {
     >
       <View style={estilos.marca}>
         <Anel tamanho={38} corFundo={cores.fundo} />
-        <Text style={[estilos.nomeMarca, { color: cores.acento }]}>OUROBOROS</Text>
+        <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
       </View>
 
       {fase === "convite" && (

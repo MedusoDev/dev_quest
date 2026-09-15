@@ -1,6 +1,4 @@
-import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 import { useEffect, useRef, useState } from "react";
 import {
     Animated,
@@ -26,21 +24,11 @@ import {
 import { useConta } from "@/dados/ContaContexto";
 import { useCores } from "@/dados/TemaContexto";
 import {
-    cadastrar,
-    credenciaisGoogle,
-    entrar as entrarComSenha,
-    entrarComGoogle,
+    entrarComoAdminTemporario,
     googleConfigurado,
-    guardarVerificadorGoogle,
     recuperarSenha,
-    redirectUriGoogle,
-    registrarConsentimentoGoogle,
     traduzirErro,
 } from "@/dados/conta";
-
-// Fecha a aba do navegador do sistema sozinha quando o Google devolve o
-// controle ao app — sem isto, no Android ela às vezes fica pendurada atrás.
-WebBrowser.maybeCompleteAuthSession();
 import {
     SENHA_MIN,
     validarEmail,
@@ -99,39 +87,16 @@ export default function Entrar() {
   // Escondido até `app.json` → `extra` ter as duas chaves do OAuth do Google
   // preenchidas — ver o comentário de `credenciaisGoogle` em `dados/conta.ts`.
   const temGoogle = googleConfigurado();
-  const { webClientId, androidClientId } = credenciaisGoogle();
-  const [requisicaoGoogle, respostaGoogle, iniciarGoogle] = Google.useAuthRequest({
-    webClientId,
-    androidClientId,
-    // O Google exige esse formato específico de redirecionamento pra um
-    // client Android — ver o comentário de `redirectUriGoogle`.
-    redirectUri: temGoogle ? redirectUriGoogle() : undefined,
-  });
 
-  useEffect(() => {
-    if (respostaGoogle?.type !== "success") return;
-
-    const idToken = respostaGoogle.authentication?.idToken;
-    if (!idToken) {
-      setErro("O Google não devolveu o token esperado. Tente de novo.");
-      return;
-    }
-
-    setOcupado(true);
-    entrarComGoogle(idToken)
-      .catch((e) => setErro(traduzirErro(e)))
-      .finally(() => setOcupado(false));
-  }, [respostaGoogle]);
-
+  // Login/cadastro temporariamente desativados: qualquer botão entra com a
+  // sessão convidada fixa "admin" — ver `entrarComoAdminTemporario`.
   function comGoogle() {
     setErro(null);
     setAviso(null);
-    registrarConsentimentoGoogle();
-    // Guardado fora do componente porque o retorno do navegador cai numa
-    // rota nova (`app/oauthredirect.tsx`) que desmonta esta tela antes da
-    // resposta chegar — ver o comentário de `guardarVerificadorGoogle`.
-    guardarVerificadorGoogle(requisicaoGoogle?.codeVerifier);
-    iniciarGoogle();
+    setOcupado(true);
+    entrarComoAdminTemporario()
+      .catch((e) => setErro(traduzirErro(e)))
+      .finally(() => setOcupado(false));
   }
 
   // O *pop* do bloco do formulário a cada troca de modo. A chave é o modo:
@@ -161,12 +126,9 @@ export default function Entrar() {
   const problemaEmail = validarEmail(email);
   const problemaSenha = validarSenha(senha);
 
-  const podeEnviar =
-    !problemaNome &&
-    !problemaEmail &&
-    !problemaSenha &&
-    !ocupado &&
-    (!cadastrando || aceitouTermos);
+  // Login/cadastro temporariamente desativados (ver `comGoogle` acima): o
+  // formulário não bloqueia mais o envio por validação de campo.
+  const podeEnviar = !ocupado;
 
   function trocarModo(novo: Modo) {
     if (novo === modo) return;
@@ -179,35 +141,15 @@ export default function Entrar() {
     setErro(null);
     setAviso(null);
 
-    const problema = problemaNome ?? problemaEmail ?? problemaSenha;
-    if (problema) return setErro(problema);
-
     setOcupado(true);
     try {
-      if (cadastrando) {
-        await cadastrar(email, senha, nome);
-      } else {
-        await entrarComSenha(email, senha);
-      }
+      await entrarComoAdminTemporario();
       // Não navego daqui: o portão da raiz (`Portao`, em `_layout.tsx`) percebe
       // a sessão nova e decide sozinho para onde ir — onboarding ou introdução.
       // Um `replace` explícito aqui competia com o dele e piscava a tela em
       // branco no meio da troca.
     } catch (e) {
-      const codigo = (e as { code?: string })?.code;
-
-      // Tentou criar conta com e-mail que já existe: em vez de só avisar, leva
-      // para o login com o e-mail preenchido. É quase sempre o que a pessoa
-      // queria fazer.
-      if (codigo === "auth/email-already-in-use") {
-        setModo("entrar");
-        setSenha("");
-        setAviso(
-          "Você já tem conta com esse e-mail. Digite a senha para entrar.",
-        );
-      } else {
-        setErro(traduzirErro(e));
-      }
+      setErro(traduzirErro(e));
     } finally {
       setOcupado(false);
     }
@@ -261,7 +203,7 @@ export default function Entrar() {
           {/* ── marca ─────────────────────────────────────────── */}
           <View style={estilos.marca}>
             <Anel tamanho={38} corFundo={cores.fundo} />
-            <Text style={[estilos.nomeMarca, { color: cores.acento }]}>OUROBOROS</Text>
+            <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
           </View>
 
           <Text style={[estilos.titulo, { color: cores.textoForte }]}>
@@ -386,7 +328,7 @@ export default function Entrar() {
                   rotulo="Continuar com Google"
                   variante="secundarioForte"
                   icone={<LogoGoogle />}
-                  desabilitado={ocupado || !requisicaoGoogle}
+                  desabilitado={ocupado}
                   aoTocar={comGoogle}
                 />
                 {cadastrando && (

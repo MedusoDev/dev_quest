@@ -72,7 +72,7 @@ export function perfilVazio(uid: string, nome: string): PerfilPublico {
   };
 }
 
-const prefixoCache = 'ouroboros:perfil:v1:';
+const prefixoCache = 'devquest:perfil:v1:';
 
 /**
  * Uma cópia do último perfil lido com sucesso, guardada no aparelho.

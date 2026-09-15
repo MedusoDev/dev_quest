@@ -121,6 +121,20 @@ export async function entrarComoConvidado(): Promise<User> {
 }
 
 /**
+ * Login e cadastro temporariamente desativados: todo botão da tela `entrar.tsx`
+ * (e-mail/senha e Google) cai aqui em vez do fluxo real, entrando com uma
+ * sessão convidada fixa chamada "admin" — até o backend definitivo (fora do
+ * Firebase atual, compartilhado com `call-of-ouroboros`) estar pronto.
+ *
+ * Exige **Anonymous** ligado em Authentication → Sign-in method no console,
+ * igual a `entrarComoConvidado`.
+ */
+export async function entrarComoAdminTemporario(): Promise<User> {
+  cadastroPendente = { nome: 'admin', termosAceitosEm: new Date().toISOString() };
+  return entrarComoConvidado();
+}
+
+/**
  * Os client IDs do OAuth do Google, lidos de `app.json` → `extra`.
  *
  * Só existem depois de duas coisas manuais, feitas uma vez só: ligar Google em
