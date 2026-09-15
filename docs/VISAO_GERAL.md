@@ -78,9 +78,9 @@ src/nucleo/       regras de negócio PURAS — sem React, sem React Native
 src/dados/        SQLite local + Firebase + contextos React
 src/tema/         cores, espaçamentos, fontes, paletas de tema
 conteudo/         as lições, em JSON, uma pasta por linguagem
-docs/             regras do Firestore, documentação
+docs/             arquitetura, cronograma, esta visão geral, regras do Firestore
 hosting-legal/    página pública (termos/privacidade) para o OAuth do Google
-feat/             ideias e roadmap (ideia.md)
+feat/             banco de ideias pessoal (ideia.md) — não é o roadmap oficial
 redesign-de-layout-do-projeto/  protótipo de design (handoff do Claude Design)
 assets/           ícones, splash
 ```
@@ -255,11 +255,17 @@ frequência, horário de estudo, taxa de acerto e crescimento de contas.
 
 ---
 
-## 12. Onde estão as ideias e o roadmap
+## 12. Cronograma e roadmap
 
-`feat/ideia.md` — estágios do projeto (pré-beta, correções, apresentação…),
-requisitos de LGPD, ideias de produto e monetização. Nem tudo ali será feito;
-é um banco de ideias organizado para virar cards de Trello.
+O planejamento oficial do projeto de faculdade está em
+[`CRONOGRAMA.md`](CRONOGRAMA.md), e a arquitetura detalhada (camadas,
+diagrama de componentes e como as partes se comunicam) em
+[`ARQUITETURA.md`](ARQUITETURA.md).
+
+`feat/ideia.md` é um **banco de ideias pessoal** do autor original — rascunhos
+de produto, monetização e métricas. Algumas ideias já viraram código, outras
+não e talvez nunca virem. Não faz parte da documentação do projeto de
+faculdade.
 
 ---
 
