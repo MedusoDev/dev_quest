@@ -1,16 +1,17 @@
-# Ouroboros — visão geral do projeto
+# DevQuest — visão geral do projeto
 
 Este documento explica **o que o app é, como está construído e como cada parte
 funciona**. É o ponto de partida para quem chega no projeto agora.
 
-> Este repositório é um clone do projeto pessoal `ouroboros_app`, criado para
-> o trabalho de faculdade. O original não é alterado por aqui.
+> Este repositório é um clone do projeto pessoal `ouroboros_app` (renomeado
+> para `devquest_app`), criado para o trabalho de faculdade. O original não é
+> alterado por aqui.
 
 ---
 
 ## 1. O que é o app
 
-Ouroboros é um app de celular (Android primeiro) para **aprender programação
+DevQuest é um app de celular (Android primeiro) para **aprender programação
 por gamificação**, no estilo Duolingo:
 
 - Sessões diárias curtas ("a diária") com cards de exercício.
@@ -218,11 +219,15 @@ sequência, `progresso.ts` grava no SQLite e `nuvem.ts` sobe o perfil e o
 evento de sessão. Com mais de uma linguagem no foco, há diária mista e uma
 por linguagem — a primeira do dia conta para a sequência, as demais são bônus.
 
-**Login com Google:** `entrar.tsx` abre o navegador via `expo-auth-session`
-(PKCE) → o Google devolve para `ouroboros://oauthredirect?code=...` →
-`oauthredirect.tsx` troca o código por token e entra no Firebase. Os IDs de
-cliente ficam em `app.json` → `extra.googleWebClientId` /
-`googleAndroidClientId`, e o esquema nativo em `app.json` → `scheme`.
+**Login com Google:** fluxo real é `entrar.tsx` abrindo o navegador via
+`expo-auth-session` (PKCE) → o Google devolve para
+`devquest://oauthredirect?code=...` → `oauthredirect.tsx` troca o código por
+token e entra no Firebase. Os IDs de cliente ficam em `app.json` →
+`extra.googleWebClientId` / `googleAndroidClientId`, e o esquema nativo em
+`app.json` → `scheme`. **Temporariamente desativado:** todo botão de
+entrar/criar conta em `entrar.tsx` (e-mail/senha e Google) chama
+`entrarComoAdminTemporario` (`dados/conta.ts`), que só faz login anônimo do
+Firebase com o nome fixo "admin" — ver o comentário na função.
 
 **Admin:** um perfil com `admin: true` (setado no console do Firebase) cai
 direto em `/admin/painel`, que lê todos os perfis e eventos e mostra

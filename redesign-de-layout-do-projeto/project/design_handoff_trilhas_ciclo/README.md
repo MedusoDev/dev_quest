@@ -1,4 +1,4 @@
-# Handoff: Ouroboros — ciclo em Trilhas, Perfil e Configurações compactos, três temas
+# Handoff: DevQuest — ciclo em Trilhas, Perfil e Configurações compactos, três temas
 
 ## Visão geral
 
@@ -253,7 +253,7 @@ src/componentes/CicloTrilha.tsx        novo
 src/componentes/SeletorLinguagem.tsx   novo
 src/app/-abas-/trilhas.tsx             substitui src/app/(abas)/trilhas.tsx
 src/tema/temas.ts                      novo
-referencias/Ouroboros - Telas.html     as 10 telas, com o alternador de tema
+referencias/DevQuest - Telas.html      as 10 telas, com o alternador de tema
 referencias/Trilhas interativo.html    o fluxo clicável de Trilhas
 ```
 

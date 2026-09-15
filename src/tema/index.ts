@@ -1,9 +1,9 @@
 /**
- * Fichas de design do Ouroboros — identidade **Terminal**.
+ * Fichas de design do DevQuest — identidade **Terminal**.
  *
- * Todo valor aqui saiu do handoff `design_handoff_ouroboros_terminal/`, não foi
+ * Todo valor aqui saiu do handoff `design_handoff_devquest_terminal/`, não foi
  * inventado. Quando houver dúvida entre este arquivo e o desenho, o desenho
- * vence — abra `Ouroboros - Protótipo.dc.html` e meça.
+ * vence — abra `DevQuest - Protótipo.dc.html` e meça.
  *
  * O app é escuro e só escuro. Suportar tema claro dobraria o trabalho de cada
  * tela em troca de quase nada, num app que se usa cinco minutos por dia.

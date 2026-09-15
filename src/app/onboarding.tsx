@@ -131,7 +131,7 @@ export default function Onboarding() {
       >
         <View style={estilos.marca}>
           <Anel tamanho={38} corFundo={cores.fundo} />
-          <Text style={[estilos.nomeMarca, { color: cores.acento }]}>OUROBOROS</Text>
+          <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
         </View>
 
         <Text style={[estilos.titulo, { color: cores.textoForte }]}>Antes de começar</Text>

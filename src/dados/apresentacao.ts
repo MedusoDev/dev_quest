@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const prefixo = "ouroboros:introducao:v1:";
+const prefixo = "devquest:introducao:v1:";
 const ouvintes = new Set<(uid: string) => void>();
 
 export async function introducaoFoiVista(uid: string): Promise<boolean> {

@@ -22,10 +22,10 @@ import { hoje } from '@/nucleo/datas';
  * do que importa.
  */
 
-const CHAVE_ATIVADO = 'ouroboros:notificacoes:ativado:v2';
-const CHAVE_ID = 'ouroboros:notificacoes:id:v2';
+const CHAVE_ATIVADO = 'devquest:notificacoes:ativado:v2';
+const CHAVE_ID = 'devquest:notificacoes:id:v2';
 /** Que dia (ISO) o lembrete corrente foi agendado para — evita reagendar de novo no mesmo dia. */
-const CHAVE_DIA_AGENDADO = 'ouroboros:notificacoes:dia-agendado:v2';
+const CHAVE_DIA_AGENDADO = 'devquest:notificacoes:dia-agendado:v2';
 
 const INTERVALO_HORAS = 2;
 const TITULO = 'Sua diária está esperando';

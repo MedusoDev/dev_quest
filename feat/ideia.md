@@ -238,17 +238,19 @@ prontas antes de começar.
 **Por que importa:** vira o case de entrada — prova social e dados reais pra
 negociar com a próxima escola.
 
-### Trocar o nome "Ouroboros"
-Nome atual é difícil de falar/lembrar. Próximo nome deve continuar
-relacionado a cobra, por causa da marca pessoal Meduso.dev.
+### ~~Trocar o nome "Ouroboros"~~ — feito: agora é DevQuest
+Nome antigo era difícil de falar/lembrar. Trocado para **DevQuest** em
+setembro de 2026 (código, docs, assets e repositório GitHub), ainda antes de
+qualquer usuário instalado — era o momento mais barato pra fazer essa troca.
 
-**Por que importa:** nome é ativo de marca. Trocar depois de já ter usuários
-instalados e reviews na loja custa caro (rebranding, reviews perdidos, links
-quebrados, ASO do zero).
+**Por que importava:** nome é ativo de marca. Trocar depois de já ter
+usuários instalados e reviews na loja custa caro (rebranding, reviews
+perdidos, links quebrados, ASO do zero).
 
-**Pontos de atenção:** por enquanto o nome permanece, mas decidir o nome novo
-ANTES de ir a mercado ou fechar com escolas, não depois. Não precisa ser feito
-agora, mas não pode ser deixado pra depois do lançamento comercial.
+**Pontos de atenção:** o Firebase compartilhado (`call-of-ouroboros`) e o
+`android.package` (`com.ouroboros.app`) ainda não foram trocados — ficam como
+estão até o backend próprio do clone de faculdade estar pronto (ver
+`docs/CONFIGURAR_FIREBASE.md`).
 
 ---
 

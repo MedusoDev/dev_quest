@@ -10,7 +10,7 @@ import { espaco, margemTela, tipo } from '@/tema';
  * PONTO DE VOLTA DO LOGIN COM GOOGLE.
  *
  * O navegador devolve o controle ao app numa URL fixa
- * (`ouroboros://oauthredirect?code=...`) — isso é o `expo-router` que
+ * (`devquest://oauthredirect?code=...`) — isso é o `expo-router` que
  * decide, ao ver essa rota, desmontar `entrar.tsx` e montar esta tela. É
  * por isso que a troca do código por token não pode depender de nada que
  * vivia na tela anterior (ver `guardarVerificadorGoogle` em
