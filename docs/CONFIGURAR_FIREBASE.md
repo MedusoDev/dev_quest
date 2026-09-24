@@ -1,11 +1,4 @@
-# Configurar um Firebase próprio para este clone
-
-Este clone ainda aponta para o Firebase do projeto original
-(`call-of-ouroboros`, compartilhado com o site). Para o trabalho de faculdade
-ter um backend **separado** — sem misturar contas, perfis e ligas com o
-projeto pessoal — siga este passo a passo.
-
-Ao final, você terá alterado **4 arquivos**:
+# Configurar um Firebase
 
 | Arquivo | O que muda |
 |---|---|

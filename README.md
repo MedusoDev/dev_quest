@@ -1,19 +1,41 @@
 # DevQuest
 
-> **Clone para o projeto de faculdade.** Copiado do projeto pessoal
-> `ouroboros_app` (renomeado para `devquest_app`) em setembro de 2026.
+> **Documentação** > `dev_quest` 
 > Documentação para começar:
 >
 > - [`docs/VISAO_GERAL.md`](docs/VISAO_GERAL.md) — o que o app é, como está
 >   construído e o que cada parte faz.
 > - [`docs/CONFIGURAR_FIREBASE.md`](docs/CONFIGURAR_FIREBASE.md) — criar um
 >   Firebase próprio para este clone e o que alterar no código.
+>- [`docs/VERSIONAMENTO.md`](docs/VERSIONAMENTO.md) — como nome seus commits
+>   Como nomear seus commits com Emoji certo .
+>- [`docs/CRONOGRAMA.md`](docs/CRONOGRAMA.md) —
+>   Onde estamos no projeto.
 
-**Versão 1.1.0**
+**Obs.:** Cronograma sempre atualizado pelo Gabriel Barros- 24/09/26
+
+## Branches
+
+| Branch | Responsável | Descrição |
+|---|---|---|
+| `deploy` | Gabriel | branch do produto final |
+| `development` | Gabriel | testes de funcionalidade, correções e afins |
+| `backend/gabriel` | Gabriel | backend |
+| `backend/brian` | Brian | backend |
+| `frontend/djalma` | Djalma | frontend |
+| `frontend/ryan` | Ryan | frontend |
+
+**Obs.:** Matheus Wendell (testes/QA) não tem branch própria — os testes
+manuais são feitos direto na `development`. Uma branch só será criada para
+QA se surgir necessidade de escrever testes automatizados.
+
+
+
+**Versão 1.0.0**
 
 App de celular para aprender programação por gamificação. Sessões diárias
 curtas, repetição espaçada, e trilhas de **C#, Java, JavaScript, PHP e
-Python** — com conta obrigatória (e-mail/senha, Google ou convidado),
+Python** — com conta obrigatória (e-mail/senha, Google),
 onboarding de perfil e um foco de estudo que a própria diária respeita.
 
 Expo + React Native + TypeScript, Android primeiro.
@@ -27,6 +49,11 @@ Documentação complementar em [`docs/`](docs/):
 - **Conta**: entrar, criar conta ou continuar como convidado (sessão anônima
   do Firebase), tudo numa tela só (`src/app/(auth)/entrar.tsx`). Login com
   Google via OAuth (só funciona em build APK, não no Expo Go).
+
+
+**Obs.:** Build não  gerada ainda - 24/09/26
+
+
 - **Onboarding**: depois de criar a conta, a pessoa informa nome completo,
   data de nascimento, nível de conhecimento e o **foco de estudo** — uma ou
   mais linguagens. Escolher mais de uma linguagem mostra um aviso explicando
@@ -113,7 +140,7 @@ pessoas diferentes.
 
 ## Firebase
 
-O projeto usa um Firebase compartilhado com o site `call_of_ouroboros`
-(mesma conta, coleções `perfis` e `ligas` separadas das do site). As regras de
+O projeto usa um Firebase - dev_quest
+As regras de
 segurança do Firestore estão em [`docs/firestore.rules`](docs/firestore.rules)
 — publique-as junto das do site, nunca sozinhas.
