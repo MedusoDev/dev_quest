@@ -1,9 +1,6 @@
 /**
  * Conexão com o Firebase.
  *
- * Reaproveita o projeto `call-of-ouroboros`, o mesmo do site. Auth compartilhada
- * é uma vantagem — um dia a mesma conta serve nos dois — e as coleções do app
- * ficam separadas (`perfis`, `ligas`), sem encostar no que o site grava.
  *
  * A `apiKey` é pública por design no Firebase: ela identifica o projeto, não
  * autoriza nada. A proteção real vem das Security Rules em
@@ -26,14 +23,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getReactNativePersistence } from '@firebase/auth';
 
 const config = {
-  apiKey: 'AIzaSyC235l3FG9pjzEj76dhMlRouPdEB-rF7xo',
-  authDomain: 'call-of-ouroboros.firebaseapp.com',
-  projectId: 'call-of-ouroboros',
-  storageBucket: 'call-of-ouroboros.firebasestorage.app',
-  messagingSenderId: '753915977876',
-  appId: '1:753915977876:web:7f1008ccaa906ed6f79481'
+  apiKey: "AIzaSyA3JHmn3ibVh9oYnOFqxNWMqS-A-8OZhWc",
+  authDomain: "devquest-faculdade.firebaseapp.com",
+  projectId: "devquest-faculdade",
+  storageBucket: "devquest-faculdade.firebasestorage.app",
+  messagingSenderId: "1007800626263",
+  appId: "1:1007800626263:web:66e2c517bceeb9657bc712",
+  measurementId: "G-E01VDZKD81"
 };
-
 // `getApps()` evita reinicializar quando o Fast Refresh reexecuta o módulo.
 export const app = getApps().length === 0 ? initializeApp(config) : getApp();
 
