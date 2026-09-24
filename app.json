@@ -11,7 +11,7 @@
     ],
     "userInterfaceStyle": "dark",
     "android": {
-      "package": "com.ouroboros.app",
+      "package": "com.devquest.app",
       "adaptiveIcon": {
         "backgroundColor": "#08090b",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -54,13 +54,10 @@
       "googleAndroidClientId": "753915977876-o978cm6auc2pdfhvv21g1qp447tlh6jd.apps.googleusercontent.com",
       "router": {},
       "eas": {
-        "projectId": "e113b612-6193-4a08-a36b-fbeafe227986"
+        "projectId": "81175e05-56fe-4f83-b944-1979644469ed"
       }
     },
     "owner": "medusa6991",
-    "updates": {
-      "url": "https://u.expo.dev/e113b612-6193-4a08-a36b-fbeafe227986"
-    },
     "ios": {}
   }
 }
