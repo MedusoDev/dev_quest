@@ -10,10 +10,8 @@ RUN npm install
 # Copia o restante do código do projeto
 COPY . .
 
-# Porta padrão do Expo Web
-EXPOSE 19006
-
-# Porta do Metro Bundler (necessária mesmo rodando web)
+# Porta do Metro Bundler — serve o web e o bundle no Expo SDK 54
+# (a antiga 19006 era do webpack, descontinuado a partir do SDK 50)
 EXPOSE 8081
 
 CMD ["npx", "expo", "start", "--web", "--host", "lan"]
