@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: dev_quest_app
+    ports:
+      - "19006:19006"   # Expo Web
+      - "8081:8081"     # Metro Bundler
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CI=true
+
+  # Descomente este serviço se o projeto passar a usar Firebase Functions
+  # firebase-emulator:
+  #   image: node:20-alpine
+  #   container_name: dev_quest_firebase
+  #   working_dir: /app/functions
+  #   volumes:
+  #     - ./functions:/app/functions
+  #   ports:
+  #     - "5000:5000"   # Hosting emulator
+  #     - "5001:5001"   # Functions emulator
+  #     - "8080:8080"   # Firestore emulator
+  #     - "4000:4000"   # Emulator UI
+  #   command: sh -c "npm install -g firebase-tools && npm install && firebase emulators:start"
