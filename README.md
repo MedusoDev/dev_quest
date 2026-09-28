@@ -31,7 +31,7 @@ QA se surgir necessidade de escrever testes automatizados.
 
 
 
-**Versão 1.0.0**
+**Versão 1.1.0**
 
 App de celular para aprender programação por gamificação. Sessões diárias
 curtas, repetição espaçada, e trilhas de **C#, Java, JavaScript, PHP e
