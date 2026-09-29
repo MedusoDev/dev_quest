@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 import * as Updates from "expo-updates";
 import { useEffect, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,6 +14,7 @@ import {
   View,
 } from "react-native";
 
+import { alertar } from "@/componentes/alerta";
 import { Avatar } from "@/componentes/Avatar";
 import { Botao } from "@/componentes/Botao";
 import { useConta } from "@/dados/ContaContexto";
@@ -36,6 +36,7 @@ import {
     espaco,
     fontes,
     margemTela,
+    raio,
     rodapeFixo,
     tamanhos,
     tipo,
@@ -121,7 +122,7 @@ export default function Configuracoes() {
     setOcupadoNotificacao(false);
 
     if (ligar && !ficou) {
-      Alert.alert(
+      alertar(
         "Sem permissão",
         "Para lembrar você, preciso de permissão para enviar notificações. Ative em Ajustes do aparelho."
       );
@@ -150,7 +151,7 @@ export default function Configuracoes() {
   function confirmarRegressao(novoNivel: NivelConhecimento) {
     const nome = NIVEIS_CONHECIMENTO.find((n) => n.id === novoNivel)?.nome ?? novoNivel;
 
-    Alert.alert(
+    alertar(
       "Regredir nível",
       `Mudar para ${nome}? Depois disso você não vai mais poder trocar o nível na mão — só receber sugestão automática pra subir de novo.`,
       [
@@ -172,7 +173,7 @@ export default function Configuracoes() {
   async function trocarFoto() {
     const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissao.granted) {
-      Alert.alert("Sem permissão", "Preciso de acesso às suas fotos para trocar o avatar.");
+      alertar("Sem permissão", "Preciso de acesso às suas fotos para trocar o avatar.");
       return;
     }
 
@@ -195,7 +196,7 @@ export default function Configuracoes() {
 
       if (reduzida.base64) await atualizarPerfil({ foto: reduzida.base64 });
     } catch {
-      Alert.alert("Não deu", "Não consegui preparar essa imagem. Tente outra.");
+      alertar("Não deu", "Não consegui preparar essa imagem. Tente outra.");
     } finally {
       setTrocandoFoto(false);
     }
@@ -230,14 +231,14 @@ export default function Configuracoes() {
   }
 
   function confirmarSaida() {
-    Alert.alert("Sair da conta", "Seu progresso continua salvo neste aparelho.", [
+    alertar("Sair da conta", "Seu progresso continua salvo neste aparelho.", [
       { text: "Ficar", style: "cancel" },
       { text: "Sair", style: "destructive", onPress: () => sair() },
     ]);
   }
 
   function confirmarExclusao() {
-    Alert.alert(
+    alertar(
       "Excluir conta",
       "Isso apaga seu perfil, progresso e histórico de sessões para sempre. Não tem como desfazer.",
       [
@@ -246,7 +247,7 @@ export default function Configuracoes() {
           text: "Excluir tudo",
           style: "destructive",
           onPress: () =>
-            Alert.alert(
+            alertar(
               "Tem certeza?",
               "Última confirmação: sua conta será excluída agora.",
               [
@@ -267,12 +268,12 @@ export default function Configuracoes() {
       setExcluindo(false);
       const codigo = (e as { code?: string })?.code;
       if (codigo === "auth/requires-recent-login") {
-        Alert.alert(
+        alertar(
           "Precisa entrar de novo",
           "Por segurança, saia da conta e entre de novo antes de excluir."
         );
       } else {
-        Alert.alert("Não deu", "Não consegui excluir agora. Tente de novo.");
+        alertar("Não deu", "Não consegui excluir agora. Tente de novo.");
       }
     }
   }
@@ -749,9 +750,9 @@ const estilos = StyleSheet.create({
   rotulo: { textTransform: "uppercase", marginTop: 11, marginBottom: 6 },
 
   cartoesTema: { flexDirection: "row", gap: 6 },
-  cartaoTema: { flex: 1, borderWidth: tamanhos.linha, padding: 8 },
+  cartaoTema: { flex: 1, borderWidth: tamanhos.linha, padding: 8, borderRadius: raio.md },
   amostras: { flexDirection: "row", gap: 3 },
-  amostra: { width: 12, height: 12 },
+  amostra: { width: 12, height: 12, borderRadius: raio.pill },
   nomeTema: { fontFamily: fontes.semi, fontSize: 13, lineHeight: 16, marginTop: 7 },
 
   linhaInterruptor: {
@@ -772,7 +773,7 @@ const estilos = StyleSheet.create({
   },
 
   cartoesRitmo: { flexDirection: "row", gap: 6 },
-  cartaoRitmo: { flex: 1, borderWidth: tamanhos.linha, paddingVertical: 8, paddingHorizontal: 10 },
+  cartaoRitmo: { flex: 1, borderWidth: tamanhos.linha, paddingVertical: 8, paddingHorizontal: 10, borderRadius: raio.md },
 
   avatarLinha: {
     flexDirection: "row",
@@ -788,6 +789,7 @@ const estilos = StyleSheet.create({
     minHeight: tamanhos.campo,
     borderWidth: tamanhos.linha,
     paddingHorizontal: 15,
+    borderRadius: raio.sm,
   },
   linhaData: { flexDirection: "row", gap: espaco.sm },
   entradaData: { flex: 1, textAlign: "center" },
@@ -803,8 +805,9 @@ const estilos = StyleSheet.create({
     borderWidth: tamanhos.linha,
     paddingVertical: espaco.md,
     paddingHorizontal: espaco.md,
+    borderRadius: raio.sm,
   },
-  marcaLinguagem: { width: 10, height: 10 },
+  marcaLinguagem: { width: 10, height: 10, borderRadius: raio.pill },
   avisoFoco: { marginTop: espaco.sm, lineHeight: 17 },
 
   opcoesNivel: { marginTop: espaco.md, gap: espaco.sm },
@@ -813,9 +816,10 @@ const estilos = StyleSheet.create({
     paddingVertical: espaco.md,
     paddingHorizontal: espaco.md,
     alignItems: "center",
+    borderRadius: raio.sm,
   },
 
-  aviso: { marginTop: espaco.xl, borderLeftWidth: tamanhos.trilho, paddingVertical: 12, paddingHorizontal: espaco.md },
+  aviso: { marginTop: espaco.xl, borderLeftWidth: tamanhos.trilho, paddingVertical: 12, paddingHorizontal: espaco.md, borderRadius: raio.sm },
 
   botaoSalvar: { marginTop: espaco.xl },
   botaoConta: { marginTop: espaco.sm },
