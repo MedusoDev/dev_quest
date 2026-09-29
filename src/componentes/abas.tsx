@@ -1,13 +1,13 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { Animated, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { House, Lightning, MapTrifold, Trophy, UserCircle, type IconWeight } from 'phosphor-react-native';
 
-import { cores, espaco, tamanhos, tipo } from '@/tema';
+import { cores, raio, tamanhos } from '@/tema';
 import type { Paleta } from '@/tema/temas';
 import { useCores } from '@/dados/TemaContexto';
-import { Anel } from './Anel';
 import { useEntradaAba, useMovimentoReduzido } from './movimento';
 
 /**
@@ -27,11 +27,11 @@ import { useEntradaAba, useMovimentoReduzido } from './movimento';
  * A direção é calculada aqui, na barra, e entregue às telas por contexto —
  * `expo-router` não conta para a tela de onde o toque veio.
  *
- * ── OS ÍCONES SÃO FORMAS ──────────────────────────────────────────────────
+ * ── OS ÍCONES DIZEM O NOME SOZINHOS ───────────────────────────────────────
  *
- * Nenhuma biblioteca de ícones. Cinco formas desenhadas com View e o anel em
- * SVG. Uma família de ícones de terceiro traria cantos arredondados e traços de
- * outra espessura para dentro de um app que não tem nem uma coisa nem outra.
+ * Cinco ícones Phosphor no peso `fill`, sem rótulo de texto embaixo — cada
+ * forma já é reconhecível o bastante (casa, mapa, raio, troféu, perfil) para
+ * não precisar de "HOJE"/"TRILHAS" escrito.
  */
 
 type ValorAbas = { direcao: number; anunciarDirecao: (direcao: number) => void };
@@ -93,59 +93,23 @@ export function TelaAba({
 
 /* ─────────────────────────── os ícones ─────────────────────────── */
 
-function IconeHoje({ cor }: { cor: string }) {
-  return <Anel tamanho={17} cor={cor} espessura={14} cabeca={false} />;
-}
+const TAMANHO_ICONE = 25;
 
-function IconeTrilhas({ cor }: { cor: string }) {
-  return (
-    <View style={estilos.barras}>
-      {[17, 11, 17].map((largura, indice) => (
-        <View key={indice} style={{ width: largura, height: 3, backgroundColor: cor }} />
-      ))}
-    </View>
-  );
-}
-
-function IconeRelampago({ cor }: { cor: string }) {
-  return <View style={[estilos.losango, { backgroundColor: cor }]} />;
-}
-
-function IconeLiga({ cor }: { cor: string }) {
-  return <View style={[estilos.quadrado, { borderColor: cor }]} />;
-}
-
-function IconePerfil({ cor }: { cor: string }) {
-  return <View style={[estilos.quadrado, estilos.redondo, { borderColor: cor }]} />;
-}
-
-/** Três barras crescentes — o ícone do painel de métricas, não do jogo. */
-function IconePainel({ cor }: { cor: string }) {
-  return (
-    <View style={estilos.barrasPainel}>
-      {[7, 12, 17].map((altura, indice) => (
-        <View key={indice} style={{ width: 3, height: altura, backgroundColor: cor }} />
-      ))}
-    </View>
-  );
-}
-
-const ICONES: Record<string, (props: { cor: string }) => ReactNode> = {
-  index: IconeHoje,
-  trilhas: IconeTrilhas,
-  relampago: IconeRelampago,
-  liga: IconeLiga,
-  perfil: IconePerfil,
-  painel: IconePainel
+const ICONES: Record<string, (props: { cor: string; peso: IconWeight }) => ReactNode> = {
+  index: ({ cor, peso }) => <House size={TAMANHO_ICONE} color={cor} weight={peso} />,
+  trilhas: ({ cor, peso }) => <MapTrifold size={TAMANHO_ICONE} color={cor} weight={peso} />,
+  relampago: ({ cor, peso }) => <Lightning size={TAMANHO_ICONE} color={cor} weight={peso} />,
+  liga: ({ cor, peso }) => <Trophy size={TAMANHO_ICONE} color={cor} weight={peso} />,
+  perfil: ({ cor, peso }) => <UserCircle size={TAMANHO_ICONE} color={cor} weight={peso} />
 };
 
+/** Só para leitor de tela — não aparece mais como texto na barra. */
 const ROTULOS: Record<string, string> = {
-  index: 'HOJE',
-  trilhas: 'TRILHAS',
-  relampago: 'RELÂMP',
-  liga: 'LIGA',
-  perfil: 'PERFIL',
-  painel: 'PAINEL'
+  index: 'Hoje',
+  trilhas: 'Trilhas',
+  relampago: 'Relâmpago',
+  liga: 'Liga',
+  perfil: 'Perfil'
 };
 
 /* ──────────────────────────── a barra ──────────────────────────── */
@@ -176,12 +140,11 @@ export function BarraAbas({ state, navigation }: BottomTabBarProps) {
             key={rota.key}
             accessibilityRole="tab"
             accessibilityState={{ selected: ativa }}
-            accessibilityLabel={ROTULOS[rota.name]}
+            accessibilityLabel={ROTULOS[rota.name] ?? rota.name}
             onPress={tocar}
             style={[estilos.item, ativa && { borderTopColor: paleta.acento }]}
           >
-            {Icone ? <Icone cor={cor} /> : null}
-            <Text style={[tipo.rotuloAba, { color: cor }]}>{ROTULOS[rota.name] ?? rota.name}</Text>
+            {Icone ? <Icone cor={cor} peso={ativa ? 'fill' : 'regular'} /> : null}
           </Pressable>
         );
       })}
@@ -195,27 +158,19 @@ const estilos = StyleSheet.create({
   barra: {
     flexDirection: 'row',
     alignItems: 'stretch',
-    borderTopWidth: tamanhos.linha
+    borderTopWidth: tamanhos.linha,
+    borderTopLeftRadius: raio.lg,
+    borderTopRightRadius: raio.lg
   },
   item: {
     flex: 1,
     minHeight: tamanhos.abas,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 7,
     // A borda de 2 px da aba ativa sobrepõe a régua da barra em vez de somar
     // altura a ela: sem o -1, a linha do topo engrossaria só naquela coluna.
     borderTopWidth: tamanhos.trilho,
     borderTopColor: 'transparent',
     marginTop: -tamanhos.linha
-  },
-  itemAtivo: {},
-
-  barras: { gap: 3, alignItems: 'flex-start' },
-  barrasPainel: { flexDirection: 'row', alignItems: 'flex-end', gap: 3 },
-  losango: { width: 13, height: 13, transform: [{ rotate: '45deg' }] },
-  quadrado: { width: 15, height: 15, borderWidth: 3 },
-  redondo: { borderRadius: 999 },
-
-  espacador: { width: espaco.xs }
+  }
 });

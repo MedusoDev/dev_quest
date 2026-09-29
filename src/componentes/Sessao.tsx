@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { X } from 'phosphor-react-native';
 
 import { espaco, margemTela, siglaLinguagem, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
@@ -136,7 +137,7 @@ export function Sessao({ cards, ehRevisao, origemDe, aoTerminar, aoSair }: Props
           hitSlop={12}
           onPress={aoSair}
         >
-          <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+          <X size={18} color={cores.legenda} weight="bold" />
         </Pressable>
 
         {/* A barra usa `resolvidos`, não o índice da fila: um card que voltou
@@ -252,7 +253,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: margemTela,
     paddingTop: topoConteudo
   },
-  fechar: { ...tipo.fechar },
   contador: { ...tipo.metricaMono },
   xp: { flexDirection: 'row', alignItems: 'baseline', gap: 3 },
   xpNumero: { ...tipo.metricaPequena, fontSize: 14 },

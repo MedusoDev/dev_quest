@@ -22,10 +22,10 @@ import { LogBox } from "react-native";
 import JetBrainsMono_400Regular from "@expo-google-fonts/jetbrains-mono/400Regular/JetBrainsMono_400Regular.ttf";
 import JetBrainsMono_500Medium from "@expo-google-fonts/jetbrains-mono/500Medium/JetBrainsMono_500Medium.ttf";
 import JetBrainsMono_700Bold from "@expo-google-fonts/jetbrains-mono/700Bold/JetBrainsMono_700Bold.ttf";
-import SpaceGrotesk_400Regular from "@expo-google-fonts/space-grotesk/400Regular/SpaceGrotesk_400Regular.ttf";
-import SpaceGrotesk_500Medium from "@expo-google-fonts/space-grotesk/500Medium/SpaceGrotesk_500Medium.ttf";
-import SpaceGrotesk_600SemiBold from "@expo-google-fonts/space-grotesk/600SemiBold/SpaceGrotesk_600SemiBold.ttf";
-import SpaceGrotesk_700Bold from "@expo-google-fonts/space-grotesk/700Bold/SpaceGrotesk_700Bold.ttf";
+import FiraCode_400Regular from "@expo-google-fonts/fira-code/400Regular/FiraCode_400Regular.ttf";
+import FiraCode_500Medium from "@expo-google-fonts/fira-code/500Medium/FiraCode_500Medium.ttf";
+import FiraCode_600SemiBold from "@expo-google-fonts/fira-code/600SemiBold/FiraCode_600SemiBold.ttf";
+import FiraCode_700Bold from "@expo-google-fonts/fira-code/700Bold/FiraCode_700Bold.ttf";
 
 import { aoMarcarIntroducao, introducaoFoiVista } from "@/dados/apresentacao";
 import { ProvedorConta, useConta } from "@/dados/ContaContexto";
@@ -76,10 +76,10 @@ export default function Layout() {
   // porque cada peso é um arquivo — em fonte customizada o peso está no nome da
   // família, não no `fontWeight`. Ver o comentário em `@/tema`.
   const [fontesCarregadas, erroFontes] = useFonts({
-    SpaceGrotesk_400Regular,
-    SpaceGrotesk_500Medium,
-    SpaceGrotesk_600SemiBold,
-    SpaceGrotesk_700Bold,
+    FiraCode_400Regular,
+    FiraCode_500Medium,
+    FiraCode_600SemiBold,
+    FiraCode_700Bold,
     JetBrainsMono_400Regular,
     JetBrainsMono_500Medium,
     JetBrainsMono_700Bold,

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View, type TextStyle, type ViewStyle } from 'react-native';
 
-import { cores, espaco, tamanhos, tipo } from '@/tema';
+import { cores, espaco, raio, tamanhos, tipo } from '@/tema';
 import type { Paleta } from '@/tema/temas';
 import { useCores } from '@/dados/TemaContexto';
 import { Cursor } from './basicos';
@@ -9,13 +9,13 @@ import { Cursor } from './basicos';
 /**
  * BOTÃO — a peça mais importante do app.
  *
- * No redesign ele é um **retângulo cheio, sem raio e sem sombra**. A camada
- * sólida deslocada que ele tinha antes foi embora junto com os cantos
- * arredondados: aqui o destaque vem do acento contra o preto, não do relevo.
+ * Cantos arredondados (`raio.md`) e, nas variantes de fundo cheio (primário e
+ * erro), uma sombra colorida na própria cor de fundo — dá relevo e dinamismo
+ * sem introduzir uma segunda cor de acento.
  *
- * O que ficou no lugar do peso: o **cursor ▌ piscando** ao lado do rótulo.
- * Botão habilitado tem cursor, botão desabilitado não — é a diferença mais
- * visível entre os dois estados, junto com o fundo.
+ * O que ficou do redesign anterior: o **cursor ▌ piscando** ao lado do
+ * rótulo. Botão habilitado tem cursor, botão desabilitado não — é a diferença
+ * mais visível entre os dois estados, junto com o fundo.
  *
  * Feedback de toque é opacidade, e só. Escurecer o acento no toque criaria uma
  * segunda cor de acento que não existe na paleta.
@@ -50,6 +50,8 @@ type Aparencia = {
   altura: number;
   /** Só o primário e o de erro têm cursor: são os que continuam o fluxo. */
   cursor: boolean;
+  /** Fundo cheio ganha sombra colorida na própria cor; borda, não. */
+  sombra: boolean;
 };
 
 /**
@@ -63,14 +65,16 @@ function aparenciaPara(c: typeof cores | Paleta): Record<VarianteBotao, Aparenci
       texto: c.acentoFundo,
       estiloTexto: tipo.botao,
       altura: tamanhos.botao,
-      cursor: true
+      cursor: true,
+      sombra: true
     },
     secundario: {
       caixa: { borderWidth: tamanhos.linha, borderColor: c.linha },
       texto: c.textoFraco,
       estiloTexto: tipo.botaoSecundario,
       altura: tamanhos.botaoSecundario,
-      cursor: false
+      cursor: false,
+      sombra: false
     },
     /** Como o secundário, mas com borda e texto que se leem contra o fundo —
         para ações de mesmo peso que a primária, como "Continuar com Google". */
@@ -79,21 +83,24 @@ function aparenciaPara(c: typeof cores | Paleta): Record<VarianteBotao, Aparenci
       texto: c.textoForte,
       estiloTexto: tipo.botaoSecundario,
       altura: tamanhos.botaoSecundario,
-      cursor: false
+      cursor: false,
+      sombra: false
     },
     discreto: {
       caixa: { borderWidth: tamanhos.linha, borderColor: c.linha },
       texto: c.legenda,
       estiloTexto: tipo.botaoDiscreto,
       altura: tamanhos.campo,
-      cursor: false
+      cursor: false,
+      sombra: false
     },
     erro: {
       caixa: { backgroundColor: c.erro },
       texto: c.erroFundo,
       estiloTexto: tipo.botaoMenor,
       altura: 56,
-      cursor: true
+      cursor: true,
+      sombra: true
     }
   };
 }
@@ -129,13 +136,18 @@ export function Botao({
 
   const corTexto = desabilitado ? desabilitadoAparencia.texto : aparencia.texto;
 
+  const sombra =
+    aparencia.sombra && !desabilitado
+      ? sombraPara((caixa as ViewStyle).backgroundColor as string)
+      : null;
+
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled: desabilitado }}
       disabled={desabilitado}
       onPress={aoTocar}
-      style={({ pressed }) => [pressed && !desabilitado && estilos.pressionado, estilo]}
+      style={({ pressed }) => [pressed && !desabilitado && estilos.pressionado, sombra, estilo]}
     >
       <View style={[estilos.caixa, caixa, { minHeight: altura ?? aparencia.altura }]}>
         {icone && <View style={desabilitado && estilos.iconeDesabilitado}>{icone}</View>}
@@ -148,13 +160,26 @@ export function Botao({
   );
 }
 
+/** Sombra colorida na própria cor de fundo do botão — dá relevo sem 2ª cor de acento. */
+function sombraPara(cor: string): ViewStyle {
+  return {
+    borderRadius: raio.md,
+    shadowColor: cor,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6
+  };
+}
+
 const estilos = StyleSheet.create({
   caixa: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: espaco.sm,
-    paddingHorizontal: espaco.lg
+    paddingHorizontal: espaco.lg,
+    borderRadius: raio.md
   },
   pressionado: { opacity: 0.75 },
   iconeDesabilitado: { opacity: 0.4 }

@@ -10,6 +10,7 @@ import {
   View
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { X } from 'phosphor-react-native';
 
 import { animacao, curva, espaco, margemTela, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
@@ -104,7 +105,7 @@ export default function Glossario() {
         <View style={estilos.cabecalho}>
           <Rotulo cor={cores.acento}>glossário</Rotulo>
           <Pressable accessibilityLabel="Fechar" accessibilityRole="button" hitSlop={12} onPress={fechar}>
-            <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+            <X size={18} color={cores.legenda} weight="bold" />
           </Pressable>
         </View>
 
@@ -180,7 +181,6 @@ const estilos = StyleSheet.create({
   },
 
   cabecalho: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  fechar: { ...tipo.fechar },
   titulo: { ...tipo.titulo, marginTop: espaco.sm },
 
   busca: {

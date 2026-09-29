@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { espaco, tamanhos, tipo } from '@/tema';
+import { espaco, raio, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { embaralhar } from '@/nucleo/aleatorio';
 import { comoTexto, type Card } from '@/nucleo/conteudo';
@@ -360,7 +360,8 @@ const estilos = StyleSheet.create({
   caixaCodigo: {
     borderLeftWidth: tamanhos.trilho,
     paddingVertical: espaco.md + 2,
-    paddingHorizontal: 18
+    paddingHorizontal: 18,
+    borderRadius: raio.md
   },
   linhaLacuna: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', minHeight: 28 },
   pedaco: { flexDirection: 'row', alignItems: 'center' },
@@ -371,7 +372,8 @@ const estilos = StyleSheet.create({
     paddingHorizontal: espaco.sm,
     marginHorizontal: 2,
     minWidth: 56,
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: raio.sm
   },
 
   // ── peças ──────────────────────────────────────────────────────
@@ -381,7 +383,8 @@ const estilos = StyleSheet.create({
     paddingHorizontal: espaco.md,
     paddingVertical: espaco.sm + 2,
     minHeight: 40,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderRadius: raio.sm
   },
   pecaPressionada: { opacity: 0.7 },
   pecaApagada: { opacity: 0.35 },
@@ -394,7 +397,8 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     gap: espaco.sm,
     borderWidth: tamanhos.linha,
-    padding: espaco.sm
+    padding: espaco.sm,
+    borderRadius: raio.md
   },
   montagemVazia: { ...tipo.notaMonoMenor, paddingHorizontal: espaco.xs },
 
@@ -405,7 +409,8 @@ const estilos = StyleSheet.create({
     padding: espaco.md,
     ...tipo.codigo,
     lineHeight: 22,
-    textAlignVertical: 'top'
+    textAlignVertical: 'top',
+    borderRadius: raio.md
   },
   entradaRevelada: { opacity: 0.7 },
 
@@ -415,7 +420,8 @@ const estilos = StyleSheet.create({
     height: tamanhos.alvoMin,
     borderWidth: tamanhos.linha,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderRadius: raio.sm
   },
   teclaTexto: { ...tipo.codigo, fontSize: 16, lineHeight: 20 },
 

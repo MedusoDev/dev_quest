@@ -1,7 +1,7 @@
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import { CaretDown, X } from 'phosphor-react-native';
 
-import { espaco, margemTela, rodapeFixo, tamanhos, tipo } from '@/tema';
+import { espaco, margemTela, raio, rodapeFixo, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { Trilho } from '@/componentes/basicos';
 
@@ -49,15 +49,7 @@ export function BotaoLinguagem({
     >
       <Text style={[estilos.gatilhoNome, { color: cores.textoForte }]}>{nome}</Text>
       <Text style={[estilos.gatilhoContagem, { color: cores.acentoTexto }]}>{contagem}</Text>
-      <Svg width={10} height={7} viewBox="0 0 10 7">
-        <Path
-          d="M1 1.4 5 5.6 9 1.4"
-          fill="none"
-          stroke={cores.acento}
-          strokeWidth={1.6}
-          strokeLinecap="square"
-        />
-      </Svg>
+      <CaretDown size={12} color={cores.acento} weight="bold" />
     </Pressable>
   );
 }
@@ -89,7 +81,7 @@ export function SeletorLinguagem({
               linguagem
             </Text>
             <Pressable accessibilityRole="button" hitSlop={12} onPress={aoFechar}>
-              <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+              <X size={18} color={cores.legenda} weight="bold" />
             </Pressable>
           </View>
 
@@ -156,7 +148,8 @@ const estilos = StyleSheet.create({
     minHeight: tamanhos.alvoMin,
     marginLeft: -11,
     paddingHorizontal: 11,
-    borderWidth: tamanhos.linha
+    borderWidth: tamanhos.linha,
+    borderRadius: raio.sm
   },
   gatilhoNome: { ...tipo.tituloLinha },
   gatilhoContagem: { ...tipo.metricaMono },
@@ -166,12 +159,13 @@ const estilos = StyleSheet.create({
     borderTopWidth: tamanhos.linha,
     paddingHorizontal: margemTela,
     paddingTop: 18,
-    paddingBottom: rodapeFixo
+    paddingBottom: rodapeFixo,
+    borderTopLeftRadius: raio.lg,
+    borderTopRightRadius: raio.lg
   },
 
   cabecalho: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   cabecalhoRotulo: { textTransform: 'uppercase' },
-  fechar: { ...tipo.fechar },
 
   lista: { marginTop: espaco.md, maxHeight: 340 },
 
@@ -183,7 +177,7 @@ const estilos = StyleSheet.create({
     paddingVertical: 11,
     borderTopWidth: tamanhos.linha
   },
-  marca: { width: 10, height: 10 },
+  marca: { width: 10, height: 10, borderRadius: raio.pill },
 
   itemTexto: { flex: 1 },
   itemNota: { ...tipo.metricaMono, marginTop: 3 },

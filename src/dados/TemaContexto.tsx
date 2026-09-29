@@ -18,17 +18,16 @@ import { fichasTema, temaDoSistema, temaPadrao, temas, type IdTema, type Paleta 
  * O TEMA TROCÁVEL, de verdade.
  *
  * `tema/index.ts` continua existindo e continua sendo lido por toda tela que
- * ainda não migrou — ele é a paleta pesada estática, sempre igual. Este
+ * ainda não migrou — ele é a paleta escura estática, sempre igual. Este
  * contexto é para quem já migrou: em vez de `import { cores } from '@/tema'`,
  * a tela chama `useCores()` e lê a paleta corrente, que muda quando a pessoa
  * troca de tema em Configurações.
  *
  * "Seguir o sistema" ignora o tema escolhido manualmente e usa
- * `temaDoSistema(esquema)` — hoje isso só distingue claro (`leve`) de escuro
- * (`pesado`); o tema `medio` só se chega escolhendo à mão.
+ * `temaDoSistema(esquema)` — distingue claro de escuro.
  *
  * Cada tela migra na sua vez — ver a nota em `tema/temas.ts`. Enquanto uma
- * tela lê `cores` do índice estático, ela fica no tema pesado não importa o
+ * tela lê `cores` do índice estático, ela fica no tema escuro não importa o
  * que a pessoa escolha aqui; nada quebra, ela só não muda de cor ainda.
  */
 
@@ -46,7 +45,7 @@ type Valor = {
 const Contexto = createContext<Valor | null>(null);
 
 function idTemaValido(valor: string | null): valor is IdTema {
-  return valor === 'leve' || valor === 'medio' || valor === 'pesado';
+  return valor === 'claro' || valor === 'escuro';
 }
 
 export function ProvedorTema({ children }: { children: ReactNode }) {

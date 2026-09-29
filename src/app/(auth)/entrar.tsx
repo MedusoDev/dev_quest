@@ -11,6 +11,7 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { Check } from "phosphor-react-native";
 
 import { Anel } from "@/componentes/Anel";
 import { Botao } from "@/componentes/Botao";
@@ -40,6 +41,7 @@ import {
     curva,
     espaco,
     margemTela,
+    raio,
     rodapeFixo,
     tamanhos,
     tipo,
@@ -270,9 +272,7 @@ export default function Entrar() {
                     },
                   ]}
                 >
-                  {aceitouTermos && (
-                    <Text style={[estilos.marcaTermos, { color: cores.acentoFundo }]}>✓</Text>
-                  )}
+                  {aceitouTermos && <Check size={12} color={cores.acentoFundo} weight="bold" />}
                 </View>
                 <Text style={[estilos.textoTermos, { color: cores.legenda }]}>
                   Li e concordo com os{" "}
@@ -580,6 +580,7 @@ const estilos = StyleSheet.create({
     borderWidth: tamanhos.linha,
     paddingHorizontal: 15,
     ...tipo.campo,
+    borderRadius: raio.sm,
   },
 
   forca: {
@@ -606,8 +607,8 @@ const estilos = StyleSheet.create({
     borderWidth: tamanhos.linha,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: raio.sm,
   },
-  marcaTermos: { ...tipo.rotuloFino, fontSize: 12 },
   textoTermos: { ...tipo.notaMonoMenor, flex: 1, lineHeight: 18 },
   termosConvidado: {
     ...tipo.notaMonoMenor,

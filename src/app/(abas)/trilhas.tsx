@@ -1,8 +1,9 @@
 import { Fragment, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { X } from 'phosphor-react-native';
 
-import { espaco, margemTela, siglaLinguagem, tamanhos, tipo } from '@/tema';
+import { espaco, margemTela, raio, rodapeFixo, siglaLinguagem, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { useProgresso } from '@/dados/ProgressoContexto';
 import {
@@ -13,29 +14,23 @@ import {
   type Licao,
   type LinguagemId
 } from '@/nucleo/conteudo';
+import { Botao } from '@/componentes/Botao';
 import { Rotulo } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
-import { CicloTrilha, type PontoCiclo } from '@/componentes/CicloTrilha';
+import { CaminhoTrilha, type ItemCaminho } from '@/componentes/CaminhoTrilha';
 import { BotaoLinguagem, SeletorLinguagem } from '@/componentes/SeletorLinguagem';
 
 /**
- * TRILHAS — uma linguagem por vez, desenhada como o ciclo do Ouroboros.
+ * TRILHAS — uma linguagem por vez, num caminho de hexágonos.
  *
- * O que mudou em relação à versão anterior:
- *
- *   1. **Uma linguagem na tela.** Antes as trilhas de C# e de JavaScript
- *      vinham empilhadas na mesma rolagem; com mais linguagens isso não
- *      escala. Agora a linguagem é escolhida no cabeçalho e a tela mostra só
- *      a dela — o progresso de cada uma vive no seletor.
- *   2. **Sem título de abertura.** Saíram o rótulo mono e o título de 30 —
- *      eram meia tela de cabeçalho antes do primeiro conteúdo. Ficou uma
- *      barra de 52 dp: nome da linguagem à esquerda, glossário à direita.
- *   3. **O ciclo no lugar da timeline.** O anel mostra a linguagem inteira
- *      de uma vez; ver `CicloTrilha.tsx`. A lista embaixo continua existindo,
- *      compacta, para quem quer ler os nomes.
- *
- * O rótulo mono no acento continua marcando **uma** trilha: aquela onde está
- * a lição atual.
+ *   1. **Uma linguagem na tela.** A linguagem é escolhida no cabeçalho e a
+ *      tela mostra só a dela — o progresso de cada uma vive no seletor.
+ *   2. **Sem título de abertura.** Barra de 52 dp: nome da linguagem à
+ *      esquerda, glossário à direita.
+ *   3. **Caminho sinuoso por seção.** Cada trilha (sub-seção) vira uma
+ *      cápsula de título seguida de um `CaminhoTrilha` — hexágonos ligados por
+ *      linha pontilhada. Tocar um hexágono liberado abre um cartão com o
+ *      resumo da lição e os botões Continuar/Revisar Conteúdo.
  */
 export default function Trilhas() {
   const cores = useCores();
@@ -44,6 +39,7 @@ export default function Trilhas() {
 
   const [linguagemId, setLinguagemId] = useState<LinguagemId>(linguagens[0]!.id);
   const [seletorAberto, setSeletorAberto] = useState(false);
+  const [licaoAberta, setLicaoAberta] = useState<Licao | null>(null);
 
   const linguagem = linguagens.find((l) => l.id === linguagemId)!;
   const fila = useMemo(() => licoesDaLinguagem(linguagemId), [linguagemId]);
@@ -53,17 +49,8 @@ export default function Trilhas() {
 
   function abrir(licao: Licao) {
     if (!licaoEstaLiberada(linguagemId, licao.id, licoesConcluidas)) return;
-    router.push(`/licao/${licao.id}`);
+    setLicaoAberta(licao);
   }
-
-  const pontos: PontoCiclo[] = fila.map((licao) => ({
-    id: licao.id,
-    concluida: licoesConcluidas.has(licao.id),
-    atual: licao.id === atual?.id,
-    aoTocar: () => abrir(licao)
-  }));
-
-  const faltam = fila.length - feitas;
 
   const secoes = linguagem.trilhas.map((trilha) => {
     const licoes = trilha.licoes.map(obterLicao).filter((l): l is Licao => l !== null);
@@ -97,105 +84,36 @@ export default function Trilhas() {
       </View>
 
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-        <CicloTrilha
-          pontos={pontos}
-          rotulo={
-            atual
-              ? `lição ${String(fila.indexOf(atual) + 1).padStart(2, '0')}`
-              : 'ciclo fechado'
-          }
-          titulo={atual ? atual.titulo : 'A cabeça achou a cauda'}
-          nota={
-            atual
-              ? `${atual.cards.length} cards · ${feitas} de ${fila.length} feitas`
-              : `${fila.length} de ${fila.length} feitas`
-          }
-          acao={atual ? 'continuar' : 'rever'}
-          aoTocarCentro={() => (atual ? abrir(atual) : setSeletorAberto(true))}
-          legenda={
-            atual
-              ? `o corpo fecha o ciclo em ${faltam} liç${faltam === 1 ? 'ão' : 'ões'}`
-              : 'o ciclo está inteiro'
-          }
-        />
+        {secoes.map((secao) => {
+          const itens: ItemCaminho[] = secao.licoes.map((licao) => ({
+            licao,
+            numero: fila.indexOf(licao) + 1,
+            concluida: licoesConcluidas.has(licao.id),
+            liberada: licaoEstaLiberada(linguagemId, licao.id, licoesConcluidas),
+            ehAtual: licao.id === atual?.id
+          }));
 
-        <View style={estilos.lista}>
-          {secoes.map((secao) => (
+          return (
             <Fragment key={secao.chave}>
-              <View style={estilos.secao}>
+              <View
+                style={[
+                  estilos.capsula,
+                  {
+                    backgroundColor: secao.emFoco ? cores.acentoFundo : cores.superficie,
+                    alignSelf: 'center'
+                  }
+                ]}
+              >
                 <Rotulo cor={secao.emFoco ? cores.acento : cores.legenda}>{secao.rotulo}</Rotulo>
                 <Text style={[estilos.secaoContagem, { color: cores.legenda }]}>
                   {secao.emBreve ? 'em breve' : `${secao.feitas}/${secao.licoes.length}`}
                 </Text>
               </View>
 
-              {secao.licoes.map((licao) => {
-                const concluida = licoesConcluidas.has(licao.id);
-                const liberada = licaoEstaLiberada(linguagemId, licao.id, licoesConcluidas);
-                const ehAtual = licao.id === atual?.id;
-
-                return (
-                  <Pressable
-                    key={licao.id}
-                    accessibilityRole="button"
-                    accessibilityState={{ disabled: !liberada }}
-                    onPress={() => abrir(licao)}
-                    style={[estilos.linha, { borderTopColor: cores.linha }]}
-                  >
-                    <View
-                      style={[
-                        estilos.no,
-                        concluida && { backgroundColor: cores.acento },
-                        ehAtual && { borderWidth: 2, borderColor: cores.acento },
-                        !concluida && !ehAtual && { borderWidth: tamanhos.linha, borderColor: cores.linha }
-                      ]}
-                    >
-                      {concluida ? (
-                        <Text style={[estilos.noTexto, { color: cores.acentoFundo }]}>✓</Text>
-                      ) : ehAtual ? (
-                        <Text style={[estilos.noTexto, { fontSize: 10, color: cores.acento }]}>
-                          {fila.indexOf(licao) + 1}
-                        </Text>
-                      ) : null}
-                    </View>
-
-                    <Text
-                      style={[
-                        tipo.botaoDiscreto,
-                        estilos.linhaTitulo,
-                        { color: liberada ? cores.textoForte : cores.desativado }
-                      ]}
-                      numberOfLines={1}
-                    >
-                      {licao.titulo}
-                    </Text>
-
-                    <Text
-                      style={[
-                        tipo.metricaMono,
-                        {
-                          color: ehAtual
-                            ? cores.acento
-                            : liberada
-                              ? cores.legenda
-                              : cores.desativado
-                        }
-                      ]}
-                    >
-                      {concluida
-                        ? 'feita'
-                        : ehAtual
-                          ? 'aqui →'
-                          : liberada
-                            ? `${licao.cards.length} cards`
-                            : 'travada'}
-                    </Text>
-                  </Pressable>
-                );
-              })}
+              <CaminhoTrilha itens={itens} aoTocar={(item) => abrir(item.licao)} />
             </Fragment>
-          ))}
-        </View>
+          );
+        })}
       </ScrollView>
 
       <SeletorLinguagem
@@ -217,6 +135,68 @@ export default function Trilhas() {
         }}
         aoFechar={() => setSeletorAberto(false)}
       />
+
+      <Modal
+        visible={licaoAberta !== null}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setLicaoAberta(null)}
+      >
+        <Pressable style={estilos.fundo} onPress={() => setLicaoAberta(null)}>
+          <Pressable
+            style={[estilos.folha, { backgroundColor: cores.fundo, borderTopColor: cores.linha }]}
+            onPress={() => {}}
+          >
+            {licaoAberta && (
+              <>
+                <View style={estilos.folhaCabecalho}>
+                  <Text style={[tipo.rotuloFino, { color: cores.acento }]}>
+                    {`${fila.indexOf(licaoAberta) + 1} · ${
+                      secoes.find((s) => s.licoes.some((l) => l.id === licaoAberta.id))?.rotulo ?? ''
+                    }`}
+                  </Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    hitSlop={12}
+                    onPress={() => setLicaoAberta(null)}
+                  >
+                    <X size={18} color={cores.legenda} weight="bold" />
+                  </Pressable>
+                </View>
+
+                <Text style={[tipo.titulo, estilos.folhaTitulo, { color: cores.textoForte }]}>
+                  {licaoAberta.titulo}
+                </Text>
+                <Text style={[tipo.corpo, estilos.folhaResumo, { color: cores.textoFraco }]}>
+                  {licaoAberta.resumo}
+                </Text>
+
+                <Botao
+                  rotulo="Continuar"
+                  aoTocar={() => {
+                    const id = licaoAberta.id;
+                    setLicaoAberta(null);
+                    router.push(`/licao/${id}`);
+                  }}
+                />
+
+                {licoesConcluidas.has(licaoAberta.id) && (
+                  <Botao
+                    rotulo="Revisar Conteúdo"
+                    variante="secundario"
+                    estilo={estilos.botaoRevisar}
+                    aoTocar={() => {
+                      const id = licaoAberta.id;
+                      setLicaoAberta(null);
+                      router.push({ pathname: '/licao/[id]', params: { id, revisar: '1' } });
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </Pressable>
+        </Pressable>
+      </Modal>
     </TelaAba>
   );
 }
@@ -238,28 +218,30 @@ const estilos = StyleSheet.create({
   },
   glossarioTexto: { ...tipo.metricaMono },
 
-  conteudo: { paddingTop: espaco.md, paddingBottom: espaco.xl },
+  conteudo: { paddingTop: espaco.lg, paddingBottom: espaco.xl },
 
-  lista: { paddingHorizontal: margemTela, marginTop: espaco.md },
-  secao: {
+  capsula: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: espaco.sm,
-    paddingBottom: 6
+    gap: espaco.sm,
+    paddingHorizontal: espaco.md,
+    paddingVertical: espaco.xs + 2,
+    borderRadius: raio.pill,
+    marginBottom: espaco.sm
   },
   secaoContagem: { ...tipo.metricaMono },
 
-  linha: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    minHeight: tamanhos.alvoMin,
-    paddingVertical: 8,
-    borderTopWidth: tamanhos.linha
+  fundo: { flex: 1, backgroundColor: 'rgba(4,5,6,0.72)', justifyContent: 'flex-end' },
+  folha: {
+    borderTopWidth: tamanhos.linha,
+    paddingHorizontal: margemTela,
+    paddingTop: 18,
+    paddingBottom: rodapeFixo,
+    borderTopLeftRadius: raio.lg,
+    borderTopRightRadius: raio.lg
   },
-  no: { width: 18, height: 18, alignItems: 'center', justifyContent: 'center' },
-  noTexto: { fontFamily: tipo.metricaPequena.fontFamily, fontSize: 11 },
-
-  linhaTitulo: { flex: 1 }
+  folhaCabecalho: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  folhaTitulo: { marginTop: espaco.md },
+  folhaResumo: { marginTop: espaco.sm, marginBottom: espaco.lg },
+  botaoRevisar: { marginTop: espaco.sm }
 });

@@ -24,7 +24,8 @@ import { espaco, margemTela } from "@/tema";
 export default function TelaLicao() {
   const cores = useCores();
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, revisar } = useLocalSearchParams<{ id: string; revisar?: string }>();
+  const somenteRevisar = revisar === '1';
   const { progresso, revisoes, registrarSessao } = useProgresso();
 
   const [fase, setFase] = useState<"conceito" | "sessao">("conceito");
@@ -77,8 +78,8 @@ export default function TelaLicao() {
     return (
       <Conceito
         licao={licao}
-        rotuloBotao={`Começar os ${licao.cards.length} cards`}
-        aoContinuar={() => setFase("sessao")}
+        rotuloBotao={somenteRevisar ? "Entendi" : `Começar os ${licao.cards.length} cards`}
+        aoContinuar={somenteRevisar ? () => router.back() : () => setFase("sessao")}
         aoVoltar={() => router.back()}
       />
     );

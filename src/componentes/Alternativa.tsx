@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { animacao, espaco, tamanhos, tipo } from '@/tema';
+import { animacao, espaco, raio, tamanhos, tipo } from '@/tema';
 import type { Paleta } from '@/tema/temas';
 import { useCores } from '@/dados/TemaContexto';
 import { TextoRico } from './basicos';
@@ -188,7 +188,8 @@ const estilos = StyleSheet.create({
     minHeight: tamanhos.alternativa,
     paddingVertical: 13,
     paddingHorizontal: espaco.md + 2,
-    borderWidth: tamanhos.linha
+    borderWidth: tamanhos.linha,
+    borderRadius: raio.md
   },
   pressionada: { opacity: 0.8 },
 

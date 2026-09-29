@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { espaco, margemTela, tamanhos, tipo } from '@/tema';
+import { espaco, margemTela, raio, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { Botao } from './Botao';
 import { TextoRico } from './basicos';
@@ -130,7 +130,9 @@ const estilos = StyleSheet.create({
     bottom: 0,
     borderTopWidth: tamanhos.trilho,
     paddingHorizontal: margemTela,
-    paddingTop: margemTela
+    paddingTop: margemTela,
+    borderTopLeftRadius: raio.lg,
+    borderTopRightRadius: raio.lg
   },
 
   cabecalho: { flexDirection: 'row', alignItems: 'baseline', gap: 11 },
@@ -143,7 +145,8 @@ const estilos = StyleSheet.create({
     marginTop: espaco.md,
     borderLeftWidth: tamanhos.trilho,
     paddingLeft: espaco.md,
-    gap: 5
+    gap: 5,
+    borderRadius: raio.sm
   },
   rotuloResposta: { ...tipo.rotuloCelula },
   respostaTexto: { ...tipo.codigo, lineHeight: 22 },

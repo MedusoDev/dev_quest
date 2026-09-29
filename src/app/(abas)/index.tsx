@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { ArrowRight, Flame } from 'phosphor-react-native';
 
 import {
   animacao,
   espaco,
   margemTela,
+  raio,
   siglaLinguagem,
   tamanhos,
   tipo,
@@ -22,10 +24,9 @@ import {
   pontosFracos,
   sugestaoDeNivel
 } from '@/nucleo/diaria';
-import { metaPara, rankPara, RANKS, recordeSequencia, reguaDaSemana } from '@/nucleo/gamificacao';
+import { metaPara, recordeSequencia, reguaDaSemana } from '@/nucleo/gamificacao';
 import { NIVEIS_CONHECIMENTO } from '@/nucleo/perfil';
 import { Anel } from '@/componentes/Anel';
-import { Avatar } from '@/componentes/Avatar';
 import { Cursor, Regua, Rotulo, Trilho } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
 import { useMovimentoReduzido, useVarredura } from '@/componentes/movimento';
@@ -73,8 +74,6 @@ export default function Hoje() {
   }
 
   const meta = metaPara(progresso.metaDiariaMin);
-  const rank = rankPara(progresso.xp);
-  const posicaoRank = RANKS.findIndex((r) => r.nome === rank.atual.nome) + 1;
 
   const vencidos = contarVencidos(revisoes);
   const fracos = pontosFracos(revisoes, 3);
@@ -132,31 +131,22 @@ export default function Hoje() {
   return (
     <TelaAba>
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-        {/* ── cabeçalho ─────────────────────────────────────────── */}
-        <View style={estilos.cabecalho}>
-          <View style={estilos.flex}>
-            <Rotulo cor={cores.acento}>
-              {`rank ${String(posicaoRank).padStart(2, '0')} / ${String(RANKS.length).padStart(2, '0')}`}
-            </Rotulo>
-            <Text style={[estilos.rank, { color: cores.textoForte }]}>{rank.atual.nome}</Text>
-
-            <View style={estilos.linhaXp}>
-              <Trilho
-                fracao={rank.progresso}
-                altura={tamanhos.trilhoGrosso}
-                duracao={animacao.rank}
-                estilo={estilos.barraRank}
-              />
-              <Text style={[estilos.xp, { color: cores.legenda }]}>
-                {rank.proximo ? `${progresso.xp} / ${rank.proximo.xp} XP` : `${progresso.xp} XP`}
-              </Text>
-            </View>
-          </View>
-
-          <Pressable accessibilityLabel="Perfil" accessibilityRole="button" onPress={() => router.push('/perfil')}>
-            <Avatar nome={perfil?.nome ?? 'Você'} foto={perfil?.foto} bordaId={perfil?.borda} />
-          </Pressable>
-        </View>
+        {/* ── cabeçalho: sequência em fogo ──────────────────────── */}
+        <Pressable
+          accessibilityLabel={`Sequência: ${progresso.sequencia} dias. Toque para ver o perfil.`}
+          accessibilityRole="button"
+          onPress={() => router.push('/perfil')}
+          style={estilos.cabecalho}
+        >
+          <Flame
+            size={28}
+            weight="fill"
+            color={progresso.sequencia > 0 ? cores.atencao : cores.desativado}
+          />
+          <Text style={[estilos.sequenciaCabecalho, { color: cores.textoForte }]}>
+            {progresso.sequencia}
+          </Text>
+        </Pressable>
 
         {/* ── o cartão da diária ────────────────────────────────── */}
         <View
@@ -275,7 +265,7 @@ export default function Hoje() {
                       {linguagem.nome}
                     </Text>
                     <View style={estilos.flex} />
-                    <Text style={[estilos.setaFoco, { color: coresLinguagem[id] }]}>→</Text>
+                    <ArrowRight size={18} color={coresLinguagem[id]} weight="bold" />
                   </Pressable>
                 );
               })}
@@ -325,62 +315,67 @@ export default function Hoje() {
         <View style={estilos.secao}>
           <Rotulo estilo={estilos.rotuloTrilhas}>trilhas</Rotulo>
 
-          {trilhas.map((trilha) => (
-            <Pressable
-              key={trilha.chave}
-              accessibilityRole="button"
-              onPress={() => router.push('/trilhas')}
-              style={({ pressed }) => [
-                estilos.linha,
-                { borderTopColor: cores.linha },
-                pressed && estilos.pressionado
-              ]}
-            >
-              <Text style={[estilos.sigla, { color: trilha.cor }]}>{trilha.sigla}</Text>
+          <View style={estilos.listaTrilhas}>
+            {trilhas.map((trilha) => (
+              <Pressable
+                key={trilha.chave}
+                accessibilityRole="button"
+                onPress={() => router.push('/trilhas')}
+                style={({ pressed }) => [
+                  estilos.cartaoTrilha,
+                  { backgroundColor: cores.superficie },
+                  pressed && estilos.pressionado
+                ]}
+              >
+                <View style={[estilos.siglaBadge, { borderColor: trilha.cor }]}>
+                  <Text style={[estilos.sigla, { color: trilha.cor }]}>{trilha.sigla}</Text>
+                </View>
 
-              <View style={estilos.flex}>
-                <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
-                  {trilha.titulo}
+                <View style={estilos.flex}>
+                  <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
+                    {trilha.titulo}
+                  </Text>
+                  <Trilho
+                    fracao={trilha.total ? trilha.feitas / trilha.total : 0}
+                    cor={trilha.cor}
+                    duracao={animacao.rank}
+                    estilo={estilos.barraTrilha}
+                  />
+                </View>
+
+                <Text style={[estilos.contagem, { color: cores.legenda }]}>
+                  {`${trilha.feitas}/${trilha.total}`}
                 </Text>
-                <Trilho
-                  fracao={trilha.total ? trilha.feitas / trilha.total : 0}
-                  cor={trilha.cor}
-                  duracao={animacao.rank}
-                  estilo={estilos.barraTrilha}
-                />
-              </View>
+              </Pressable>
+            ))}
 
-              <Text style={[estilos.contagem, { color: cores.legenda }]}>
-                {`${trilha.feitas}/${trilha.total}`}
-              </Text>
-            </Pressable>
-          ))}
+            {fracos.length > 0 && (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push('/fracos')}
+                style={({ pressed }) => [
+                  estilos.cartaoTrilha,
+                  { backgroundColor: cores.superficie },
+                  pressed && estilos.pressionado
+                ]}
+              >
+                <View style={[estilos.siglaBadge, { borderColor: cores.erro }]}>
+                  <Text style={[estilos.sigla, { color: cores.erro }]}>!</Text>
+                </View>
 
-          {fracos.length > 0 && (
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => router.push('/fracos')}
-              style={({ pressed }) => [
-                estilos.linha,
-                estilos.linhaFinal,
-                { borderTopColor: cores.linha, borderBottomColor: cores.linha },
-                pressed && estilos.pressionado
-              ]}
-            >
-              <Text style={[estilos.sigla, { color: cores.erro }]}>!</Text>
+                <View style={estilos.flex}>
+                  <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
+                    {`${fracos.length} ponto${fracos.length > 1 ? 's' : ''} fraco${fracos.length > 1 ? 's' : ''}`}
+                  </Text>
+                  <Text style={[estilos.notaLinha, { color: cores.legenda }]} numberOfLines={1}>
+                    {fracos.map((f) => f.card.licaoTitulo).join(' · ')}
+                  </Text>
+                </View>
 
-              <View style={estilos.flex}>
-                <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
-                  {`${fracos.length} ponto${fracos.length > 1 ? 's' : ''} fraco${fracos.length > 1 ? 's' : ''}`}
-                </Text>
-                <Text style={[estilos.notaLinha, { color: cores.legenda }]} numberOfLines={1}>
-                  {fracos.map((f) => f.card.licaoTitulo).join(' · ')}
-                </Text>
-              </View>
-
-              <Text style={[estilos.seta, { color: cores.legenda }]}>→</Text>
-            </Pressable>
-          )}
+                <ArrowRight size={14} color={cores.legenda} weight="bold" />
+              </Pressable>
+            )}
+          </View>
         </View>
       </ScrollView>
     </TelaAba>
@@ -396,22 +391,20 @@ const estilos = StyleSheet.create({
   // ── cabeçalho ────────────────────────────────────────────────
   cabecalho: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: espaco.md,
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: espaco.sm,
     paddingHorizontal: margemTela
   },
-  rank: { ...tipo.tituloGrande, letterSpacing: -1.4, marginTop: 7 },
-  linhaXp: { flexDirection: 'row', alignItems: 'center', gap: espaco.sm, marginTop: 10 },
-  barraRank: { width: 98 },
-  xp: { ...tipo.metricaMono },
+  sequenciaCabecalho: { ...tipo.tituloGrande, letterSpacing: -1.4 },
 
   // ── cartão da diária ─────────────────────────────────────────
   cartao: {
     marginTop: espaco.lg,
     marginHorizontal: margemTela,
     borderWidth: tamanhos.linha,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderRadius: raio.lg
   },
   varredura: {
     position: 'absolute',
@@ -495,24 +488,31 @@ const estilos = StyleSheet.create({
     gap: espaco.md,
     minHeight: tamanhos.botaoSecundario + 6,
     paddingHorizontal: espaco.md + 2,
-    borderWidth: tamanhos.linha
+    borderWidth: tamanhos.linha,
+    borderRadius: raio.md
   },
   siglaFoco: { ...tipo.tituloItem, fontFamily: tipo.metricaMonoMedia.fontFamily, minWidth: 30 },
   tituloFoco: { ...tipo.tituloItem },
-  setaFoco: { ...tipo.tituloItem },
   rotuloTrilhas: { marginBottom: 12 },
-  linha: {
+  listaTrilhas: { gap: espaco.sm },
+  cartaoTrilha: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: espaco.md,
-    paddingVertical: 15,
-    borderTopWidth: tamanhos.linha
+    padding: espaco.md,
+    borderRadius: raio.md
   },
-  linhaFinal: { borderBottomWidth: tamanhos.linha },
-  sigla: { ...tipo.metricaMonoMedia, fontSize: 13, minWidth: 26 },
+  siglaBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: raio.pill,
+    borderWidth: tamanhos.linha,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sigla: { ...tipo.metricaMonoMedia, fontSize: 12 },
   tituloLinha: { ...tipo.tituloLinha },
   barraTrilha: { marginTop: 6 },
   notaLinha: { ...tipo.notaMonoMenor, marginTop: 4 },
-  contagem: { ...tipo.metricaMonoMedia },
-  seta: { ...tipo.metricaMonoMedia, fontSize: 14 }
+  contagem: { ...tipo.metricaMonoMedia }
 });

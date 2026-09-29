@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
+import { ArrowDown, ArrowUp } from 'phosphor-react-native';
 
 import { espaco, margemTela, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
@@ -315,14 +316,13 @@ export default function TelaLiga() {
                     {pessoa.nome}
                   </Text>
                   <Text style={[estilos.xp, { color: cores.legenda }]}>{pessoa.xpSemana}</Text>
-                  <Text
-                    style={[
-                      estilos.marca,
-                      { color: sobe ? cores.acento : cai ? cores.erro : cores.desativado }
-                    ]}
-                  >
-                    {sobe ? '↑' : cai ? '↓' : ''}
-                  </Text>
+                  <View style={estilos.marca}>
+                    {sobe ? (
+                      <ArrowUp size={13} color={cores.acento} weight="bold" />
+                    ) : cai ? (
+                      <ArrowDown size={13} color={cores.erro} weight="bold" />
+                    ) : null}
+                  </View>
                 </View>
               );
             })}
@@ -440,7 +440,7 @@ const estilos = StyleSheet.create({
   posicao: { ...tipo.metricaMonoMedia, width: 22 },
   nome: { ...tipo.tituloItemMenor, flex: 1 },
   xp: { ...tipo.metricaMonoMedia },
-  marca: { ...tipo.metricaMono, width: 14, textAlign: 'center' },
+  marca: { width: 14, alignItems: 'center', justifyContent: 'center' },
 
   sair: { marginTop: espaco.xl }
 });

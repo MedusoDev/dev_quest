@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { X } from 'phosphor-react-native';
 
 import { espaco, margemTela, siglaLinguagem, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
@@ -186,7 +187,7 @@ export default function Relampago() {
     <TelaAba>
       <View style={estilos.topo}>
         <Pressable accessibilityLabel="Encerrar" accessibilityRole="button" hitSlop={10} onPress={encerrar}>
-          <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+          <X size={18} color={cores.legenda} weight="bold" />
         </Pressable>
 
         <Trilho
@@ -288,7 +289,6 @@ const estilos = StyleSheet.create({
     paddingHorizontal: margemTela,
     paddingTop: topoConteudo
   },
-  fechar: { ...tipo.fechar },
   contador: { ...tipo.metricaMono },
   pontos: { flexDirection: 'row', alignItems: 'baseline', gap: 3 },
   pontosNumero: { ...tipo.metricaPequena, fontSize: 14 },

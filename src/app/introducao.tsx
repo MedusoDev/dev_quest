@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { CaretDown, CaretUp, X } from "phosphor-react-native";
 
 import { Anel } from "@/componentes/Anel";
 import { Rotulo } from "@/componentes/basicos";
@@ -11,6 +12,7 @@ import { useCores } from "@/dados/TemaContexto";
 import {
   espaco,
   margemTela,
+  raio,
   tamanhos,
   tipo,
   topoConteudo,
@@ -49,7 +51,7 @@ const PASSOS: Passo[] = [
   {
     destaque: "cabecalho",
     titulo: "seu progresso",
-    texto: "Cada exercício certo dá pontos de experiência, o XP. Ao acumular XP você sobe de nível — uma escada de níveis que começa no Ovo e termina no Ouroboros, o nível mais alto.",
+    texto: "Cada exercício certo dá pontos de experiência, o XP. Ao acumular XP você sobe de nível — uma escada de níveis que começa no Iniciante e termina no Lenda, o nível mais alto.",
     balaoEmbaixo: true,
   },
   {
@@ -183,7 +185,7 @@ function Balao({
 
   return (
     <View style={estilos.balaoBloco}>
-      {seta === "cima" && <Text style={[estilos.seta, { color: cores.acento }]}>▲</Text>}
+      {seta === "cima" && <CaretUp size={12} color={cores.acento} weight="bold" />}
       <View
         style={[
           estilos.balao,
@@ -193,7 +195,7 @@ function Balao({
         <Rotulo cor={cores.acento}>{titulo}</Rotulo>
         <Text style={[estilos.balaoTexto, { color: cores.texto }]}>{texto}</Text>
       </View>
-      {seta === "baixo" && <Text style={[estilos.seta, { color: cores.acento }]}>▼</Text>}
+      {seta === "baixo" && <CaretDown size={12} color={cores.acento} weight="bold" />}
     </View>
   );
 }
@@ -288,15 +290,6 @@ function MockHoje({ destaque }: { destaque: Destaque }) {
                 i === 0 && { backgroundColor: cores.acento },
               ]}
             />
-            <Text
-              style={[
-                estilos.mockRotuloAba,
-                { color: cores.desativado },
-                i === 0 && { color: cores.acento },
-              ]}
-            >
-              {rotulo}
-            </Text>
           </View>
         ))}
       </View>
@@ -312,7 +305,7 @@ function MockCardExercicio() {
   return (
     <View style={estilos.mockTela}>
       <View style={estilos.mockTopoCard}>
-        <Text style={[estilos.mockFechar, { color: cores.legenda }]}>✕</Text>
+        <X size={14} color={cores.legenda} weight="bold" />
         <View style={[estilos.mockTrilhoSessao, { backgroundColor: cores.linha }]}>
           <View style={[estilos.mockTrilhoSessaoPreenchido, { backgroundColor: cores.acento }]} />
         </View>
@@ -391,7 +384,6 @@ const estilos = StyleSheet.create({
   },
 
   balaoBloco: { width: "100%", alignItems: "center", gap: 2 },
-  seta: { fontSize: 12, lineHeight: 12 },
   balao: {
     width: "100%",
     borderWidth: tamanhos.linha,
@@ -467,12 +459,10 @@ const estilos = StyleSheet.create({
     paddingTop: espaco.xs,
   },
   mockAba: { flex: 1, alignItems: "center", gap: 3 },
-  mockIconeAba: { width: 8, height: 8 },
-  mockRotuloAba: { fontSize: 6.5, fontFamily: tipo.rotuloAba.fontFamily },
+  mockIconeAba: { width: 10, height: 10, borderRadius: raio.pill },
 
   /* ── réplica do card de exercício, em miniatura ─────────────── */
   mockTopoCard: { flexDirection: "row", alignItems: "center", gap: espaco.sm },
-  mockFechar: { fontSize: 14 },
   mockTrilhoSessao: { flex: 1, height: 3 },
   mockTrilhoSessaoPreenchido: { width: "35%", height: "100%" },
   mockContador: { ...tipo.rotuloCelula },
