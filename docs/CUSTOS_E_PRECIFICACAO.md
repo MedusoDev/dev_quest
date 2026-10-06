@@ -4,11 +4,6 @@ Simulação de quanto custa construir e manter o DevQuest como SaaS, feita para
 o trabalho de DevOps. Os números vêm da planilha de custos do grupo e da
 apresentação [Viabilidade financeira DevQuest](https://www.canva.com/d/Lu6u-Ub_3p7jdRH).
 
-> Todos os valores estão em reais (R$) e são estimativas. Para testar outros
-> cenários, edite as células de premissa da
-> [planilha](https://docs.google.com/spreadsheets/d/1Mmqr2-6eJIs9BF5-yY8Ow4A875P-GvldU3b_gk9pxqE/edit)
-> e atualize este documento.
-
 ---
 
 ## 1. Equipe e senioridade
