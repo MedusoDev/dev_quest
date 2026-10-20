@@ -1,21 +1,11 @@
 /**
- * Fichas de design do DevQuest — identidade **Terminal**.
+ * Fichas de design do DevQuest.
  *
- * Todo valor aqui saiu do handoff `design_handoff_devquest_terminal/`, não foi
- * inventado. Quando houver dúvida entre este arquivo e o desenho, o desenho
- * vence — abra `DevQuest - Protótipo.dc.html` e meça.
- *
- * O app é escuro e só escuro. Suportar tema claro dobraria o trabalho de cada
- * tela em troca de quase nada, num app que se usa cinco minutos por dia.
- *
- * Três regras da identidade, e elas explicam quase todo valor abaixo:
- *
- *   1. **Raio zero em tudo.** Nenhum canto arredondado em lugar nenhum. O que
- *      separa dois blocos é uma régua de 1px, não uma borda de cartão.
- *   2. **Um acento só.** O verde-lima aparece no que é ação ou progresso.
- *      Espalhado, deixa de significar qualquer coisa.
- *   3. **O número é o herói.** Cada tela tem um número grande, e ele é a
- *      primeira coisa que o olho encontra.
+ * O app tem tema claro e escuro (`escuro` é o padrão) — ver `tema/temas.ts`.
+ * A identidade é a do mascote, o **Devzinho**: azul-marinho profundo, azul
+ * `#1E90FF` como acento, ciano `#4DD0FF` para realces e dourado `#FFC107`
+ * para tudo que é recompensa (XP, sequência, lição concluída, conquista).
+ * Cantos arredondados (`raio`) e botões "de jogo", com degrau embaixo.
  *
  * Regra da casa: nenhuma cor, espaçamento ou tamanho de fonte escrito solto
  * numa tela. Tudo sai daqui.
@@ -28,49 +18,54 @@ import type { Paleta } from './temas';
 /* ──────────────────────────── cores ────────────────────────────── */
 
 export let cores: Paleta = {
-  /** Fundo de todas as telas. Preto quase absoluto. */
-  fundo: '#08090b',
-  /** Campo de formulário, alternativa não escolhida. A única superfície. */
-  superficie: '#0f1115',
-  /** TODA régua, borda e trilho de barra. Não existe segunda cor de linha. */
-  linha: '#1e2128',
+  /** Fundo de todas as telas. O azul-marinho do Devzinho. */
+  fundo: '#0B1630',
+  /** Cartão, campo de formulário, alternativa não escolhida. */
+  superficie: '#14254A',
+  /** Régua, borda e trilho de barra. */
+  linha: '#24396A',
 
-  /** Verde-lima: o único acento do app. */
-  acento: '#c7f74e',
+  /** Azul #1E90FF: o acento primário — ação e progresso. */
+  acento: '#1E90FF',
   /** Fundo do bloco de código e do cartão da diária. */
-  acentoFundo: '#0d1006',
+  acentoFundo: '#0E1F45',
   /** Borda dentro de área com `acentoFundo`. */
-  acentoLinha: '#2b3417',
+  acentoLinha: '#1F4E9E',
   /** Texto secundário sobre `acentoFundo`. */
-  acentoTexto: '#7e8a5c',
+  acentoTexto: '#8DB8F0',
+  /** Ciano: acento secundário — realces, ícones e links de segundo plano. */
+  acentoSecundario: '#4DD0FF',
+  /** Dourado: recompensa — XP, sequência, lição concluída, conquista. */
+  ouro: '#FFC107',
+  ouroFundo: '#2B2615',
 
   /** Números e títulos. */
-  textoForte: '#f2f4f7',
+  textoForte: '#FFFFFF',
   /** Corpo. */
-  texto: '#c3c9d2',
+  texto: '#DCE6F7',
   /** Corpo secundário. */
-  textoFraco: '#9aa1ad',
+  textoFraco: '#A3B4D3',
   /** Rótulos mono, métricas, notas. */
-  legenda: '#6f7683',
+  legenda: '#7F95BC',
   /** Aba inativa, item "em breve". */
-  desativado: '#4a505b',
+  desativado: '#4A5F88',
   /** Letra de alternativa descartada. */
-  desativado2: '#31363f',
+  desativado2: '#2C416C',
 
-  erro: '#f87171',
-  erroFundo: '#170b0b',
-  erroLinha: '#4a2020',
+  erro: '#FF5C70',
+  erroFundo: '#2A1428',
+  erroLinha: '#5E2440',
 
-  /** Nível "leve". */
-  ok: '#34d399',
+  /** Acerto, nível "leve". */
+  ok: '#2ED47A',
   /** Força de senha "ok". */
-  atencao: '#fbbf24',
+  atencao: '#FFC107',
 
   // Uma cor por nível de dificuldade — as mesmas de cima, nomeadas pelo uso.
-  nivel1: '#34d399',
-  nivel2: '#c7f74e',
-  nivel3: '#f87171',
-  varredura: 'rgba(199,247,78,0.35)',
+  nivel1: '#2ED47A',
+  nivel2: '#1E90FF',
+  nivel3: '#FF5C70',
+  varredura: 'rgba(77,208,255,0.35)',
   barraStatus: 'light' as const
 } as const;
 
@@ -96,7 +91,7 @@ export function aplicarPaletaTema(paleta: Paleta) {
 }
 
 /** A linha de varredura que desce no cartão da diária. */
-export let varredura = 'rgba(199,247,78,0.35)';
+export let varredura = 'rgba(77,208,255,0.35)';
 
 /**
  * Cada linguagem tem uma cor, e ela é sempre a mesma em todo o app.
@@ -160,8 +155,8 @@ export let coresCodigo: {
 
 export const espaco = { xs: 4, sm: 9, md: 14, lg: 22, xl: 26, xxl: 34 } as const;
 
-/** O redesign não usa raio em nenhum lugar. A ficha existe para dizer isso. */
-export const raio = { nada: 0 } as const;
+/** Escala de raio de borda — cantos arredondados em toda a UI. */
+export const raio = { sm: 8, md: 14, lg: 20, pill: 999 } as const;
 
 /** Margem lateral de toda tela. */
 export const margemTela = 22;
@@ -180,7 +175,8 @@ export const tamanhos = {
   campo: 52,
   /** Altura mínima de alternativa. */
   alternativa: 58,
-  abas: 76,
+  /** A barra de abas é só ícone, sem rótulo embaixo — não precisa da altura de antes. */
+  abas: 56,
   /** Espessura de régua. */
   linha: 1,
   /** Barra de progresso fina: trilha, XP do topo. */
@@ -203,14 +199,15 @@ export const tamanhos = {
  * No Android, pedir `fontWeight: '700'` faz o sistema inventar um negrito
  * sintético borrado, diferente do desenho.
  *
- * Duas famílias, sem exceção: Space Grotesk para número, título e corpo;
+ * Duas famílias, sem exceção: Nunito (a letra arredondada do Devzinho) para
+ * número, título, botão e corpo;
  * JetBrains Mono para todo rótulo, toda métrica e todo código.
  */
 export const fontes = {
-  corpo: 'SpaceGrotesk_400Regular',
-  medio: 'SpaceGrotesk_500Medium',
-  semi: 'SpaceGrotesk_600SemiBold',
-  forte: 'SpaceGrotesk_700Bold',
+  corpo: 'Nunito_600SemiBold',
+  medio: 'Nunito_700Bold',
+  semi: 'Nunito_800ExtraBold',
+  forte: 'Nunito_900Black',
 
   mono: 'JetBrainsMono_400Regular',
   monoMedio: 'JetBrainsMono_500Medium',

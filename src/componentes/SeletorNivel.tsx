@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { NIVEIS_CONHECIMENTO, type NivelConhecimento } from "@/nucleo/perfil";
-import { espaco, tamanhos, tipo } from "@/tema";
+import { espaco, raio, tamanhos, tipo } from "@/tema";
 import { useCores } from "@/dados/TemaContexto";
 
 /**
@@ -81,6 +81,7 @@ const estilos = StyleSheet.create({
     width: 8,
     height: 8,
     borderWidth: tamanhos.linha,
+    borderRadius: raio.pill,
   },
   tituloItem: { ...tipo.tituloItemMenor },
   notaItem: { ...tipo.metricaMono, marginTop: 3, lineHeight: 15 },

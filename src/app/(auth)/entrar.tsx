@@ -11,8 +11,9 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { Check } from "phosphor-react-native";
 
-import { Anel } from "@/componentes/Anel";
+import { Devzinho } from "@/componentes/Devzinho";
 import { Botao } from "@/componentes/Botao";
 import { LogoGoogle } from "@/componentes/icones/LogoGoogle";
 import { Regua } from "@/componentes/basicos";
@@ -39,7 +40,9 @@ import {
     animacao,
     curva,
     espaco,
+    fontes,
     margemTela,
+    raio,
     rodapeFixo,
     tamanhos,
     tipo,
@@ -202,8 +205,18 @@ export default function Entrar() {
         >
           {/* ── marca ─────────────────────────────────────────── */}
           <View style={estilos.marca}>
-            <Anel tamanho={38} corFundo={cores.fundo} />
-            <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
+            <Devzinho
+              tamanho={132}
+              item="varinha"
+              expressao={cadastrando ? "feliz" : "determinado"}
+            />
+            <Text style={estilos.logo}>
+              <Text style={{ color: cores.textoForte }}>DEV</Text>
+              <Text style={{ color: cores.acento }}>QUEST</Text>
+            </Text>
+            <Text style={[estilos.slogan, { color: cores.legenda }]}>
+              {"APRENDA  ·  PRATIQUE  ·  EVOLUA"}
+            </Text>
           </View>
 
           <Text style={[estilos.titulo, { color: cores.textoForte }]}>
@@ -270,9 +283,7 @@ export default function Entrar() {
                     },
                   ]}
                 >
-                  {aceitouTermos && (
-                    <Text style={[estilos.marcaTermos, { color: cores.acentoFundo }]}>✓</Text>
-                  )}
+                  {aceitouTermos && <Check size={12} color={cores.acentoFundo} weight="bold" />}
                 </View>
                 <Text style={[estilos.textoTermos, { color: cores.legenda }]}>
                   Li e concordo com os{" "}
@@ -554,12 +565,17 @@ const estilos = StyleSheet.create({
   },
 
   marca: {
-    flexDirection: "row",
     alignItems: "center",
-    gap: espaco.md,
-    paddingTop: 30,
+    paddingTop: 4,
   },
-  nomeMarca: { ...tipo.rotuloSecao },
+  logo: {
+    fontFamily: fontes.forte,
+    fontSize: 42,
+    lineHeight: 46,
+    letterSpacing: 1,
+    marginTop: espaco.sm,
+  },
+  slogan: { ...tipo.rotuloSecao, letterSpacing: 3, marginTop: 6 },
 
   titulo: {
     ...tipo.tituloGrande,
@@ -580,6 +596,7 @@ const estilos = StyleSheet.create({
     borderWidth: tamanhos.linha,
     paddingHorizontal: 15,
     ...tipo.campo,
+    borderRadius: raio.sm,
   },
 
   forca: {
@@ -606,8 +623,8 @@ const estilos = StyleSheet.create({
     borderWidth: tamanhos.linha,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: raio.sm,
   },
-  marcaTermos: { ...tipo.rotuloFino, fontSize: 12 },
   textoTermos: { ...tipo.notaMonoMenor, flex: 1, lineHeight: 18 },
   termosConvidado: {
     ...tipo.notaMonoMenor,

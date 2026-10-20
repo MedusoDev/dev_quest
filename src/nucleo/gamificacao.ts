@@ -38,12 +38,12 @@ export function metaPara(minutos: number): Meta {
 export type Rank = { nome: string; xp: number };
 
 export const RANKS: Rank[] = [
-  { nome: 'Ovo', xp: 0 },
-  { nome: 'Cria', xp: 200 },
-  { nome: 'Serpente', xp: 600 },
-  { nome: 'Naja', xp: 1500 },
-  { nome: 'Basilisco', xp: 3000 },
-  { nome: 'Ouroboros', xp: 6000 }
+  { nome: 'Iniciante', xp: 0 },
+  { nome: 'Aprendiz', xp: 200 },
+  { nome: 'Dev', xp: 600 },
+  { nome: 'Full Stack', xp: 1500 },
+  { nome: 'Dev Master', xp: 3000 },
+  { nome: 'Lenda', xp: 6000 }
 ];
 
 export function rankPara(xp: number) {

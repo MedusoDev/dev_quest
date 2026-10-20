@@ -1,6 +1,7 @@
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Check } from 'phosphor-react-native';
 
-import { espaco, tamanhos, tipo } from '@/tema';
+import { espaco, raio, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import type { Licao } from '@/nucleo/conteudo';
 import { usePop, useMovimentoReduzido } from './movimento';
@@ -98,7 +99,7 @@ function Linha({
       <View style={[estilos.corpo, ultima && estilos.corpoFinal]}>
         <View style={estilos.cabeca}>
           <Animated.View style={[estilos.no, { borderColor: cores.linha }, noEstado, estado.concluida && pop]}>
-            {estado.concluida && <Text style={[estilos.marca, { color: cores.acentoFundo }]}>✓</Text>}
+            {estado.concluida && <Check size={13} color={cores.acentoFundo} weight="bold" />}
             {atual && <Text style={[estilos.numero, { color: cores.acento }]}>{numero}</Text>}
           </Animated.View>
 
@@ -152,10 +153,10 @@ const estilos = StyleSheet.create({
     height: tamanhos.no,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: tamanhos.linha
+    borderWidth: tamanhos.linha,
+    borderRadius: raio.pill
   },
 
-  marca: { ...tipo.metricaPequena, fontSize: 13 },
   numero: { ...tipo.metricaPequena, fontSize: 13 },
 
   titulo: { ...tipo.tituloItem, flex: 1 },

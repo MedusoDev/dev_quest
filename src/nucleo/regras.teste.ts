@@ -152,10 +152,10 @@ describe('sequência de dias', () => {
 
 describe('ranks e XP', () => {
   it('escolhe a faixa certa', () => {
-    expect(rankPara(0).atual.nome).toBe('Ovo');
-    expect(rankPara(199).atual.nome).toBe('Ovo');
-    expect(rankPara(200).atual.nome).toBe('Cria');
-    expect(rankPara(999999).atual.nome).toBe('Ouroboros');
+    expect(rankPara(0).atual.nome).toBe('Iniciante');
+    expect(rankPara(199).atual.nome).toBe('Iniciante');
+    expect(rankPara(200).atual.nome).toBe('Aprendiz');
+    expect(rankPara(999999).atual.nome).toBe('Lenda');
   });
 
   it('no topo a barra fica cheia, não dividida por zero', () => {
@@ -164,7 +164,7 @@ describe('ranks e XP', () => {
   });
 
   it('a barra enche proporcionalmente dentro da faixa', () => {
-    const meio = rankPara(400); // entre Cria (200) e Serpente (600)
+    const meio = rankPara(400); // entre Aprendiz (200) e Dev (600)
     expect(meio.progresso).toBe(0.5);
     expect(meio.faltam).toBe(200);
   });

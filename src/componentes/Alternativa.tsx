@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { animacao, espaco, tamanhos, tipo } from '@/tema';
+import { animacao, espaco, raio, tamanhos, tipo } from '@/tema';
 import type { Paleta } from '@/tema/temas';
 import { useCores } from '@/dados/TemaContexto';
 import { TextoRico } from './basicos';
@@ -21,7 +21,7 @@ import { useMovimentoReduzido } from './movimento';
  *
  * ── DEPOIS DE RESPONDER ───────────────────────────────────────────────────
  *
- * As alternativas **não somem e não embaralham**. A certa acende no acento, a
+ * As alternativas **não somem e não embaralham**. A certa acende no verde, a
  * escolhida errada fica vermelha, e as outras apagam. A pessoa precisa comparar
  * o que escolheu com o que era certo, lado a lado, sem a tela se reorganizar
  * embaixo dela.
@@ -67,9 +67,10 @@ function aparenciaDe(cores: Paleta): Record<Estado, Aparencia> {
       texto: cores.textoForte
     },
     certa: {
-      fundo: cores.acentoFundo,
-      borda: cores.acento,
-      letra: cores.acento,
+      // Verde do acerto, num véu translúcido que funciona nos dois temas.
+      fundo: 'rgba(46,212,122,0.12)',
+      borda: cores.ok,
+      letra: cores.ok,
       texto: cores.textoForte
     },
     errada: {
@@ -188,7 +189,8 @@ const estilos = StyleSheet.create({
     minHeight: tamanhos.alternativa,
     paddingVertical: 13,
     paddingHorizontal: espaco.md + 2,
-    borderWidth: tamanhos.linha
+    borderWidth: tamanhos.linha,
+    borderRadius: raio.md
   },
   pressionada: { opacity: 0.8 },
 

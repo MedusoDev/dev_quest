@@ -22,10 +22,11 @@ import { LogBox } from "react-native";
 import JetBrainsMono_400Regular from "@expo-google-fonts/jetbrains-mono/400Regular/JetBrainsMono_400Regular.ttf";
 import JetBrainsMono_500Medium from "@expo-google-fonts/jetbrains-mono/500Medium/JetBrainsMono_500Medium.ttf";
 import JetBrainsMono_700Bold from "@expo-google-fonts/jetbrains-mono/700Bold/JetBrainsMono_700Bold.ttf";
-import SpaceGrotesk_400Regular from "@expo-google-fonts/space-grotesk/400Regular/SpaceGrotesk_400Regular.ttf";
-import SpaceGrotesk_500Medium from "@expo-google-fonts/space-grotesk/500Medium/SpaceGrotesk_500Medium.ttf";
-import SpaceGrotesk_600SemiBold from "@expo-google-fonts/space-grotesk/600SemiBold/SpaceGrotesk_600SemiBold.ttf";
-import SpaceGrotesk_700Bold from "@expo-google-fonts/space-grotesk/700Bold/SpaceGrotesk_700Bold.ttf";
+// Nunito: a letra arredondada da marca do Devzinho — títulos, botões e corpo.
+import Nunito_600SemiBold from "@expo-google-fonts/nunito/600SemiBold/Nunito_600SemiBold.ttf";
+import Nunito_700Bold from "@expo-google-fonts/nunito/700Bold/Nunito_700Bold.ttf";
+import Nunito_800ExtraBold from "@expo-google-fonts/nunito/800ExtraBold/Nunito_800ExtraBold.ttf";
+import Nunito_900Black from "@expo-google-fonts/nunito/900Black/Nunito_900Black.ttf";
 
 import { aoMarcarIntroducao, introducaoFoiVista } from "@/dados/apresentacao";
 import { ProvedorConta, useConta } from "@/dados/ContaContexto";
@@ -76,10 +77,10 @@ export default function Layout() {
   // porque cada peso é um arquivo — em fonte customizada o peso está no nome da
   // família, não no `fontWeight`. Ver o comentário em `@/tema`.
   const [fontesCarregadas, erroFontes] = useFonts({
-    SpaceGrotesk_400Regular,
-    SpaceGrotesk_500Medium,
-    SpaceGrotesk_600SemiBold,
-    SpaceGrotesk_700Bold,
+    Nunito_600SemiBold,
+    Nunito_700Bold,
+    Nunito_800ExtraBold,
+    Nunito_900Black,
     JetBrainsMono_400Regular,
     JetBrainsMono_500Medium,
     JetBrainsMono_700Bold,

@@ -1,17 +1,14 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { tamanhos, tipo } from '@/tema';
+import { raio, tamanhos, tipo } from '@/tema';
 import type { Paleta } from '@/tema/temas';
 import { useCores } from '@/dados/TemaContexto';
 import { obterBorda } from '@/nucleo/perfil';
 
 /**
- * A foto do perfil dentro de um quadrado de borda fina.
+ * A foto do perfil dentro de um círculo de borda fina.
  *
- * No redesign o avatar é **quadrado**, com 1 px de borda e as iniciais em mono.
- * Nada de círculo, nada de moldura decorativa em volta: no meio de uma tela
- * feita só de réguas, um círculo com anel giratório seria o único objeto que
- * não pertence.
+ * O avatar é **redondo**, com 1 px de borda e as iniciais em mono.
  *
  * As bordas ganhas estudando (`nucleo/perfil`) continuam existindo — mas agora
  * elas colorem a régua de 1 px em vez de desenharem um aro. É a mesma recompensa
@@ -83,6 +80,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: tamanhos.linha,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderRadius: raio.pill
   }
 });

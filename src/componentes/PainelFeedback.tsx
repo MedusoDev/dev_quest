@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { espaco, margemTela, tamanhos, tipo } from '@/tema';
+import { espaco, margemTela, raio, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { Botao } from './Botao';
 import { TextoRico } from './basicos';
 import { useMovimentoReduzido, useSubida } from './movimento';
+import { Devzinho } from './Devzinho';
 
 /**
  * PAINEL DE FEEDBACK.
@@ -15,8 +16,9 @@ import { useMovimentoReduzido, useSubida } from './movimento';
  * exercício continua visível atrás, porque a pessoa precisa comparar a
  * explicação com a alternativa que ela marcou.
  *
- * A borda superior de 2 px é o veredito inteiro: acento ou vermelho. Não há
- * ícone, não há anel, não há emoji.
+ * A borda superior é o veredito: verde ou vermelho. E o Devzinho reage junto —
+ * pula de alegria no acerto, fica tristinho e treme no erro. Ele fica no canto
+ * do painel, sem cobrir a explicação.
  *
  * ── O QUE ELE DIZ, E POR QUÊ ──────────────────────────────────────────────
  *
@@ -78,8 +80,8 @@ export function PainelFeedback({
 
   const titulo = acertou ? (dePrimeira ? 'Certo' : 'Agora sim') : 'Não é essa';
   const delta = acertou ? `+${xpGanho} XP` : 'volta pra fila';
-  const cor = acertou ? cores.acento : cores.erro;
-  const fundo = acertou ? cores.acentoFundo : cores.erroFundo;
+  const cor = acertou ? cores.ok : cores.erro;
+  const fundo = acertou ? cores.superficie : cores.erroFundo;
 
   const rotuloBotao = ultimo ? 'Fechar sessão' : acertou ? 'Seguir' : 'Volta pra fila';
 
@@ -97,9 +99,19 @@ export function PainelFeedback({
         subida
       ]}
     >
-      <View style={estilos.cabecalho}>
-        <Text style={[estilos.titulo, { color: cor }]}>{titulo}</Text>
-        <Text style={[estilos.delta, { color: cor }]}>{delta}</Text>
+      <View style={estilos.topo}>
+        <Devzinho
+          tamanho={64}
+          expressao={acertou ? (dePrimeira ? 'animado' : 'feliz') : 'triste'}
+          item={acertou ? 'varinha' : 'nenhum'}
+          aura={false}
+          flutuar={false}
+          reacao={{ tipo: acertou ? 'pulo' : 'tremor', chave: explicacao }}
+        />
+        <View style={estilos.cabecalho}>
+          <Text style={[estilos.titulo, { color: cor }]}>{titulo}</Text>
+          <Text style={[estilos.delta, { color: acertou ? cores.ouro : cor }]}>{delta}</Text>
+        </View>
       </View>
 
       <TextoRico texto={explicacao} estilo={estilos.explicacao} cor={cores.texto} />
@@ -114,6 +126,7 @@ export function PainelFeedback({
       <Botao
         rotulo={rotuloBotao}
         variante={acertou ? 'primario' : 'erro'}
+        cor={acertou ? cores.ok : undefined}
         altura={56}
         estilo={estilos.botao}
         aoTocar={aoContinuar}
@@ -128,13 +141,16 @@ const estilos = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    borderTopWidth: tamanhos.trilho,
+    borderTopWidth: 3,
     paddingHorizontal: margemTela,
-    paddingTop: margemTela
+    paddingTop: margemTela,
+    borderTopLeftRadius: raio.lg,
+    borderTopRightRadius: raio.lg
   },
 
-  cabecalho: { flexDirection: 'row', alignItems: 'baseline', gap: 11 },
-  titulo: { ...tipo.tituloFeedback },
+  topo: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: -8 },
+  cabecalho: { flex: 1, gap: 4 },
+  titulo: { ...tipo.tituloFeedback, fontSize: 24, lineHeight: 28 },
   delta: { ...tipo.metricaMono },
 
   explicacao: { ...tipo.corpo, marginTop: 11 },
@@ -143,7 +159,8 @@ const estilos = StyleSheet.create({
     marginTop: espaco.md,
     borderLeftWidth: tamanhos.trilho,
     paddingLeft: espaco.md,
-    gap: 5
+    gap: 5,
+    borderRadius: raio.sm
   },
   rotuloResposta: { ...tipo.rotuloCelula },
   respostaTexto: { ...tipo.codigo, lineHeight: 22 },

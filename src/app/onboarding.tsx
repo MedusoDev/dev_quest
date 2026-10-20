@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 
-import { Anel } from "@/componentes/Anel";
+import { Devzinho } from "@/componentes/Devzinho";
 import { Botao } from "@/componentes/Botao";
 import { SeletorNivel } from "@/componentes/SeletorNivel";
 import { TesteDeNivel } from "@/componentes/TesteDeNivel";
@@ -130,7 +130,7 @@ export default function Onboarding() {
         showsVerticalScrollIndicator={false}
       >
         <View style={estilos.marca}>
-          <Anel tamanho={38} corFundo={cores.fundo} />
+          <Devzinho tamanho={64} expressao="feliz" item="varinha" />
           <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
         </View>
 
@@ -360,8 +360,8 @@ const estilos = StyleSheet.create({
     ...tipo.campo,
   },
   linhaData: { flexDirection: "row", gap: espaco.sm },
-  entradaData: { flex: 1, textAlign: "center" },
-  entradaAno: { flex: 1.6, textAlign: "center" },
+  entradaData: { flex: 1, minWidth: 0, textAlign: "center" },
+  entradaAno: { flex: 1.6, minWidth: 0, textAlign: "center" },
 
   rotuloSecao: { marginTop: espaco.xl, marginBottom: espaco.md },
 

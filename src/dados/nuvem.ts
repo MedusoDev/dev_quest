@@ -50,7 +50,7 @@ export function perfilVazio(uid: string, nome: string): PerfilPublico {
     borda: BORDA_PADRAO,
     xp: 0,
     sequencia: 0,
-    rank: 'Ovo',
+    rank: 'Iniciante',
     xpSemana: 0,
     semana: semanaDe(),
     ligaCodigo: null,

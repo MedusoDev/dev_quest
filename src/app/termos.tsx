@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { X } from "phosphor-react-native";
 
 import { Rotulo } from "@/componentes/basicos";
 import { useCores } from "@/dados/TemaContexto";
@@ -31,7 +32,7 @@ export default function Termos() {
             hitSlop={12}
             onPress={() => router.back()}
           >
-            <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+            <X size={18} color={cores.legenda} weight="bold" />
           </Pressable>
         </View>
 
@@ -97,8 +98,6 @@ const estilos = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  fechar: { ...tipo.fechar },
-
   titulo: { ...tipo.titulo, marginTop: espaco.sm },
 
   secao: { marginTop: espaco.xl },

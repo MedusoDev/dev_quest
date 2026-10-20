@@ -1,8 +1,9 @@
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { alertar } from '@/componentes/alerta';
 import { Avatar } from '@/componentes/Avatar';
 import { Botao } from '@/componentes/Botao';
 import { TelaAba } from '@/componentes/abas';
@@ -33,7 +34,7 @@ export default function PerfilAdmin() {
   async function trocarFoto() {
     const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissao.granted) {
-      Alert.alert('Sem permissão', 'Preciso de acesso às suas fotos para trocar o avatar.');
+      alertar('Sem permissão', 'Preciso de acesso às suas fotos para trocar o avatar.');
       return;
     }
 
@@ -56,7 +57,7 @@ export default function PerfilAdmin() {
 
       if (reduzida.base64) await atualizarPerfil({ foto: reduzida.base64 });
     } catch {
-      Alert.alert('Não deu', 'Não consegui preparar essa imagem. Tente outra.');
+      alertar('Não deu', 'Não consegui preparar essa imagem. Tente outra.');
     } finally {
       setTrocandoFoto(false);
     }
@@ -79,7 +80,7 @@ export default function PerfilAdmin() {
   }
 
   function confirmarSaida() {
-    Alert.alert('Sair da conta', 'Você precisa entrar de novo para ver o painel.', [
+    alertar('Sair da conta', 'Você precisa entrar de novo para ver o painel.', [
       { text: 'Ficar', style: 'cancel' },
       { text: 'Sair', style: 'destructive', onPress: () => sair() }
     ]);

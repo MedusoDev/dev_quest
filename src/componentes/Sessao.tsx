@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Flame, Lightning, X } from 'phosphor-react-native';
 
 import { espaco, margemTela, siglaLinguagem, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
@@ -24,7 +25,7 @@ import { corDoNivel, rotuloDoNivel, TextoRico, Trilho } from './basicos';
 import { Botao } from './Botao';
 import { RenderizarCard } from './cards';
 import { PainelFeedback } from './PainelFeedback';
-import { useAbertura, useMovimentoReduzido, useTremor } from './movimento';
+import { useAbertura, useMovimentoReduzido, usePop, useTremor } from './movimento';
 
 /**
  * A TELA DE EXERCÍCIO.
@@ -81,6 +82,8 @@ export function Sessao({ cards, ehRevisao, origemDe, aoTerminar, aoSair }: Props
   const [resposta, setResposta] = useState<Resposta>(null);
   const [revelado, setRevelado] = useState(false);
   const [acertou, setAcertou] = useState(false);
+  /** Acertos seguidos nesta sessão — o "combo" que aparece no topo. */
+  const [combo, setCombo] = useState(0);
 
   const card = cardAtual(sessao);
 
@@ -101,7 +104,9 @@ export function Sessao({ cards, ehRevisao, origemDe, aoTerminar, aoSair }: Props
     origemDe?.(card) ?? (ehRevisao?.(card) ? 'volta do ciclo' : 'card novo');
 
   function conferir(valor: Resposta) {
-    setAcertou(avaliar(card!, valor));
+    const certo = avaliar(card!, valor);
+    setAcertou(certo);
+    setCombo((atual) => (certo ? atual + 1 : 0));
     setRevelado(true);
   }
 
@@ -136,22 +141,23 @@ export function Sessao({ cards, ehRevisao, origemDe, aoTerminar, aoSair }: Props
           hitSlop={12}
           onPress={aoSair}
         >
-          <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+          <X size={18} color={cores.legenda} weight="bold" />
         </Pressable>
 
         {/* A barra usa `resolvidos`, não o índice da fila: um card que voltou
             para o fim não pode fazer o progresso andar para trás. */}
         <Trilho
           fracao={fracaoFeita(sessao)}
-          altura={tamanhos.trilhoGrosso}
+          altura={14}
+          cor={cores.ok}
           estilo={estilos.flex}
         />
 
         <Text style={[estilos.contador, { color: cores.legenda }]}>{`${sessao.concluidos + 1}/${sessao.total}`}</Text>
 
         <View style={estilos.xp}>
-          <Text style={[estilos.xpNumero, { color: cores.acento }]}>{sessao.xp}</Text>
-          <Text style={[estilos.xpRotulo, { color: cores.acentoTexto }]}>XP</Text>
+          <Lightning size={15} weight="fill" color={cores.ouro} />
+          <Text style={[estilos.xpNumero, { color: cores.ouro }]}>{sessao.xp}</Text>
         </View>
       </View>
 
@@ -164,6 +170,8 @@ export function Sessao({ cards, ehRevisao, origemDe, aoTerminar, aoSair }: Props
         <Text style={[tipo.rotuloFino, { color: corDoNivel(nivel, cores) }]}>{rotuloDoNivel(nivel)}</Text>
         <View style={[estilos.tracinho, { backgroundColor: cores.linha }]} />
         <Text style={[tipo.rotuloFino, { color: cores.legenda }]}>{origem}</Text>
+        <View style={estilos.flex} />
+        {combo >= 2 && <ChipCombo key={combo} combo={combo} />}
       </View>
 
       {/* ── corpo ─────────────────────────────────────────────── */}
@@ -241,8 +249,35 @@ export function Sessao({ cards, ehRevisao, origemDe, aoTerminar, aoSair }: Props
   );
 }
 
+/** "3 seguidas!" — aparece a partir do segundo acerto em sequência, com pop. */
+function ChipCombo({ combo }: { combo: number }) {
+  const cores = useCores();
+  const reduzido = useMovimentoReduzido();
+  // Monta de novo a cada acerto (a `key` é o próprio combo), e o pop roda de novo.
+  const pop = usePop(true, 420, reduzido);
+
+  return (
+    <Animated.View
+      style={[estilos.combo, { backgroundColor: cores.ouroFundo, borderColor: cores.ouro }, pop]}
+    >
+      <Flame size={13} weight="fill" color={cores.ouro} />
+      <Text style={[estilos.comboTexto, { color: cores.ouro }]}>{`${combo} seguidas!`}</Text>
+    </Animated.View>
+  );
+}
+
 const estilos = StyleSheet.create({
   tela: { flex: 1 },
+  combo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 999,
+    borderWidth: 1.5
+  },
+  comboTexto: { ...tipo.metricaMono, fontFamily: tipo.botao.fontFamily, fontSize: 12 },
   flex: { flex: 1 },
 
   topo: {
@@ -252,9 +287,8 @@ const estilos = StyleSheet.create({
     paddingHorizontal: margemTela,
     paddingTop: topoConteudo
   },
-  fechar: { ...tipo.fechar },
   contador: { ...tipo.metricaMono },
-  xp: { flexDirection: 'row', alignItems: 'baseline', gap: 3 },
+  xp: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   xpNumero: { ...tipo.metricaPequena, fontSize: 14 },
   xpRotulo: { ...tipo.rotuloCelula, letterSpacing: 0 },
 

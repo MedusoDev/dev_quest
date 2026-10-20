@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { espaco, tamanhos, tipo } from '@/tema';
+import { espaco, raio, tamanhos, tipo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { destacarSintaxe, type Linguagem } from '@/nucleo/destacarSintaxe';
 
@@ -158,7 +158,8 @@ const estilos = StyleSheet.create({
   caixa: {
     borderLeftWidth: tamanhos.trilho,
     paddingVertical: espaco.md + 2,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderRadius: raio.md
   },
 
   /** `flexGrow` é o que deixa o conteúdo transbordar em vez de encolher. */
@@ -174,10 +175,10 @@ const estilos = StyleSheet.create({
     borderLeftWidth: tamanhos.trilho,
     borderLeftColor: 'transparent'
   },
-  pressionada: { backgroundColor: 'rgba(199,247,78,0.06)' },
-  escolhida: { backgroundColor: 'rgba(199,247,78,0.10)' },
-  certa: { backgroundColor: 'rgba(199,247,78,0.14)' },
-  errada: { backgroundColor: 'rgba(248,113,113,0.14)' },
+  pressionada: { backgroundColor: 'rgba(49,87,213,0.06)' },
+  escolhida: { backgroundColor: 'rgba(49,87,213,0.10)' },
+  certa: { backgroundColor: 'rgba(49,87,213,0.14)' },
+  errada: { backgroundColor: 'rgba(255,92,112,0.14)' },
 
   linha: { ...tipo.codigo },
   numero: { ...tipo.codigo, textAlign: 'right' }

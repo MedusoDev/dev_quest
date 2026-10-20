@@ -8,7 +8,7 @@ import { embaralhar } from "@/nucleo/aleatorio";
 import { comoTexto, linguagens, type Card, type LinguagemId } from "@/nucleo/conteudo";
 import { montarTesteDeNivel } from "@/nucleo/diaria";
 import { recomendarNivel, type NivelConhecimento } from "@/nucleo/perfil";
-import { espaco, tamanhos, tipo } from "@/tema";
+import { espaco, raio, tamanhos, tipo } from "@/tema";
 import { useCores } from "@/dados/TemaContexto";
 
 /**
@@ -185,8 +185,9 @@ const estilos = StyleSheet.create({
     borderWidth: tamanhos.linha,
     paddingVertical: espaco.md,
     paddingHorizontal: espaco.md,
+    borderRadius: raio.sm,
   },
-  marcaLinguagem: { width: 10, height: 10 },
+  marcaLinguagem: { width: 10, height: 10, borderRadius: raio.pill },
   nomeLinguagem: { ...tipo.tituloItemMenor },
   pressionado: { opacity: 0.75 },
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { X } from 'phosphor-react-native';
 
 import { espaco, margemTela, siglaLinguagem, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
@@ -89,7 +90,7 @@ export default function Fracos() {
         <View style={estilos.cabecalho}>
           <Rotulo cor={cores.erro}>pontos fracos</Rotulo>
           <Pressable accessibilityRole="button" hitSlop={12} onPress={() => router.back()}>
-            <Text style={[estilos.fechar, { color: cores.legenda }]}>✕</Text>
+            <X size={18} color={cores.legenda} weight="bold" />
           </Pressable>
         </View>
 
@@ -163,7 +164,6 @@ const estilos = StyleSheet.create({
   },
 
   cabecalho: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  fechar: { ...tipo.fechar },
 
   titulo: { ...tipo.titulo, marginTop: espaco.sm },
   nota: { ...tipo.notaMono, marginTop: 12 },

@@ -11,6 +11,8 @@
 >   Como nomear seus commits com Emoji certo .
 >- [`docs/CRONOGRAMA.md`](docs/CRONOGRAMA.md) —
 >   Onde estamos no projeto.
+>- [`docs/CUSTOS_E_PRECIFICACAO.md`](docs/CUSTOS_E_PRECIFICACAO.md) —
+>   senioridade da equipe, valor/hora, custo do projeto e planos.
 
 **Obs.:** Cronograma sempre atualizado pelo Gabriel Barros- 24/09/26
 
@@ -31,7 +33,7 @@ QA se surgir necessidade de escrever testes automatizados.
 
 
 
-**Versão 1.0.0**
+**Versão 1.1.0**
 
 App de celular para aprender programação por gamificação. Sessões diárias
 curtas, repetição espaçada, e trilhas de **C#, Java, JavaScript, PHP e
@@ -42,7 +44,8 @@ Expo + React Native + TypeScript, Android primeiro.
 
 Documentação complementar em [`docs/`](docs/):
 [arquitetura](docs/ARQUITETURA.md) · [cronograma](docs/CRONOGRAMA.md) ·
-[visão geral](docs/VISAO_GERAL.md) · [Firebase](docs/CONFIGURAR_FIREBASE.md).
+[visão geral](docs/VISAO_GERAL.md) · [Firebase](docs/CONFIGURAR_FIREBASE.md) ·
+[custos e precificação](docs/CUSTOS_E_PRECIFICACAO.md).
 
 ## O que já existe nesta versão
 

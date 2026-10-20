@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { ArrowRight, Flame, Lightning, Timer } from 'phosphor-react-native';
 
 import {
   animacao,
   espaco,
   margemTela,
+  raio,
   siglaLinguagem,
   tamanhos,
   tipo,
@@ -22,13 +24,16 @@ import {
   pontosFracos,
   sugestaoDeNivel
 } from '@/nucleo/diaria';
-import { metaPara, rankPara, RANKS, recordeSequencia, reguaDaSemana } from '@/nucleo/gamificacao';
+import { metaPara, RANKS, rankPara, recordeSequencia, reguaDaSemana } from '@/nucleo/gamificacao';
 import { NIVEIS_CONHECIMENTO } from '@/nucleo/perfil';
 import { Anel } from '@/componentes/Anel';
-import { Avatar } from '@/componentes/Avatar';
-import { Cursor, Regua, Rotulo, Trilho } from '@/componentes/basicos';
+import { Cursor, Rotulo, Trilho } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
 import { useMovimentoReduzido, useVarredura } from '@/componentes/movimento';
+import { Devzinho, CORES_NIVEL, nivelDoRank, type ExpressaoDevzinho } from '@/componentes/Devzinho';
+import { DevzinhoFala } from '@/componentes/BalaoFala';
+import { Gradiente } from '@/componentes/Gradiente';
+import { escurecer, tingir } from '@/componentes/Botao';
 
 /**
  * HOJE.
@@ -40,6 +45,10 @@ import { useMovimentoReduzido, useVarredura } from '@/componentes/movimento';
  *
  * Tudo abaixo — sequência, trilhas, pontos fracos — é apoio, e é apoio em
  * réguas de 1 px justamente para não disputar com o cartão.
+ *
+ * O Devzinho abre a tela: ele cumprimenta pelo nome e diz, numa frase, o que
+ * importa hoje (sequência em risco, cards voltando, diária feita). A barra do
+ * topo é o "HUD" do jogo — fogo da sequência, XP e o nível dele.
  */
 export default function Hoje() {
   const cores = useCores();
@@ -67,14 +76,13 @@ export default function Hoje() {
   if (carregando || carregandoConta || !usuario) {
     return (
       <TelaAba estilo={estilos.centro}>
-        <Anel tamanho={72} />
+        <Devzinho tamanho={110} expressao="pensando" item="nenhum" />
+        <Text style={[estilos.carregandoTexto, { color: cores.legenda }]}>carregando…</Text>
       </TelaAba>
     );
   }
 
   const meta = metaPara(progresso.metaDiariaMin);
-  const rank = rankPara(progresso.xp);
-  const posicaoRank = RANKS.findIndex((r) => r.nome === rank.atual.nome) + 1;
 
   const vencidos = contarVencidos(revisoes);
   const fracos = pontosFracos(revisoes, 3);
@@ -121,6 +129,16 @@ export default function Hoje() {
       })
   );
 
+  const rank = rankPara(progresso.xp);
+  const indiceRank = RANKS.findIndex((r) => r.nome === rank.atual.nome);
+  const nivel = nivelDoRank(indiceRank);
+  const fala = falaDoDevzinho({
+    nome: perfil?.nome ?? 'dev',
+    sequencia: progresso.sequencia,
+    fezDiariaHoje,
+    vencidos
+  });
+
   const focoMultiplo = (perfil?.foco.length ?? 0) > 1;
   const restam = fezDiariaHoje ? 0 : meta.cards;
   const nota = fezDiariaHoje
@@ -132,37 +150,53 @@ export default function Hoje() {
   return (
     <TelaAba>
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-        {/* ── cabeçalho ─────────────────────────────────────────── */}
-        <View style={estilos.cabecalho}>
-          <View style={estilos.flex}>
-            <Rotulo cor={cores.acento}>
-              {`rank ${String(posicaoRank).padStart(2, '0')} / ${String(RANKS.length).padStart(2, '0')}`}
-            </Rotulo>
-            <Text style={[estilos.rank, { color: cores.textoForte }]}>{rank.atual.nome}</Text>
+        {/* ── HUD: sequência, XP e nível ─────────────────────────── */}
+        <View style={estilos.hud}>
+          <Pressable
+            accessibilityLabel={`Sequência: ${progresso.sequencia} dias. Toque para ver o perfil.`}
+            accessibilityRole="button"
+            onPress={() => router.push('/perfil')}
+            style={[estilos.pilula, { backgroundColor: cores.superficie, borderColor: cores.linha }]}
+          >
+            <Chama acesa={progresso.sequencia > 0} reduzido={reduzido} />
+            <Text style={[estilos.pilulaNumero, { color: progresso.sequencia > 0 ? cores.ouro : cores.desativado }]}>
+              {progresso.sequencia}
+            </Text>
+          </Pressable>
 
-            <View style={estilos.linhaXp}>
-              <Trilho
-                fracao={rank.progresso}
-                altura={tamanhos.trilhoGrosso}
-                duracao={animacao.rank}
-                estilo={estilos.barraRank}
-              />
-              <Text style={[estilos.xp, { color: cores.legenda }]}>
-                {rank.proximo ? `${progresso.xp} / ${rank.proximo.xp} XP` : `${progresso.xp} XP`}
-              </Text>
-            </View>
+          <View style={[estilos.pilula, { backgroundColor: cores.superficie, borderColor: cores.linha }]}>
+            <Lightning size={20} weight="fill" color={cores.acentoSecundario} />
+            <Text style={[estilos.pilulaNumero, { color: cores.acentoSecundario }]}>{progresso.xp}</Text>
           </View>
 
-          <Pressable accessibilityLabel="Perfil" accessibilityRole="button" onPress={() => router.push('/perfil')}>
-            <Avatar nome={perfil?.nome ?? 'Você'} foto={perfil?.foto} bordaId={perfil?.borda} />
+          <View style={estilos.flex} />
+
+          <Pressable
+            accessibilityLabel={`Nível ${nivel}: ${rank.atual.nome}. Toque para ver o perfil.`}
+            accessibilityRole="button"
+            onPress={() => router.push('/perfil')}
+            style={[estilos.pilula, { backgroundColor: cores.superficie, borderColor: CORES_NIVEL[nivel] }]}
+          >
+            <Text style={[estilos.pilulaNivel, { color: CORES_NIVEL[nivel] }]}>{`NV ${nivel}`}</Text>
+            <Text style={[estilos.pilulaRank, { color: cores.textoForte }]}>{rank.atual.nome}</Text>
           </Pressable>
         </View>
+
+        {/* ── o Devzinho fala ──────────────────────────────────── */}
+        <DevzinhoFala
+          texto={fala.texto}
+          expressao={fala.expressao}
+          nivel={nivel}
+          tamanho={100}
+          estilo={estilos.fala}
+        />
 
         {/* ── o cartão da diária ────────────────────────────────── */}
         <View
           style={[estilos.cartao, { borderColor: cores.acento, backgroundColor: cores.acentoFundo }]}
           onLayout={(e) => setAlturaCartao(e.nativeEvent.layout.height)}
         >
+          <Gradiente de={cores.acentoFundo} para={tingir(cores.acento, cores, 0.55)} />
           <Animated.View
             pointerEvents="none"
             style={[estilos.varredura, { backgroundColor: cores.varredura }, scan]}
@@ -170,9 +204,18 @@ export default function Hoje() {
 
           <View style={estilos.cartaoTopo}>
             <Rotulo cor={cores.acento}>
-              {focoMultiplo ? 'sessão diária · mista' : 'sessão diária'}
+              {focoMultiplo ? 'diária mista' : 'diária'}
             </Rotulo>
-            <Text style={[estilos.duracao, { color: cores.acentoTexto }]}>{`0${meta.minutos}:00`.slice(-5)}</Text>
+            <View style={estilos.chips}>
+              <View style={[estilos.chip, { backgroundColor: cores.fundo }]}>
+                <Timer size={13} weight="bold" color={cores.acentoTexto} />
+                <Text style={[estilos.duracao, { color: cores.acentoTexto }]}>{`${meta.minutos} min`}</Text>
+              </View>
+              <View style={[estilos.chip, { backgroundColor: cores.ouroFundo }]}>
+                <Lightning size={13} weight="fill" color={cores.ouro} />
+                <Text style={[estilos.duracao, { color: cores.ouro }]}>{fezDiariaHoje ? 'feita' : `+${meta.cards * 10} XP`}</Text>
+              </View>
+            </View>
           </View>
 
           <View style={estilos.cartaoCorpo}>
@@ -183,28 +226,20 @@ export default function Hoje() {
             </View>
             <View style={estilos.flex} />
             <Anel
-              tamanho={52}
+              tamanho={56}
               progresso={fezDiariaHoje ? 1 : 0}
               corFundo={cores.acentoFundo}
             />
           </View>
 
-          <Regua cor={cores.acentoLinha} estilo={estilos.cartaoRegua} />
-
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.push('/sessao')}
-            style={({ pressed }) => [
-              estilos.botaoDiaria,
-              { backgroundColor: cores.acento },
-              pressed && estilos.pressionado
-            ]}
-          >
-            <Text style={[estilos.rotuloBotao, { color: cores.acentoFundo }]}>
-              {fezDiariaHoje ? 'Rever a sessão' : 'Começar'}
-            </Text>
-            <Cursor />
-          </Pressable>
+          <View style={estilos.botaoDiariaMoldura}>
+            <BotaoDiaria
+              rotulo={fezDiariaHoje ? 'Rever a sessão' : 'Começar'}
+              cor={fezDiariaHoje ? cores.ok : cores.acento}
+              aoTocar={() => router.push('/sessao')}
+              pulsar={!fezDiariaHoje && !reduzido}
+            />
+          </View>
         </View>
 
         {/* ── sugestão de subir de nível ─────────────────────────── */}
@@ -275,7 +310,7 @@ export default function Hoje() {
                       {linguagem.nome}
                     </Text>
                     <View style={estilos.flex} />
-                    <Text style={[estilos.setaFoco, { color: coresLinguagem[id] }]}>→</Text>
+                    <ArrowRight size={18} color={coresLinguagem[id]} weight="bold" />
                   </Pressable>
                 );
               })}
@@ -291,7 +326,9 @@ export default function Hoje() {
           </View>
 
           <View style={estilos.linhaSequencia}>
-            <Text style={[estilos.sequencia, { color: cores.acento }]}>{progresso.sequencia}</Text>
+            <Text style={[estilos.sequencia, { color: progresso.sequencia > 0 ? cores.ouro : cores.desativado }]}>
+              {progresso.sequencia}
+            </Text>
             <Text style={[estilos.notaSequencia, { color: cores.legenda }]}>
               {'dias seguidos\n'}
               {fezDiariaHoje ? 'feita hoje' : 'não quebre hoje'}
@@ -299,119 +336,288 @@ export default function Hoje() {
           </View>
 
           <View style={estilos.semana}>
-            {semana.map(({ dia, feito, ehHoje }) => (
-              <View
-                key={dia}
-                style={[
-                  estilos.celula,
-                  { backgroundColor: cores.linha },
-                  feito && { backgroundColor: cores.acento },
-                  !feito && ehHoje && { backgroundColor: 'transparent', borderColor: cores.acento }
-                ]}
-              />
-            ))}
-          </View>
-
-          <View style={estilos.legendas}>
-            {semana.map(({ dia, rotulo }) => (
-              <Text key={dia} style={[estilos.legenda, { color: cores.desativado }]}>
-                {rotulo}
-              </Text>
+            {semana.map(({ dia, rotulo, feito, ehHoje }) => (
+              <View key={dia} style={estilos.diaSemana}>
+                <View
+                  style={[
+                    estilos.bolaDia,
+                    { backgroundColor: cores.superficie, borderColor: cores.linha },
+                    feito && { backgroundColor: cores.ouroFundo, borderColor: cores.ouro },
+                    !feito && ehHoje && { borderColor: cores.acento, borderStyle: 'dashed' }
+                  ]}
+                >
+                  <Flame
+                    size={18}
+                    weight={feito ? 'fill' : 'bold'}
+                    color={feito ? cores.ouro : ehHoje ? cores.acento : cores.desativado2}
+                  />
+                </View>
+                <Text style={[estilos.legenda, { color: ehHoje ? cores.acento : cores.desativado }]}>
+                  {ehHoje ? 'HOJE' : rotulo}
+                </Text>
+              </View>
             ))}
           </View>
         </View>
+
+        {/* ── evolução: quanto falta para o próximo nível ───────── */}
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/perfil')}
+          style={({ pressed }) => [
+            estilos.evolucao,
+            { backgroundColor: cores.superficie, borderColor: cores.linha },
+            pressed && estilos.pressionado
+          ]}
+        >
+          <Devzinho tamanho={54} nivel={nivel} item="notebook" flutuar={false} />
+          <View style={estilos.flex}>
+            <Text style={[estilos.evolucaoTitulo, { color: cores.textoForte }]}>
+              {rank.proximo ? `Rumo a ${rank.proximo.nome}` : 'Você é uma Lenda!'}
+            </Text>
+            <Trilho
+              fracao={rank.progresso}
+              cor={CORES_NIVEL[nivel]}
+              duracao={animacao.rank}
+              estilo={estilos.barraEvolucao}
+            />
+            <Text style={[estilos.notaLinha, { color: cores.legenda }]}>
+              {rank.proximo ? `faltam ${rank.faltam} XP · nível ${nivel + 1}` : `${progresso.xp} XP no total`}
+            </Text>
+          </View>
+          <ArrowRight size={16} color={cores.legenda} weight="bold" />
+        </Pressable>
 
         {/* ── trilhas ───────────────────────────────────────────── */}
         <View style={estilos.secao}>
           <Rotulo estilo={estilos.rotuloTrilhas}>trilhas</Rotulo>
 
-          {trilhas.map((trilha) => (
-            <Pressable
-              key={trilha.chave}
-              accessibilityRole="button"
-              onPress={() => router.push('/trilhas')}
-              style={({ pressed }) => [
-                estilos.linha,
-                { borderTopColor: cores.linha },
-                pressed && estilos.pressionado
-              ]}
-            >
-              <Text style={[estilos.sigla, { color: trilha.cor }]}>{trilha.sigla}</Text>
+          <View style={estilos.listaTrilhas}>
+            {trilhas.map((trilha) => (
+              <Pressable
+                key={trilha.chave}
+                accessibilityRole="button"
+                onPress={() => router.push('/trilhas')}
+                style={({ pressed }) => [
+                  estilos.cartaoTrilha,
+                  { backgroundColor: cores.superficie },
+                  pressed && estilos.pressionado
+                ]}
+              >
+                <View style={[estilos.siglaBadge, { borderColor: trilha.cor }]}>
+                  <Text style={[estilos.sigla, { color: trilha.cor }]}>{trilha.sigla}</Text>
+                </View>
 
-              <View style={estilos.flex}>
-                <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
-                  {trilha.titulo}
+                <View style={estilos.flex}>
+                  <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
+                    {trilha.titulo}
+                  </Text>
+                  <Trilho
+                    fracao={trilha.total ? trilha.feitas / trilha.total : 0}
+                    cor={trilha.cor}
+                    duracao={animacao.rank}
+                    estilo={estilos.barraTrilha}
+                  />
+                </View>
+
+                <Text style={[estilos.contagem, { color: cores.legenda }]}>
+                  {`${trilha.feitas}/${trilha.total}`}
                 </Text>
-                <Trilho
-                  fracao={trilha.total ? trilha.feitas / trilha.total : 0}
-                  cor={trilha.cor}
-                  duracao={animacao.rank}
-                  estilo={estilos.barraTrilha}
-                />
-              </View>
+              </Pressable>
+            ))}
 
-              <Text style={[estilos.contagem, { color: cores.legenda }]}>
-                {`${trilha.feitas}/${trilha.total}`}
-              </Text>
-            </Pressable>
-          ))}
+            {fracos.length > 0 && (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push('/fracos')}
+                style={({ pressed }) => [
+                  estilos.cartaoTrilha,
+                  { backgroundColor: cores.superficie },
+                  pressed && estilos.pressionado
+                ]}
+              >
+                <View style={[estilos.siglaBadge, { borderColor: cores.erro }]}>
+                  <Text style={[estilos.sigla, { color: cores.erro }]}>!</Text>
+                </View>
 
-          {fracos.length > 0 && (
-            <Pressable
-              accessibilityRole="button"
-              onPress={() => router.push('/fracos')}
-              style={({ pressed }) => [
-                estilos.linha,
-                estilos.linhaFinal,
-                { borderTopColor: cores.linha, borderBottomColor: cores.linha },
-                pressed && estilos.pressionado
-              ]}
-            >
-              <Text style={[estilos.sigla, { color: cores.erro }]}>!</Text>
+                <View style={estilos.flex}>
+                  <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
+                    {`${fracos.length} ponto${fracos.length > 1 ? 's' : ''} fraco${fracos.length > 1 ? 's' : ''}`}
+                  </Text>
+                  <Text style={[estilos.notaLinha, { color: cores.legenda }]} numberOfLines={1}>
+                    {fracos.map((f) => f.card.licaoTitulo).join(' · ')}
+                  </Text>
+                </View>
 
-              <View style={estilos.flex}>
-                <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
-                  {`${fracos.length} ponto${fracos.length > 1 ? 's' : ''} fraco${fracos.length > 1 ? 's' : ''}`}
-                </Text>
-                <Text style={[estilos.notaLinha, { color: cores.legenda }]} numberOfLines={1}>
-                  {fracos.map((f) => f.card.licaoTitulo).join(' · ')}
-                </Text>
-              </View>
-
-              <Text style={[estilos.seta, { color: cores.legenda }]}>→</Text>
-            </Pressable>
-          )}
+                <ArrowRight size={14} color={cores.legenda} weight="bold" />
+              </Pressable>
+            )}
+          </View>
         </View>
       </ScrollView>
     </TelaAba>
   );
 }
 
+/* ─────────────────────────── peças da tela ─────────────────────────── */
+
+/** O que o Devzinho diz ao abrir o app — uma frase só, a que mais importa. */
+function falaDoDevzinho({
+  nome,
+  sequencia,
+  fezDiariaHoje,
+  vencidos
+}: {
+  nome: string;
+  sequencia: number;
+  fezDiariaHoje: boolean;
+  vencidos: number;
+}): { texto: string; expressao: ExpressaoDevzinho } {
+  const hora = new Date().getHours();
+  const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite';
+  const primeiroNome = nome.split(' ')[0] || 'dev';
+
+  if (fezDiariaHoje) {
+    return {
+      texto: `Mandou bem, ${primeiroNome}! Diária feita. ${sequencia > 1 ? `São ${sequencia} dias seguidos!` : 'Volta amanhã pra acender o fogo!'}`,
+      expressao: 'animado'
+    };
+  }
+  if (vencidos > 0) {
+    return {
+      texto: `${saudacao}, ${primeiroNome}! ${vencidos} card${vencidos > 1 ? 's voltaram' : ' voltou'} do ciclo. Bora revisar?`,
+      expressao: 'determinado'
+    };
+  }
+  if (sequencia > 0) {
+    return {
+      texto: `${saudacao}, ${primeiroNome}! ${sequencia} dia${sequencia > 1 ? 's' : ''} de sequência. Não deixa o fogo apagar hoje!`,
+      expressao: 'determinado'
+    };
+  }
+  return { texto: `${saudacao}, ${primeiroNome}! Vamos codar? Começa a diária e acende o fogo.`, expressao: 'feliz' };
+}
+
+/** A chama do HUD: tremula de leve quando a sequência está acesa. */
+function Chama({ acesa, reduzido }: { acesa: boolean; reduzido: boolean }) {
+  const cores = useCores();
+  const valor = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!acesa || reduzido) return;
+    const laco = Animated.loop(
+      Animated.sequence([
+        Animated.timing(valor, { toValue: 1, duration: 520, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+        Animated.timing(valor, { toValue: 0, duration: 520, easing: Easing.inOut(Easing.quad), useNativeDriver: true })
+      ])
+    );
+    laco.start();
+    return () => laco.stop();
+  }, [acesa, reduzido, valor]);
+
+  return (
+    <Animated.View
+      style={{
+        transform: [
+          { scaleY: valor.interpolate({ inputRange: [0, 1], outputRange: [1, 1.14] }) },
+          { rotate: valor.interpolate({ inputRange: [0, 1], outputRange: ['-4deg', '4deg'] }) }
+        ]
+      }}
+    >
+      <Flame size={22} weight="fill" color={acesa ? cores.ouro : cores.desativado} />
+    </Animated.View>
+  );
+}
+
+/**
+ * O botão da diária: "de jogo" (com degrau) e, enquanto a diária não foi
+ * feita, respirando devagar para chamar o toque.
+ */
+function BotaoDiaria({
+  rotulo,
+  cor,
+  aoTocar,
+  pulsar
+}: {
+  rotulo: string;
+  cor: string;
+  aoTocar: () => void;
+  pulsar: boolean;
+}) {
+  const valor = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!pulsar) {
+      valor.setValue(0);
+      return;
+    }
+    const laco = Animated.loop(
+      Animated.sequence([
+        Animated.timing(valor, { toValue: 1, duration: 900, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(valor, { toValue: 0, duration: 900, easing: Easing.inOut(Easing.sin), useNativeDriver: true })
+      ])
+    );
+    laco.start();
+    return () => laco.stop();
+  }, [pulsar, valor]);
+
+  return (
+    <Animated.View style={{ transform: [{ scale: valor.interpolate({ inputRange: [0, 1], outputRange: [1, 1.025] }) }] }}>
+      <Pressable accessibilityRole="button" onPress={aoTocar}>
+        {({ pressed }) => (
+          <View
+            style={[
+              estilos.botaoDegrau,
+              { backgroundColor: escurecer(cor, 0.35) },
+              pressed ? { marginTop: 5 } : { paddingBottom: 5 }
+            ]}
+          >
+            <View style={[estilos.botaoDiaria, { backgroundColor: cor }]}>
+              <Text style={[estilos.rotuloBotao, { color: '#FFFFFF' }]}>{rotulo}</Text>
+              <Cursor cor="#FFFFFF" />
+            </View>
+          </View>
+        )}
+      </Pressable>
+    </Animated.View>
+  );
+}
+
 const estilos = StyleSheet.create({
-  centro: { alignItems: 'center', justifyContent: 'center' },
+  centro: { alignItems: 'center', justifyContent: 'center', gap: espaco.md },
+  carregandoTexto: { ...tipo.notaMono },
   flex: { flex: 1 },
-  conteudo: { paddingTop: topoConteudo, paddingBottom: espaco.xl },
+  conteudo: { paddingTop: topoConteudo - 10, paddingBottom: espaco.xl },
   pressionado: { opacity: 0.75 },
 
-  // ── cabeçalho ────────────────────────────────────────────────
-  cabecalho: {
+  // ── HUD ──────────────────────────────────────────────────────
+  hud: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: espaco.md,
+    alignItems: 'center',
+    gap: espaco.sm,
     paddingHorizontal: margemTela
   },
-  rank: { ...tipo.tituloGrande, letterSpacing: -1.4, marginTop: 7 },
-  linhaXp: { flexDirection: 'row', alignItems: 'center', gap: espaco.sm, marginTop: 10 },
-  barraRank: { width: 98 },
-  xp: { ...tipo.metricaMono },
+  pilula: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    height: 38,
+    paddingHorizontal: 12,
+    borderRadius: raio.pill,
+    borderWidth: 1.5
+  },
+  pilulaNumero: { ...tipo.tituloItem, fontSize: 17 },
+  pilulaNivel: { ...tipo.rotuloCampo, letterSpacing: 1 },
+  pilulaRank: { ...tipo.tituloItemMenor, fontSize: 14 },
+  fala: { marginTop: espaco.md, marginHorizontal: margemTela - 6 },
 
   // ── cartão da diária ─────────────────────────────────────────
   cartao: {
-    marginTop: espaco.lg,
+    marginTop: espaco.sm,
     marginHorizontal: margemTela,
     borderWidth: tamanhos.linha,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderRadius: raio.lg
   },
   varredura: {
     position: 'absolute',
@@ -428,6 +634,15 @@ const estilos = StyleSheet.create({
     paddingTop: 20
   },
   duracao: { ...tipo.metricaMono },
+  chips: { flexDirection: 'row', gap: 6 },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: raio.pill
+  },
 
   cartaoCorpo: {
     flexDirection: 'row',
@@ -441,9 +656,11 @@ const estilos = StyleSheet.create({
   cards: { ...tipo.tituloLinha, fontFamily: tipo.botao.fontFamily },
   notaDiaria: { ...tipo.notaMonoCurta },
 
-  cartaoRegua: { marginTop: 18 },
+  botaoDiariaMoldura: { padding: 14, paddingTop: 18 },
+  botaoDegrau: { borderRadius: raio.md },
   botaoDiaria: {
-    minHeight: tamanhos.botao,
+    borderRadius: raio.md,
+    minHeight: tamanhos.botao - 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -477,16 +694,31 @@ const estilos = StyleSheet.create({
   sequencia: { ...tipo.metricaGrande },
   notaSequencia: { ...tipo.notaMonoCurta, paddingBottom: 5 },
 
-  semana: { flexDirection: 'row', gap: espaco.xs, marginTop: 11 },
-  celula: {
-    flex: 1,
-    height: tamanhos.celulaSemana,
-    borderWidth: tamanhos.linha,
-    borderColor: 'transparent'
+  semana: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
+  diaSemana: { alignItems: 'center', gap: 6 },
+  bolaDia: {
+    width: 38,
+    height: 38,
+    borderRadius: raio.pill,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-
-  legendas: { flexDirection: 'row', justifyContent: 'space-between', marginTop: espaco.sm },
   legenda: { ...tipo.rotuloCelula, letterSpacing: 0 },
+
+  evolucao: {
+    marginTop: espaco.lg,
+    marginHorizontal: margemTela,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espaco.md,
+    paddingVertical: 10,
+    paddingHorizontal: espaco.md,
+    borderRadius: raio.lg,
+    borderWidth: 1.5
+  },
+  evolucaoTitulo: { ...tipo.tituloLinha },
+  barraEvolucao: { marginTop: 8 },
 
   diariasFoco: { marginTop: 11, gap: espaco.sm },
   cartaoFoco: {
@@ -495,24 +727,31 @@ const estilos = StyleSheet.create({
     gap: espaco.md,
     minHeight: tamanhos.botaoSecundario + 6,
     paddingHorizontal: espaco.md + 2,
-    borderWidth: tamanhos.linha
+    borderWidth: tamanhos.linha,
+    borderRadius: raio.md
   },
   siglaFoco: { ...tipo.tituloItem, fontFamily: tipo.metricaMonoMedia.fontFamily, minWidth: 30 },
   tituloFoco: { ...tipo.tituloItem },
-  setaFoco: { ...tipo.tituloItem },
   rotuloTrilhas: { marginBottom: 12 },
-  linha: {
+  listaTrilhas: { gap: espaco.sm },
+  cartaoTrilha: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: espaco.md,
-    paddingVertical: 15,
-    borderTopWidth: tamanhos.linha
+    padding: espaco.md,
+    borderRadius: raio.md
   },
-  linhaFinal: { borderBottomWidth: tamanhos.linha },
-  sigla: { ...tipo.metricaMonoMedia, fontSize: 13, minWidth: 26 },
+  siglaBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: raio.pill,
+    borderWidth: tamanhos.linha,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sigla: { ...tipo.metricaMonoMedia, fontSize: 12 },
   tituloLinha: { ...tipo.tituloLinha },
   barraTrilha: { marginTop: 6 },
   notaLinha: { ...tipo.notaMonoMenor, marginTop: 4 },
-  contagem: { ...tipo.metricaMonoMedia },
-  seta: { ...tipo.metricaMonoMedia, fontSize: 14 }
+  contagem: { ...tipo.metricaMonoMedia }
 });
