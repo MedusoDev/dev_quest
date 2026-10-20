@@ -792,8 +792,8 @@ const estilos = StyleSheet.create({
     borderRadius: raio.sm,
   },
   linhaData: { flexDirection: "row", gap: espaco.sm },
-  entradaData: { flex: 1, textAlign: "center" },
-  entradaAno: { flex: 1.6, textAlign: "center" },
+  entradaData: { flex: 1, minWidth: 0, textAlign: "center" },
+  entradaAno: { flex: 1.6, minWidth: 0, textAlign: "center" },
 
   opcoes: { flexDirection: "row", flexWrap: "wrap", gap: espaco.sm },
   chipFoco: {

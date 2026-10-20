@@ -18,6 +18,8 @@ import { Botao } from '@/componentes/Botao';
 import { Rotulo } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
 import { CaminhoTrilha, type ItemCaminho } from '@/componentes/CaminhoTrilha';
+import { Devzinho, nivelDoRank } from '@/componentes/Devzinho';
+import { RANKS, rankPara } from '@/nucleo/gamificacao';
 import { BotaoLinguagem, SeletorLinguagem } from '@/componentes/SeletorLinguagem';
 
 /**
@@ -35,7 +37,8 @@ import { BotaoLinguagem, SeletorLinguagem } from '@/componentes/SeletorLinguagem
 export default function Trilhas() {
   const cores = useCores();
   const router = useRouter();
-  const { licoesConcluidas } = useProgresso();
+  const { licoesConcluidas, progresso } = useProgresso();
+  const nivel = nivelDoRank(RANKS.findIndex((r) => r.nome === rankPara(progresso.xp).atual.nome));
 
   const [linguagemId, setLinguagemId] = useState<LinguagemId>(linguagens[0]!.id);
   const [seletorAberto, setSeletorAberto] = useState(false);
@@ -100,6 +103,7 @@ export default function Trilhas() {
                   estilos.capsula,
                   {
                     backgroundColor: secao.emFoco ? cores.acentoFundo : cores.superficie,
+                    borderColor: secao.emFoco ? cores.acento : cores.linha,
                     alignSelf: 'center'
                   }
                 ]}
@@ -110,7 +114,7 @@ export default function Trilhas() {
                 </Text>
               </View>
 
-              <CaminhoTrilha itens={itens} aoTocar={(item) => abrir(item.licao)} />
+              <CaminhoTrilha itens={itens} nivel={nivel} aoTocar={(item) => abrir(item.licao)} />
             </Fragment>
           );
         })}
@@ -149,6 +153,15 @@ export default function Trilhas() {
           >
             {licaoAberta && (
               <>
+                {/* O Devzinho espia por cima da folha. */}
+                <View pointerEvents="none" style={estilos.espiando}>
+                  <Devzinho
+                    tamanho={86}
+                    nivel={nivel}
+                    item="notebook"
+                    expressao={licoesConcluidas.has(licaoAberta.id) ? 'feliz' : 'animado'}
+                  />
+                </View>
                 <View style={estilos.folhaCabecalho}>
                   <Text style={[tipo.rotuloFino, { color: cores.acento }]}>
                     {`${fila.indexOf(licaoAberta) + 1} · ${
@@ -164,7 +177,7 @@ export default function Trilhas() {
                   </Pressable>
                 </View>
 
-                <Text style={[tipo.titulo, estilos.folhaTitulo, { color: cores.textoForte }]}>
+                <Text style={[tipo.titulo, estilos.folhaTitulo, { color: cores.textoForte, marginRight: 70 }]}>
                   {licaoAberta.titulo}
                 </Text>
                 <Text style={[tipo.corpo, estilos.folhaResumo, { color: cores.textoFraco }]}>
@@ -227,6 +240,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: espaco.md,
     paddingVertical: espaco.xs + 2,
     borderRadius: raio.pill,
+    borderWidth: 1.5,
     marginBottom: espaco.sm
   },
   secaoContagem: { ...tipo.metricaMono },
@@ -240,7 +254,13 @@ const estilos = StyleSheet.create({
     borderTopLeftRadius: raio.lg,
     borderTopRightRadius: raio.lg
   },
-  folhaCabecalho: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  folhaCabecalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: 84
+  },
+  espiando: { position: 'absolute', right: 14, top: -64 },
   folhaTitulo: { marginTop: espaco.md },
   folhaResumo: { marginTop: espaco.sm, marginBottom: espaco.lg },
   botaoRevisar: { marginTop: espaco.sm }

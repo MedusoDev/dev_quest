@@ -1,11 +1,15 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { GearSix } from "phosphor-react-native";
+import { Flame, GearSix, Lightning, LockSimple, Star, Target, Trophy } from "phosphor-react-native";
 
 import { Avatar } from "@/componentes/Avatar";
 import { Calendario } from "@/componentes/Calendario";
 import { TelaAba } from "@/componentes/abas";
+import { Trilho } from "@/componentes/basicos";
+import { escurecer, tingir } from "@/componentes/Botao";
+import { CORES_NIVEL, Devzinho, nivelDoRank, type NivelDevzinho } from "@/componentes/Devzinho";
+import { Gradiente } from "@/componentes/Gradiente";
 import { useCores } from "@/dados/TemaContexto";
 import { useConta } from "@/dados/ContaContexto";
 import { useProgresso } from "@/dados/ProgressoContexto";
@@ -26,6 +30,10 @@ import { espaco, fontes, margemTela, raio, tamanhos, tipo } from "@/tema";
  * que também tirou a seção de bordas do avatar daqui (ela não tinha lugar no
  * desenho compacto) e moveu "ritmo da diária" para Configurações, junto com
  * o resto do que hoje é "editar".
+ *
+ * O topo é do Devzinho: ele aparece no nível atual da pessoa (aura, óculos,
+ * coroa) e a "escada" virou a **Evolução do Devzinho** — os seis níveis lado a
+ * lado, os alcançados coloridos, os próximos como silhueta.
  */
 
 const QUANTAS_CONQUISTAS_VISIVEIS = 3;
@@ -39,6 +47,8 @@ export default function Perfil() {
 
   const rank = rankPara(progresso.xp);
   const posicaoRank = RANKS.findIndex((r) => r.nome === rank.atual.nome) + 1;
+  const nivel = nivelDoRank(posicaoRank - 1);
+  const corNivel = CORES_NIVEL[nivel];
   const desbloqueadas = new Set(progresso.conquistas);
   const dominados = [...revisoes.values()].filter(estaDominado).length;
   const idade = idadeDe(perfil?.dataNascimento ?? null);
@@ -77,34 +87,40 @@ export default function Perfil() {
       </View>
 
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-        {/* ── identidade + métricas ────────────────────────────── */}
-        <View style={[estilos.cartao, { backgroundColor: cores.superficie }]}>
-          <View style={estilos.identidade}>
-            <Avatar
-              nome={perfil?.nome ?? "Você"}
-              foto={perfil?.foto}
-              bordaId={perfil?.borda}
-              tamanho={tamanhos.avatar}
-              paleta={cores}
-            />
-            <View style={estilos.flex}>
-              <Text style={[estilos.nome, { color: cores.textoForte }]}>
+        {/* ── o Devzinho no nível da pessoa ─────────────────────── */}
+        <View style={[estilos.heroi, { borderColor: corNivel }]}>
+          <Gradiente de={cores.superficie} para={tingir(corNivel, cores, 0.6)} />
+          <Devzinho tamanho={112} nivel={nivel} item="varinha" expressao="feliz" />
+          <View style={estilos.flex}>
+            <View style={estilos.identidade}>
+              <Avatar
+                nome={perfil?.nome ?? "Você"}
+                foto={perfil?.foto}
+                bordaId={perfil?.borda}
+                tamanho={36}
+                paleta={cores}
+              />
+              <Text numberOfLines={1} style={[estilos.nome, estilos.flex, { color: cores.textoForte }]}>
                 {perfil?.nome ?? "Sem nome"}
               </Text>
-              <Text style={[tipo.metricaMono, { color: cores.acento, marginTop: 4 }]}>
-                {rank.proximo
-                  ? `RANK ${String(posicaoRank).padStart(2, "0")} · ${rank.atual.nome.toUpperCase()} · faltam ${rank.faltam} XP`
-                  : `RANK ${String(posicaoRank).padStart(2, "0")} · ${rank.atual.nome.toUpperCase()}`}
-              </Text>
             </View>
+            <View style={[estilos.chipNivel, { backgroundColor: cores.fundo, borderColor: corNivel }]}>
+              <Text style={[estilos.chipNivelTexto, { color: corNivel }]}>{`NÍVEL ${nivel}`}</Text>
+              <Text style={[estilos.chipNivelRank, { color: cores.textoForte }]}>{rank.atual.nome}</Text>
+            </View>
+            <Trilho fracao={rank.progresso} cor={corNivel} altura={10} estilo={estilos.barraNivel} />
+            <Text style={[tipo.metricaMono, { color: cores.texto, marginTop: 6 }]}>
+              {rank.proximo ? `faltam ${rank.faltam} XP p/ ${rank.proximo.nome}` : "nível máximo!"}
+            </Text>
           </View>
+        </View>
 
-          <View style={[estilos.grade, { borderTopColor: cores.linha }]}>
-            <Celula valor={String(progresso.xp)} rotulo="XP" cores={cores} />
-            <Celula valor={String(progresso.sequencia)} rotulo="SEQ" acento cores={cores} />
-            <Celula valor={String(dominados)} rotulo="MADUROS" cores={cores} />
-            <Celula valor={`${acerto}%`} rotulo="ACERTO" ultima cores={cores} />
-          </View>
+        {/* ── métricas ─────────────────────────────────────────── */}
+        <View style={estilos.grade}>
+          <Celula icone={<Lightning size={18} weight="fill" color={cores.ouro} />} valor={String(progresso.xp)} rotulo="XP" cores={cores} />
+          <Celula icone={<Flame size={18} weight="fill" color={cores.ouro} />} valor={String(progresso.sequencia)} rotulo="SEQ" cores={cores} />
+          <Celula icone={<Star size={18} weight="fill" color={cores.acentoSecundario} />} valor={String(dominados)} rotulo="MADUROS" cores={cores} />
+          <Celula icone={<Target size={18} weight="bold" color={cores.ok} />} valor={`${acerto}%`} rotulo="ACERTO" cores={cores} />
         </View>
 
         {/* ── sobre você ───────────────────────────────────────── */}
@@ -135,39 +151,61 @@ export default function Perfil() {
           </View>
         )}
 
-        {/* ── a escada ─────────────────────────────────────────── */}
+        {/* ── evolução do Devzinho ─────────────────────────────── */}
         <View style={[estilos.cartao, { backgroundColor: cores.superficie }]}>
           <View style={estilos.cabecalhoSecaoCartao}>
-            <Text style={[tipo.rotuloSecao, { color: cores.legenda }]}>a escada</Text>
+            <Text style={[tipo.rotuloSecao, { color: cores.legenda }]}>evolução do devzinho</Text>
             <Text style={[tipo.metricaMono, { color: cores.legenda }]}>
               {posicaoRank} de {RANKS.length}
             </Text>
           </View>
-          <View style={estilos.escada}>
-            {RANKS.map((r) => {
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={estilos.evolucao}>
+            {RANKS.map((r, indice) => {
+              const nivelDoCartao = nivelDoRank(indice) as NivelDevzinho;
+              const cor = CORES_NIVEL[nivelDoCartao];
               const alcancado = progresso.xp >= r.xp;
               const atual = r.nome === rank.atual.nome;
 
               return (
-                <View key={r.nome} style={estilos.degrau}>
-                  <View
-                    style={[
-                      estilos.barraDegrau,
-                      { backgroundColor: alcancado ? cores.acento : cores.linha }
-                    ]}
+                <View
+                  key={r.nome}
+                  style={[
+                    estilos.cartaoNivel,
+                    {
+                      backgroundColor: alcancado ? tingir(cor, cores, 0.72) : cores.fundo,
+                      borderColor: atual ? cor : alcancado ? escurecer(cor, 0.4) : cores.linha
+                    },
+                    atual && estilos.cartaoNivelAtual
+                  ]}
+                >
+                  {atual && (
+                    <View style={[estilos.voce, { backgroundColor: cor }]}>
+                      <Text style={[estilos.voceTexto, { color: cores.fundo }]}>VOCÊ</Text>
+                    </View>
+                  )}
+                  <Devzinho
+                    tamanho={64}
+                    nivel={nivelDoCartao}
+                    item="notebook"
+                    flutuar={atual}
+                    bloqueado={!alcancado}
+                    expressao={atual ? "feliz" : "determinado"}
                   />
-                  <Text
-                    style={[
-                      estilos.nomeDegrau,
-                      { color: atual ? cores.acento : cores.desativado }
-                    ]}
-                  >
+                  <View style={[estilos.pilulaNivel, { backgroundColor: alcancado ? cor : cores.linha }]}>
+                    <Text style={[estilos.pilulaNivelTexto, { color: alcancado ? cores.fundo : cores.desativado }]}>
+                      {`Nível ${indice + 1}`}
+                    </Text>
+                  </View>
+                  <Text numberOfLines={1} style={[estilos.nomeNivel, { color: alcancado ? cores.textoForte : cores.desativado }]}>
                     {r.nome}
+                  </Text>
+                  <Text style={[estilos.xpNivel, { color: cores.legenda }]}>
+                    {alcancado ? "alcançado" : `${r.xp} XP`}
                   </Text>
                 </View>
               );
             })}
-          </View>
+          </ScrollView>
         </View>
 
         {/* ── últimas 5 semanas ────────────────────────────────── */}
@@ -215,10 +253,16 @@ export default function Perfil() {
                     style={[
                       estilos.marcaConquista,
                       tem
-                        ? { backgroundColor: cores.acento }
-                        : { borderWidth: tamanhos.linha, borderColor: cores.linha }
+                        ? { backgroundColor: cores.ouroFundo, borderColor: cores.ouro }
+                        : { borderColor: cores.linha }
                     ]}
-                  />
+                  >
+                    {tem ? (
+                      <Trophy size={16} weight="fill" color={cores.ouro} />
+                    ) : (
+                      <LockSimple size={14} weight="bold" color={cores.desativado} />
+                    )}
+                  </View>
                   <Text
                     style={[
                       tipo.botaoDiscreto,
@@ -259,34 +303,23 @@ function ReguaSobre({
   );
 }
 
-/** Uma célula da grade 1×4: número em cima, rótulo mono embaixo. */
+/** Uma célula da grade 1×4: ícone, número e rótulo mono, num cartãozinho. */
 function Celula({
+  icone,
   valor,
   rotulo,
-  acento = false,
-  ultima = false,
   cores
 }: {
+  icone: ReactNode;
   valor: string;
   rotulo: string;
-  acento?: boolean;
-  ultima?: boolean;
   cores: ReturnType<typeof useCores>;
 }) {
   return (
-    <View
-      style={[
-        estilos.celula,
-        { borderColor: cores.linha },
-        !ultima && { borderRightWidth: tamanhos.linha, borderRightColor: cores.linha }
-      ]}
-    >
-      <Text style={[estilos.celulaValor, { color: acento ? cores.acento : cores.textoForte }]}>
-        {valor}
-      </Text>
-      <Text style={[tipo.rotuloCelula, estilos.celulaRotulo, { color: cores.legenda }]}>
-        {rotulo}
-      </Text>
+    <View style={[estilos.celula, { backgroundColor: cores.superficie, borderColor: cores.linha }]}>
+      {icone}
+      <Text style={[estilos.celulaValor, { color: cores.textoForte }]}>{valor}</Text>
+      <Text style={[tipo.rotuloCelula, estilos.celulaRotulo, { color: cores.legenda }]}>{rotulo}</Text>
     </View>
   );
 }
@@ -309,22 +342,49 @@ const estilos = StyleSheet.create({
 
   cartao: { borderRadius: raio.lg, padding: espaco.md, marginTop: espaco.sm },
 
+  heroi: {
+    marginTop: espaco.md,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: espaco.sm,
+    padding: espaco.md,
+    paddingLeft: espaco.sm,
+    borderRadius: raio.lg,
+    borderWidth: 2,
+    overflow: "hidden"
+  },
   identidade: {
     flexDirection: "row",
     alignItems: "center",
-    gap: espaco.md
+    gap: espaco.sm
   },
-  nome: { ...tipo.tituloPerfil, fontSize: 20, lineHeight: 22, letterSpacing: -0.7 },
-
-  grade: {
+  nome: { ...tipo.tituloPerfil, fontSize: 21, lineHeight: 25, letterSpacing: -0.4 },
+  chipNivel: {
+    marginTop: espaco.sm,
+    alignSelf: "flex-start",
     flexDirection: "row",
-    borderTopWidth: tamanhos.linha,
-    marginTop: espaco.md,
-    paddingTop: espaco.sm
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: raio.pill,
+    borderWidth: 1.5
   },
-  celula: { flex: 1, paddingVertical: 6, paddingHorizontal: 10 },
-  celulaValor: { ...tipo.metrica, fontSize: 22, lineHeight: 22, letterSpacing: -1 },
-  celulaRotulo: { marginTop: 5 },
+  chipNivelTexto: { ...tipo.rotuloCampo, letterSpacing: 1 },
+  chipNivelRank: { ...tipo.tituloItemMenor, fontSize: 13, lineHeight: 16 },
+  barraNivel: { marginTop: espaco.sm },
+
+  grade: { flexDirection: "row", gap: espaco.sm, marginTop: espaco.sm },
+  celula: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 10,
+    borderRadius: raio.md,
+    borderWidth: 1.5,
+    gap: 4
+  },
+  celulaValor: { ...tipo.metrica, fontSize: 20, lineHeight: 22, letterSpacing: -0.5 },
+  celulaRotulo: { fontSize: 9 },
 
   cabecalhoSecaoCartao: {
     flexDirection: "row",
@@ -342,10 +402,29 @@ const estilos = StyleSheet.create({
     borderTopWidth: tamanhos.linha
   },
 
-  escada: { flexDirection: "row", gap: 4 },
-  degrau: { flex: 1 },
-  barraDegrau: { height: 4, borderRadius: raio.pill },
-  nomeDegrau: { fontFamily: fontes.mono, fontSize: 9.5, lineHeight: 12, marginTop: 6 },
+  evolucao: { gap: espaco.sm, paddingTop: 10, paddingBottom: 2 },
+  cartaoNivel: {
+    width: 104,
+    alignItems: "center",
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderRadius: raio.md,
+    borderWidth: 1.5
+  },
+  cartaoNivelAtual: { borderWidth: 2.5 },
+  voce: {
+    position: "absolute",
+    top: -9,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: raio.pill,
+    zIndex: 2
+  },
+  voceTexto: { fontFamily: fontes.forte, fontSize: 10, letterSpacing: 1 },
+  pilulaNivel: { marginTop: 6, paddingHorizontal: 8, paddingVertical: 2, borderRadius: raio.pill },
+  pilulaNivelTexto: { fontFamily: fontes.forte, fontSize: 11 },
+  nomeNivel: { ...tipo.tituloItemMenor, fontSize: 14, marginTop: 6 },
+  xpNivel: { fontFamily: fontes.mono, fontSize: 10, marginTop: 2 },
 
   linhaConquista: {
     flexDirection: "row",
@@ -353,5 +432,12 @@ const estilos = StyleSheet.create({
     gap: 10,
     paddingVertical: 9
   },
-  marcaConquista: { width: 8, height: 8, borderRadius: raio.pill }
+  marcaConquista: {
+    width: 30,
+    height: 30,
+    borderRadius: raio.pill,
+    borderWidth: 1.5,
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });

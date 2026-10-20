@@ -53,8 +53,8 @@ export function Calendario({ historico, paleta }: { historico: string[]; paleta?
               style={[
                 estilos.dia,
                 { backgroundColor: c.linha },
-                feito && { backgroundColor: c.acento },
-                !feito && ehHoje && { backgroundColor: 'transparent', borderColor: c.acento },
+                feito && { backgroundColor: c.ouro },
+                !feito && ehHoje && { backgroundColor: 'transparent', borderColor: c.acento, borderWidth: 2 },
                 futuro && { backgroundColor: 'transparent', borderColor: c.linha }
               ]}
             />
@@ -79,6 +79,7 @@ const estilos = StyleSheet.create({
 
   dia: {
     aspectRatio: 1,
+    borderRadius: 8,
     borderWidth: tamanhos.linha,
     borderColor: 'transparent'
   }

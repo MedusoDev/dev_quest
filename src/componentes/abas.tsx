@@ -1,4 +1,13 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode
+} from 'react';
 import { Animated, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
@@ -142,13 +151,42 @@ export function BarraAbas({ state, navigation }: BottomTabBarProps) {
             accessibilityState={{ selected: ativa }}
             accessibilityLabel={ROTULOS[rota.name] ?? rota.name}
             onPress={tocar}
-            style={[estilos.item, ativa && { borderTopColor: paleta.acento }]}
+            style={estilos.item}
           >
-            {Icone ? <Icone cor={cor} peso={ativa ? 'fill' : 'regular'} /> : null}
+            <IconeAba ativa={ativa}>
+              {Icone ? <Icone cor={cor} peso={ativa ? 'fill' : 'regular'} /> : null}
+            </IconeAba>
           </Pressable>
         );
       })}
     </View>
+  );
+}
+
+/**
+ * A aba ativa ganha uma "cápsula" no acento e dá um pulinho ao ser escolhida —
+ * o mesmo pop do resto do app.
+ */
+function IconeAba({ ativa, children }: { ativa: boolean; children: ReactNode }) {
+  const paleta = useCores();
+  const escala = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (!ativa) return;
+    escala.setValue(0.7);
+    Animated.spring(escala, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }).start();
+  }, [ativa, escala]);
+
+  return (
+    <Animated.View
+      style={[
+        estilos.capsula,
+        ativa && { backgroundColor: paleta.acentoFundo, borderColor: paleta.acento },
+        { transform: [{ scale: escala }] }
+      ]}
+    >
+      {children}
+    </Animated.View>
   );
 }
 
@@ -169,8 +207,15 @@ const estilos = StyleSheet.create({
     justifyContent: 'center',
     // A borda de 2 px da aba ativa sobrepõe a régua da barra em vez de somar
     // altura a ela: sem o -1, a linha do topo engrossaria só naquela coluna.
-    borderTopWidth: tamanhos.trilho,
-    borderTopColor: 'transparent',
-    marginTop: -tamanhos.linha
+    paddingVertical: 6
+  },
+  capsula: {
+    width: 52,
+    height: 38,
+    borderRadius: raio.md,
+    borderWidth: 1.5,
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });

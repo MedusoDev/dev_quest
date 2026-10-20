@@ -5,6 +5,7 @@ import type { Paleta } from '@/tema/temas';
 import { useCores } from '@/dados/TemaContexto';
 import { NIVEIS, type Nivel } from '@/nucleo/dificuldade';
 import { useLargura, useMovimentoReduzido, usePiscar } from './movimento';
+import { Devzinho } from './Devzinho';
 
 /**
  * As peças pequenas que aparecem em quase toda tela.
@@ -56,8 +57,8 @@ export function Regua({ cor, estilo }: { cor?: string; estilo?: ViewStyle }) {
 /**
  * Barra de progresso: um trilho na cor `linha` e o preenchimento no acento.
  *
- * Três espessuras no app inteiro — 2 para trilha e XP do topo, 3 para a sessão
- * e o rank. Nada de raio: é um retângulo.
+ * Barra "de jogo": no mínimo 6 dp, cantos redondos e um brilho claro no
+ * terço de cima do preenchimento.
  */
 export function Trilho({
   fracao,
@@ -77,9 +78,32 @@ export function Trilho({
   const reduzido = useMovimentoReduzido();
   const largura = useLargura(fracao, duracao, reduzido);
 
+  const alturaFinal = Math.max(altura, 6);
+
   return (
-    <View style={[{ height: altura, backgroundColor: cores.linha }, estilo]}>
-      <Animated.View style={{ width: largura, height: '100%', backgroundColor: corFinal }} />
+    <View
+      style={[
+        { height: alturaFinal, backgroundColor: cores.linha, borderRadius: alturaFinal / 2, overflow: 'hidden' },
+        estilo
+      ]}
+    >
+      <Animated.View
+        style={{ width: largura, height: '100%', backgroundColor: corFinal, borderRadius: alturaFinal / 2 }}
+      >
+        {alturaFinal >= 10 && (
+          <View
+            style={{
+              position: 'absolute',
+              left: alturaFinal / 2,
+              right: alturaFinal / 2,
+              top: alturaFinal * 0.22,
+              height: Math.max(2, alturaFinal * 0.22),
+              borderRadius: alturaFinal,
+              backgroundColor: 'rgba(255,255,255,0.35)'
+            }}
+          />
+        )}
+      </Animated.View>
     </View>
   );
 }
@@ -230,8 +254,7 @@ export function ReguaMetrica({
  * Nunca é texto solto no meio da tela: traz o rótulo da seção, uma frase que
  * explica por que está vazio, e **sempre uma saída** — senão a tela vira beco.
  *
- * No redesign perdeu a caixa tracejada: é só texto alinhado à esquerda, como
- * todo o resto.
+ * O Devzinho aparece pensando em cima — tela vazia nunca é tela morta.
  */
 export function Vazio({
   titulo,
@@ -246,6 +269,7 @@ export function Vazio({
 
   return (
     <View style={estilos.vazio}>
+      <Devzinho tamanho={96} expressao="pensando" item="nenhum" />
       <Rotulo>sem nada aqui</Rotulo>
       <Text style={[tipo.titulo, { color: cores.textoForte }]}>{titulo}</Text>
       <Text style={[tipo.notaMono, { color: cores.legenda }]}>{texto}</Text>

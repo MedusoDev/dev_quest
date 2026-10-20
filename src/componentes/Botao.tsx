@@ -17,7 +17,10 @@ import { Cursor } from './basicos';
  * rótulo. Botão habilitado tem cursor, botão desabilitado não — é a diferença
  * mais visível entre os dois estados, junto com o fundo.
  *
- * Feedback de toque é opacidade, e só. Escurecer o acento no toque criaria uma
+ * Botão "de jogo": as variantes cheias ficam em cima de um degrau mais escuro
+ * da própria cor, e afundam nele quando tocadas — como os botões do Devzinho.
+ *
+ * (Antes:) Feedback de toque é opacidade, e só. Escurecer o acento no toque criaria uma
  * segunda cor de acento que não existe na paleta.
  */
 
@@ -62,14 +65,14 @@ function aparenciaPara(c: typeof cores | Paleta): Record<VarianteBotao, Aparenci
   return {
     primario: {
       caixa: { backgroundColor: c.acento },
-      texto: c.acentoFundo,
+      texto: '#FFFFFF',
       estiloTexto: tipo.botao,
       altura: tamanhos.botao,
       cursor: true,
       sombra: true
     },
     secundario: {
-      caixa: { borderWidth: tamanhos.linha, borderColor: c.linha },
+      caixa: { borderWidth: 1.5, borderBottomWidth: DEGRAU, borderColor: c.linha, backgroundColor: c.superficie },
       texto: c.textoFraco,
       estiloTexto: tipo.botaoSecundario,
       altura: tamanhos.botaoSecundario,
@@ -79,7 +82,7 @@ function aparenciaPara(c: typeof cores | Paleta): Record<VarianteBotao, Aparenci
     /** Como o secundário, mas com borda e texto que se leem contra o fundo —
         para ações de mesmo peso que a primária, como "Continuar com Google". */
     secundarioForte: {
-      caixa: { borderWidth: tamanhos.linha, borderColor: c.texto },
+      caixa: { borderWidth: 1.5, borderBottomWidth: DEGRAU, borderColor: c.textoFraco, backgroundColor: c.superficie },
       texto: c.textoForte,
       estiloTexto: tipo.botaoSecundario,
       altura: tamanhos.botaoSecundario,
@@ -87,7 +90,7 @@ function aparenciaPara(c: typeof cores | Paleta): Record<VarianteBotao, Aparenci
       sombra: false
     },
     discreto: {
-      caixa: { borderWidth: tamanhos.linha, borderColor: c.linha },
+      caixa: { borderWidth: 1.5, borderBottomWidth: DEGRAU, borderColor: c.linha },
       texto: c.legenda,
       estiloTexto: tipo.botaoDiscreto,
       altura: tamanhos.campo,
@@ -96,7 +99,7 @@ function aparenciaPara(c: typeof cores | Paleta): Record<VarianteBotao, Aparenci
     },
     erro: {
       caixa: { backgroundColor: c.erro },
-      texto: c.erroFundo,
+      texto: '#FFFFFF',
       estiloTexto: tipo.botaoMenor,
       altura: 56,
       cursor: true,
@@ -141,23 +144,81 @@ export function Botao({
       ? sombraPara((caixa as ViewStyle).backgroundColor as string)
       : null;
 
+  const corCheia = aparencia.sombra && !desabilitado ? ((caixa as ViewStyle).backgroundColor as string) : null;
+
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ disabled: desabilitado }}
       disabled={desabilitado}
       onPress={aoTocar}
-      style={({ pressed }) => [pressed && !desabilitado && estilos.pressionado, sombra, estilo]}
+      style={[sombra, estilo]}
     >
-      <View style={[estilos.caixa, caixa, { minHeight: altura ?? aparencia.altura }]}>
-        {icone && <View style={desabilitado && estilos.iconeDesabilitado}>{icone}</View>}
-        <Text numberOfLines={1} style={[aparencia.estiloTexto, { color: corTexto }]}>
-          {rotulo}
-        </Text>
-        {aparencia.cursor && !desabilitado && <Cursor cor={corTexto} />}
-      </View>
+      {({ pressed }) => {
+        const afundado = pressed && !desabilitado;
+        return (
+          <View
+            style={[
+              estilos.degrau,
+              corCheia ? { backgroundColor: escurecer(corCheia, 0.32) } : null,
+              corCheia && !afundado ? { paddingBottom: DEGRAU } : { marginTop: corCheia ? DEGRAU : 0 },
+              !corCheia && afundado && estilos.pressionado
+            ]}
+          >
+            <View
+              style={[
+                estilos.caixa,
+                caixa,
+                { minHeight: (altura ?? aparencia.altura) - (corCheia ? DEGRAU : 0) },
+                !corCheia && afundado ? { borderBottomWidth: 1.5, marginTop: DEGRAU - 1.5 } : null
+              ]}
+            >
+              {icone && <View style={desabilitado && estilos.iconeDesabilitado}>{icone}</View>}
+              <Text numberOfLines={1} style={[aparencia.estiloTexto, { color: corTexto }]}>
+                {rotulo}
+              </Text>
+              {aparencia.cursor && !desabilitado && <Cursor cor={corTexto} />}
+            </View>
+          </View>
+        );
+      }}
     </Pressable>
   );
+}
+
+/** A altura do degrau do botão "de jogo". */
+const DEGRAU = 4;
+
+/** Clareia uma cor `#RRGGBB` misturando com branco. */
+export function clarear(hex: string, fator: number): string {
+  const limpo = hex.replace('#', '');
+  if (limpo.length !== 6) return hex;
+  const canal = (i: number) => {
+    const v = parseInt(limpo.slice(i, i + 2), 16);
+    return Math.round(v + (255 - v) * fator)
+      .toString(16)
+      .padStart(2, '0');
+  };
+  return `#${canal(0)}${canal(2)}${canal(4)}`;
+}
+
+/**
+ * Um fundo "tingido" por uma cor, que funciona nos dois temas: no escuro a cor
+ * é escurecida, no claro é clareada — o texto por cima continua legível.
+ */
+export function tingir(hex: string, paleta: Pick<Paleta, 'barraStatus'>, forca: number): string {
+  return paleta.barraStatus === 'light' ? escurecer(hex, forca) : clarear(hex, forca + 0.12);
+}
+
+/** Escurece uma cor `#RRGGBB` misturando com preto — o degrau do botão. */
+export function escurecer(hex: string, fator: number): string {
+  const limpo = hex.replace('#', '');
+  if (limpo.length !== 6) return hex;
+  const canal = (i: number) =>
+    Math.round(parseInt(limpo.slice(i, i + 2), 16) * (1 - fator))
+      .toString(16)
+      .padStart(2, '0');
+  return `#${canal(0)}${canal(2)}${canal(4)}`;
 }
 
 /** Sombra colorida na própria cor de fundo do botão — dá relevo sem 2ª cor de acento. */
@@ -166,9 +227,9 @@ function sombraPara(cor: string): ViewStyle {
     borderRadius: raio.md,
     shadowColor: cor,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 4
   };
 }
 
@@ -181,6 +242,7 @@ const estilos = StyleSheet.create({
     paddingHorizontal: espaco.lg,
     borderRadius: raio.md
   },
-  pressionado: { opacity: 0.75 },
+  degrau: { borderRadius: raio.md },
+  pressionado: { opacity: 0.85 },
   iconeDesabilitado: { opacity: 0.4 }
 });

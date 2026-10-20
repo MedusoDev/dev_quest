@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Animated, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { animacao, espaco, margemTela, tamanhos, tipo, topoConteudo } from '@/tema';
+import { animacao, espaco, margemTela, raio, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { comoTexto, obterLicao } from '@/nucleo/conteudo';
-import { rankPara } from '@/nucleo/gamificacao';
+import { RANKS, rankPara } from '@/nucleo/gamificacao';
 import type { Resultado } from '@/nucleo/sessao';
 import type { FechoDeSessao } from '@/dados/ProgressoContexto';
 import { BlocoCodigo } from './BlocoCodigo';
 import { Botao } from './Botao';
 import { Regua, ReguaMetrica, Rotulo, TextoRico } from './basicos';
 import { useMovimentoReduzido, usePop, useQueda } from './movimento';
+import { Lightning, Trophy, LockOpen } from 'phosphor-react-native';
+import { BalaoFala } from './BalaoFala';
+import { CORES_NIVEL, Devzinho, nivelDoRank, type ExpressaoDevzinho } from './Devzinho';
 
 /**
  * FIM DE SESSÃO.
@@ -18,6 +21,10 @@ import { useMovimentoReduzido, usePop, useQueda } from './movimento';
  * O XP em corpo 96 é o herói da tela e entra com um *pop* — é a recompensa, e
  * ela precisa chegar antes de qualquer leitura. Logo abaixo, quatro réguas
  * dizem o resto em uma linha cada.
+ *
+ * O Devzinho comemora junto — a expressão e a fala dele seguem a taxa de
+ * acerto, e se a sessão fez a pessoa **subir de nível**, ele aparece já
+ * evoluído (aura nova, óculos, coroa...) num cartão próprio.
  *
  * O confete roda **uma vez**. Em laço ele viraria papel de parede e a pessoa
  * pararia de olhar o número que ele estava comemorando.
@@ -56,6 +63,11 @@ export function Resumo({
   const pop = usePop(true, animacao.popResumo, reduzido);
 
   const rank = rankPara(xpTotal);
+  const rankAntes = rankPara(Math.max(0, xpTotal - xpGanho));
+  const nivel = nivelDoRank(RANKS.findIndex((r) => r.nome === rank.atual.nome));
+  const subiuDeNivel = rankAntes.atual.nome !== rank.atual.nome;
+  const taxa = resultado.total > 0 ? resultado.acertosDePrimeira / resultado.total : 0;
+  const humor = humorDaSessao(taxa);
   const fechadas = (fecho?.licoesFechadas ?? []).map(obterLicao).filter(Boolean);
 
   return (
@@ -63,12 +75,45 @@ export function Resumo({
       <Confete ativo={!reduzido} />
 
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+        {/* ── o Devzinho comemora ─────────────────────────────── */}
+        <View style={estilos.festa}>
+          <Devzinho
+            tamanho={128}
+            expressao={humor.expressao}
+            item="varinha"
+            nivel={nivel}
+            reacao={humor.pula && !reduzido ? { tipo: 'pulo', chave: 'resumo' } : null}
+          />
+          <BalaoFala texto={humor.fala} ponta="esquerda" estilo={estilos.festaBalao} />
+        </View>
+
         <Rotulo cor={cores.acento}>sessão fechada</Rotulo>
 
         <View style={estilos.heroi}>
-          <Animated.Text style={[estilos.xp, { color: cores.textoForte }, pop]}>{xpNaTela}</Animated.Text>
+          <Lightning size={54} weight="fill" color={cores.ouro} style={estilos.raio} />
+          <Animated.Text style={[estilos.xp, { color: cores.ouro }, pop]}>{`+${xpNaTela}`}</Animated.Text>
           <Text style={[estilos.unidade, { color: cores.acentoTexto }]}>XP</Text>
         </View>
+
+        {subiuDeNivel && (
+          <View
+            style={[
+              estilos.nivelNovo,
+              { borderColor: CORES_NIVEL[nivel], backgroundColor: cores.superficie }
+            ]}
+          >
+            <Devzinho tamanho={70} nivel={nivel} expressao="animado" item="notebook" />
+            <View style={estilos.flex}>
+              <Text style={[estilos.desbloqueioRotulo, { color: CORES_NIVEL[nivel] }]}>
+                {`SUBIU PARA O NÍVEL ${nivel}`}
+              </Text>
+              <Text style={[estilos.desbloqueioTitulo, { color: cores.textoForte }]}>{rank.atual.nome}</Text>
+              <Text style={[estilos.desbloqueioNota, { color: cores.acentoTexto }]}>
+                O Devzinho evoluiu com você!
+              </Text>
+            </View>
+          </View>
+        )}
 
         <View style={estilos.reguas}>
           <ReguaMetrica
@@ -107,10 +152,13 @@ export function Resumo({
             key={licao!.id}
             style={[
               estilos.desbloqueio,
-              { borderLeftColor: cores.acento, backgroundColor: cores.acentoFundo }
+              { borderColor: cores.acento, backgroundColor: cores.acentoFundo }
             ]}
           >
-            <Text style={[estilos.desbloqueioRotulo, { color: cores.acento }]}>DESBLOQUEOU</Text>
+            <View style={estilos.linhaRotulo}>
+              <LockOpen size={14} weight="bold" color={cores.acento} />
+              <Text style={[estilos.desbloqueioRotulo, { color: cores.acento }]}>DESBLOQUEOU</Text>
+            </View>
             <Text style={[estilos.desbloqueioTitulo, { color: cores.textoForte }]}>{licao!.titulo}</Text>
             <Text style={[estilos.desbloqueioNota, { color: cores.acentoTexto }]}>{licao!.resumo}</Text>
           </View>
@@ -121,10 +169,13 @@ export function Resumo({
             key={c.id}
             style={[
               estilos.desbloqueio,
-              { borderLeftColor: cores.acento, backgroundColor: cores.acentoFundo }
+              { borderColor: cores.ouro, backgroundColor: cores.ouroFundo }
             ]}
           >
-            <Text style={[estilos.desbloqueioRotulo, { color: cores.acento }]}>CONQUISTA</Text>
+            <View style={estilos.linhaRotulo}>
+              <Trophy size={14} weight="fill" color={cores.ouro} />
+              <Text style={[estilos.desbloqueioRotulo, { color: cores.ouro }]}>CONQUISTA</Text>
+            </View>
             <Text style={[estilos.desbloqueioTitulo, { color: cores.textoForte }]}>{c.nome}</Text>
             <Text style={[estilos.desbloqueioNota, { color: cores.acentoTexto }]}>{c.descricao}</Text>
           </View>
@@ -167,6 +218,15 @@ export function Resumo({
   );
 }
 
+/** A cara e a fala do Devzinho no fim da sessão, pela taxa de acerto de primeira. */
+function humorDaSessao(taxa: number): { expressao: ExpressaoDevzinho; fala: string; pula: boolean } {
+  if (taxa >= 0.9) return { expressao: 'animado', fala: 'Que sessão! Você tá voando!', pula: true };
+  if (taxa >= 0.7) return { expressao: 'feliz', fala: 'Mandou muito bem! Bora manter o ritmo.', pula: true };
+  if (taxa >= 0.4)
+    return { expressao: 'determinado', fala: 'Boa! O que errou volta logo pra fixar.', pula: false };
+  return { expressao: 'determinado', fala: 'Errar faz parte. Amanhã esses cards voltam e você pega!', pula: false };
+}
+
 /** Faz o XP subir na tela em vez de simplesmente aparecer: 22 passos de 40 ms. */
 function useContagem(alvo: number) {
   const [valor, setValor] = useState(0);
@@ -193,7 +253,7 @@ const PECAS = 26;
 
 function Confete({ ativo }: { ativo: boolean }) {
   const cores = useCores();
-  const coresConfete = [cores.acento, cores.textoForte, cores.ok, cores.legenda];
+  const coresConfete = [cores.acento, cores.ouro, cores.acentoSecundario, cores.textoForte, cores.ok];
 
   // Sorteado uma vez: sem o `useMemo`, cada re-renderização daria posições
   // novas e o confete pularia pela tela em vez de cair.
@@ -261,7 +321,21 @@ const estilos = StyleSheet.create({
   confete: { ...StyleSheet.absoluteFillObject, overflow: 'hidden', zIndex: 1 },
   peca: { position: 'absolute', top: 0 },
 
-  heroi: { flexDirection: 'row', alignItems: 'flex-end', gap: 12, marginTop: 12 },
+  flex: { flex: 1 },
+  festa: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: espaco.lg },
+  festaBalao: { flex: 1 },
+  raio: { marginBottom: 12 },
+  linhaRotulo: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  nivelNovo: {
+    marginTop: espaco.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espaco.md,
+    padding: espaco.md,
+    borderWidth: 2,
+    borderRadius: raio.lg
+  },
+  heroi: { flexDirection: 'row', alignItems: 'flex-end', gap: 8, marginTop: 12 },
   xp: { ...tipo.heroiXp },
   unidade: { ...tipo.monoForte, fontFamily: tipo.codigo.fontFamily, paddingBottom: espaco.md },
 
@@ -270,7 +344,8 @@ const estilos = StyleSheet.create({
 
   desbloqueio: {
     marginTop: margemTela,
-    borderLeftWidth: tamanhos.trilho,
+    borderWidth: 1.5,
+    borderRadius: raio.lg,
     paddingVertical: 16,
     paddingHorizontal: 18
   },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { Anel } from "@/componentes/Anel";
+import { Devzinho } from "@/componentes/Devzinho";
 import { Botao } from "@/componentes/Botao";
 import { SeletorNivel } from "@/componentes/SeletorNivel";
 import { TesteDeNivel } from "@/componentes/TesteDeNivel";
@@ -69,7 +69,7 @@ export default function TesteNivel() {
       showsVerticalScrollIndicator={false}
     >
       <View style={estilos.marca}>
-        <Anel tamanho={38} corFundo={cores.fundo} />
+        <Devzinho tamanho={64} expressao="pensando" item="notebook" />
         <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
       </View>
 

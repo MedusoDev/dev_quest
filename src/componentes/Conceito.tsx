@@ -12,6 +12,7 @@ import { useCores } from "@/dados/TemaContexto";
 import { BlocoCodigo } from "./BlocoCodigo";
 import { Botao } from "./Botao";
 import { Rotulo, TextoRico } from "./basicos";
+import { DevzinhoFala } from './BalaoFala';
 
 /**
  * A tela que ensina antes de testar.
@@ -48,6 +49,14 @@ export function Conceito({
         contentContainerStyle={estilos.conteudo}
         showsVerticalScrollIndicator={false}
       >
+        <DevzinhoFala
+          texto="Assunto novo! Lê com calma que daqui a pouco eu te pergunto."
+          expressao="determinado"
+          item="notebook"
+          tamanho={78}
+          estilo={estilos.fala}
+        />
+
         <Rotulo cor={cores.acento}>
           {passo ?? `${siglaLinguagem[licao.linguagem]} · conceito`}
         </Rotulo>
@@ -88,10 +97,11 @@ const estilos = StyleSheet.create({
   tela: { flex: 1 },
   conteudo: {
     paddingHorizontal: margemTela,
-    paddingTop: topoConteudo,
+    paddingTop: topoConteudo - 14,
     paddingBottom: espaco.xl,
   },
 
+  fala: { marginBottom: espaco.lg, marginLeft: -8 },
   titulo: { ...tipo.titulo, marginTop: espaco.sm },
   resumo: { ...tipo.notaMono, marginTop: 12 },
 
