@@ -21,7 +21,7 @@ import { useMovimentoReduzido } from './movimento';
  *
  * ── DEPOIS DE RESPONDER ───────────────────────────────────────────────────
  *
- * As alternativas **não somem e não embaralham**. A certa acende no acento, a
+ * As alternativas **não somem e não embaralham**. A certa acende no verde, a
  * escolhida errada fica vermelha, e as outras apagam. A pessoa precisa comparar
  * o que escolheu com o que era certo, lado a lado, sem a tela se reorganizar
  * embaixo dela.
@@ -67,9 +67,10 @@ function aparenciaDe(cores: Paleta): Record<Estado, Aparencia> {
       texto: cores.textoForte
     },
     certa: {
-      fundo: cores.acentoFundo,
-      borda: cores.acento,
-      letra: cores.acento,
+      // Verde do acerto, num véu translúcido que funciona nos dois temas.
+      fundo: 'rgba(46,212,122,0.12)',
+      borda: cores.ok,
+      letra: cores.ok,
       texto: cores.textoForte
     },
     errada: {

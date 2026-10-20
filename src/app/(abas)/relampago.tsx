@@ -13,6 +13,7 @@ import type { Conquista } from '@/nucleo/gamificacao';
 import { Alternativa } from '@/componentes/Alternativa';
 import { BlocoCodigo } from '@/componentes/BlocoCodigo';
 import { Botao } from '@/componentes/Botao';
+import { DevzinhoFala } from '@/componentes/BalaoFala';
 import { corDoNivel, ReguaMetrica, Rotulo, TextoRico, Trilho, rotuloDoNivel } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
 
@@ -139,6 +140,22 @@ export default function Relampago() {
     return (
       <TelaAba>
         <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+          <DevzinhoFala
+            texto={
+              !acabou
+                ? 'Desafio relâmpago! 60 segundos, quantos cards você acerta?'
+                : fecho?.recorde
+                  ? `RECORDE NOVO! ${acertos} cards. Você é rápido demais!`
+                  : acertos > 0
+                    ? `${acertos} acerto${acertos === 1 ? '' : 's'}! Bora tentar bater o recorde?`
+                    : 'Esse foi só o aquecimento. De novo?'
+            }
+            expressao={!acabou ? 'determinado' : fecho?.recorde ? 'animado' : acertos > 0 ? 'feliz' : 'surpreso'}
+            item="varinha"
+            tamanho={88}
+            reacao={acabou && fecho?.recorde ? { tipo: 'pulo', chave: pontos } : null}
+            estilo={estilos.fala}
+          />
           <Rotulo cor={cores.acento}>relâmpago</Rotulo>
           <Text style={[estilos.titulo, { color: cores.textoForte }]}>
             {acabou ? `${pontos} pontos` : '60 segundos, fora do ciclo'}
@@ -150,7 +167,7 @@ export default function Relampago() {
           </Text>
 
           <View style={estilos.relogio}>
-            <Text style={[estilos.numeroGigante, { color: cores.textoForte }]}>
+            <Text style={[estilos.numeroGigante, { color: acabou ? cores.ouro : cores.textoForte }]}>
               {acabou ? acertos : DURACAO}
             </Text>
             <Text style={[estilos.unidade, { color: cores.legenda }]}>{acabou ? 'cards' : 's'}</Text>
@@ -163,7 +180,7 @@ export default function Relampago() {
           </View>
 
           {fecho?.recorde && (
-            <Text style={[estilos.recorde, { color: cores.acento }]}>recorde pessoal novo</Text>
+            <Text style={[estilos.recorde, { color: cores.ouro }]}>recorde pessoal novo!</Text>
           )}
           {fecho?.conquistas.map((c) => (
             <Text key={c.id} style={[estilos.recorde, { color: cores.acento }]}>{`conquista: ${c.nome}`}</Text>
@@ -264,6 +281,7 @@ const estilos = StyleSheet.create({
     paddingBottom: espaco.xl
   },
 
+  fala: { marginBottom: espaco.lg, marginLeft: -6 },
   titulo: { ...tipo.titulo, marginTop: espaco.sm },
   nota: { ...tipo.notaMono, marginTop: 12 },
 

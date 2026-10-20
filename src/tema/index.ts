@@ -2,8 +2,10 @@
  * Fichas de design do DevQuest.
  *
  * O app tem tema claro e escuro (`escuro` é o padrão) — ver `tema/temas.ts`.
- * Cantos são arredondados (`raio`) e botões cheios levam sombra; o acento
- * principal é o azul `#3157D5`, com um ciano secundário para realces.
+ * A identidade é a do mascote, o **Devzinho**: azul-marinho profundo, azul
+ * `#1E90FF` como acento, ciano `#4DD0FF` para realces e dourado `#FFC107`
+ * para tudo que é recompensa (XP, sequência, lição concluída, conquista).
+ * Cantos arredondados (`raio`) e botões "de jogo", com degrau embaixo.
  *
  * Regra da casa: nenhuma cor, espaçamento ou tamanho de fonte escrito solto
  * numa tela. Tudo sai daqui.
@@ -16,51 +18,54 @@ import type { Paleta } from './temas';
 /* ──────────────────────────── cores ────────────────────────────── */
 
 export let cores: Paleta = {
-  /** Fundo de todas as telas. Azul-marinho escuro. */
-  fundo: '#131B2C',
-  /** Campo de formulário, alternativa não escolhida. */
-  superficie: '#1C2638',
+  /** Fundo de todas as telas. O azul-marinho do Devzinho. */
+  fundo: '#0B1630',
+  /** Cartão, campo de formulário, alternativa não escolhida. */
+  superficie: '#14254A',
   /** Régua, borda e trilho de barra. */
-  linha: '#2A3548',
+  linha: '#24396A',
 
-  /** Azul: o acento primário do app. */
-  acento: '#3157D5',
+  /** Azul #1E90FF: o acento primário — ação e progresso. */
+  acento: '#1E90FF',
   /** Fundo do bloco de código e do cartão da diária. */
-  acentoFundo: '#0F1830',
+  acentoFundo: '#0E1F45',
   /** Borda dentro de área com `acentoFundo`. */
-  acentoLinha: '#2A4180',
+  acentoLinha: '#1F4E9E',
   /** Texto secundário sobre `acentoFundo`. */
-  acentoTexto: '#8AA0D6',
+  acentoTexto: '#8DB8F0',
   /** Ciano: acento secundário — realces, ícones e links de segundo plano. */
-  acentoSecundario: '#4CC2FF',
+  acentoSecundario: '#4DD0FF',
+  /** Dourado: recompensa — XP, sequência, lição concluída, conquista. */
+  ouro: '#FFC107',
+  ouroFundo: '#2B2615',
 
   /** Números e títulos. */
-  textoForte: '#F4F7FB',
+  textoForte: '#FFFFFF',
   /** Corpo. */
-  texto: '#D7DEE9',
+  texto: '#DCE6F7',
   /** Corpo secundário. */
-  textoFraco: '#9AA7BB',
+  textoFraco: '#A3B4D3',
   /** Rótulos mono, métricas, notas. */
-  legenda: '#7C879C',
+  legenda: '#7F95BC',
   /** Aba inativa, item "em breve". */
-  desativado: '#4B5568',
+  desativado: '#4A5F88',
   /** Letra de alternativa descartada. */
-  desativado2: '#333F52',
+  desativado2: '#2C416C',
 
   erro: '#FF5C70',
-  erroFundo: '#2A1620',
-  erroLinha: '#5A2530',
+  erroFundo: '#2A1428',
+  erroLinha: '#5E2440',
 
-  /** Nível "leve". */
-  ok: '#61D095',
+  /** Acerto, nível "leve". */
+  ok: '#2ED47A',
   /** Força de senha "ok". */
-  atencao: '#FFC857',
+  atencao: '#FFC107',
 
   // Uma cor por nível de dificuldade — as mesmas de cima, nomeadas pelo uso.
-  nivel1: '#61D095',
-  nivel2: '#3157D5',
+  nivel1: '#2ED47A',
+  nivel2: '#1E90FF',
   nivel3: '#FF5C70',
-  varredura: 'rgba(49,87,213,0.35)',
+  varredura: 'rgba(77,208,255,0.35)',
   barraStatus: 'light' as const
 } as const;
 
@@ -86,7 +91,7 @@ export function aplicarPaletaTema(paleta: Paleta) {
 }
 
 /** A linha de varredura que desce no cartão da diária. */
-export let varredura = 'rgba(49,87,213,0.35)';
+export let varredura = 'rgba(77,208,255,0.35)';
 
 /**
  * Cada linguagem tem uma cor, e ela é sempre a mesma em todo o app.
@@ -194,14 +199,15 @@ export const tamanhos = {
  * No Android, pedir `fontWeight: '700'` faz o sistema inventar um negrito
  * sintético borrado, diferente do desenho.
  *
- * Duas famílias, sem exceção: Fira Code para número, título e corpo;
+ * Duas famílias, sem exceção: Nunito (a letra arredondada do Devzinho) para
+ * número, título, botão e corpo;
  * JetBrains Mono para todo rótulo, toda métrica e todo código.
  */
 export const fontes = {
-  corpo: 'FiraCode_400Regular',
-  medio: 'FiraCode_500Medium',
-  semi: 'FiraCode_600SemiBold',
-  forte: 'FiraCode_700Bold',
+  corpo: 'Nunito_600SemiBold',
+  medio: 'Nunito_700Bold',
+  semi: 'Nunito_800ExtraBold',
+  forte: 'Nunito_900Black',
 
   mono: 'JetBrainsMono_400Regular',
   monoMedio: 'JetBrainsMono_500Medium',

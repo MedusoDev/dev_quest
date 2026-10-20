@@ -9,7 +9,7 @@ import { Platform } from 'react-native';
  * e decide, em runtime, qual paleta entregar.
  *
  *   claro  — fundo quase branco, acento azul
- *   escuro — fundo azul-marinho escuro, acento azul (tema padrão)
+ *   escuro — azul-marinho do Devzinho, acento azul e dourado (tema padrão)
  */
 
 export type IdTema = 'claro' | 'escuro';
@@ -25,6 +25,10 @@ export type Paleta = {
   acentoTexto: string;
   /** Acento ciano secundário — realces, ícones e links de segundo plano. */
   acentoSecundario: string;
+  /** Dourado da recompensa: XP, sequência, lição concluída, conquista. */
+  ouro: string;
+  /** Fundo atrás de algo dourado. */
+  ouroFundo: string;
   textoForte: string;
   texto: string;
   textoFraco: string;
@@ -47,57 +51,61 @@ export type Paleta = {
 
 /** TEMA CLARO — fundo quase branco, acento azul. Espelha o tema escuro. */
 const claro: Paleta = {
-  fundo: '#F4F7FB',
+  fundo: '#F2F6FD',
   superficie: '#FFFFFF',
-  linha: '#E1E6EE',
-  acento: '#3157D5',
-  acentoFundo: '#EEF2FC',
-  acentoLinha: '#C7D3F5',
-  acentoTexto: '#5670B0',
-  acentoSecundario: '#1D8FCC',
-  textoForte: '#131B2C',
-  texto: '#2B3446',
-  textoFraco: '#5C6B82',
-  legenda: '#7C8AA0',
-  desativado: '#AAB4C4',
-  desativado2: '#C9D0DC',
+  linha: '#DCE5F3',
+  acento: '#1877E6',
+  acentoFundo: '#EAF3FF',
+  acentoLinha: '#B9D6FA',
+  acentoTexto: '#4D74AE',
+  acentoSecundario: '#0FA3D8',
+  ouro: '#E0A100',
+  ouroFundo: '#FFF6DA',
+  textoForte: '#0B1E3A',
+  texto: '#26375A',
+  textoFraco: '#5A6B8C',
+  legenda: '#7A8AA8',
+  desativado: '#AAB7CC',
+  desativado2: '#CBD5E4',
   erro: '#D6304B',
   erroFundo: '#FDECEF',
   erroLinha: '#F5C6CE',
-  ok: '#1F9E64',
-  atencao: '#B8860B',
-  nivel1: '#1F9E64',
-  nivel2: '#3157D5',
+  ok: '#1AA563',
+  atencao: '#C98A00',
+  nivel1: '#1AA563',
+  nivel2: '#1877E6',
   nivel3: '#D6304B',
-  varredura: 'rgba(49,87,213,0.35)',
+  varredura: 'rgba(24,119,230,0.30)',
   barraStatus: 'dark'
 };
 
-/** TEMA ESCURO — a identidade nova do DevQuest, valor por valor. */
+/** TEMA ESCURO — a identidade do Devzinho: azul-marinho, azul #1E90FF e dourado. */
 const escuro: Paleta = {
-  fundo: '#131B2C',
-  superficie: '#1C2638',
-  linha: '#2A3548',
-  acento: '#3157D5',
-  acentoFundo: '#0F1830',
-  acentoLinha: '#2A4180',
-  acentoTexto: '#8AA0D6',
-  acentoSecundario: '#4CC2FF',
-  textoForte: '#F4F7FB',
-  texto: '#D7DEE9',
-  textoFraco: '#9AA7BB',
-  legenda: '#7C879C',
-  desativado: '#4B5568',
-  desativado2: '#333F52',
+  fundo: '#0B1630',
+  superficie: '#14254A',
+  linha: '#24396A',
+  acento: '#1E90FF',
+  acentoFundo: '#0E1F45',
+  acentoLinha: '#1F4E9E',
+  acentoTexto: '#8DB8F0',
+  acentoSecundario: '#4DD0FF',
+  ouro: '#FFC107',
+  ouroFundo: '#2B2615',
+  textoForte: '#FFFFFF',
+  texto: '#DCE6F7',
+  textoFraco: '#A3B4D3',
+  legenda: '#7F95BC',
+  desativado: '#4A5F88',
+  desativado2: '#2C416C',
   erro: '#FF5C70',
-  erroFundo: '#2A1620',
-  erroLinha: '#5A2530',
-  ok: '#61D095',
-  atencao: '#FFC857',
-  nivel1: '#61D095',
-  nivel2: '#3157D5',
+  erroFundo: '#2A1428',
+  erroLinha: '#5E2440',
+  ok: '#2ED47A',
+  atencao: '#FFC107',
+  nivel1: '#2ED47A',
+  nivel2: '#1E90FF',
   nivel3: '#FF5C70',
-  varredura: 'rgba(49,87,213,0.35)',
+  varredura: 'rgba(77,208,255,0.35)',
   barraStatus: 'light'
 };
 

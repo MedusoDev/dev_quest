@@ -13,7 +13,7 @@
     "android": {
       "package": "com.devquest.app",
       "adaptiveIcon": {
-        "backgroundColor": "#131B2C",
+        "backgroundColor": "#0B1630",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
@@ -28,9 +28,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#131B2C",
+          "backgroundColor": "#0B1630",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 96
+          "imageWidth": 160
         }
       ],
       "expo-sqlite",
@@ -38,7 +38,7 @@
       [
         "expo-notifications",
         {
-          "color": "#3157D5"
+          "color": "#1E90FF"
         }
       ]
     ],

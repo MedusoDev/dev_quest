@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { CaretDown, CaretUp, X } from "phosphor-react-native";
 
-import { Anel } from "@/componentes/Anel";
+import { CORES_NIVEL, Devzinho } from "@/componentes/Devzinho";
 import { Rotulo } from "@/componentes/basicos";
 import { Botao } from "@/componentes/Botao";
 import { marcarIntroducaoVista } from "@/dados/apresentacao";
@@ -12,6 +12,7 @@ import { useCores } from "@/dados/TemaContexto";
 import {
   espaco,
   margemTela,
+  fontes,
   raio,
   tamanhos,
   tipo,
@@ -44,8 +45,8 @@ type Passo = {
 const PASSOS: Passo[] = [
   {
     destaque: "logo",
-    titulo: "o que é Ouroboros",
-    texto: "Ouroboros é a cobra que morde o próprio rabo — um símbolo antigo de algo que nunca para de girar. Aqui é o nome do seu ciclo de estudo: você aprende um pouco, revisa o que já viu, e volta sempre um pouco mais forte. Vem ver como funciona.",
+    titulo: "oi, eu sou o Devzinho!",
+    texto: "Sou um mago programador e vou te acompanhar nessa jornada. Aqui você aprende um pouco por dia, revisa o que já viu e volta sempre um pouco mais forte — e eu evoluo junto com você, nível por nível. Vem ver como funciona!",
     balaoEmbaixo: true,
   },
   {
@@ -113,7 +114,7 @@ export default function Introducao() {
       {/* ── topo ──────────────────────────────────────────────── */}
       <View style={estilos.topo}>
         <View style={estilos.marca}>
-          <Anel tamanho={30} corFundo={cores.fundo} />
+          <Devzinho tamanho={30} aura={false} flutuar={false} item="nenhum" />
           <Text style={[estilos.nomeMarca, { color: cores.acento }]}>DEVQUEST</Text>
         </View>
 
@@ -192,8 +193,13 @@ function Balao({
           { borderColor: cores.acentoLinha, backgroundColor: cores.acentoFundo },
         ]}
       >
-        <Rotulo cor={cores.acento}>{titulo}</Rotulo>
-        <Text style={[estilos.balaoTexto, { color: cores.texto }]}>{texto}</Text>
+        <View style={estilos.balaoLinha}>
+          <Devzinho tamanho={46} aura={false} flutuar={false} item="nenhum" expressao="feliz" />
+          <View style={estilos.balaoColuna}>
+            <Rotulo cor={cores.acento}>{titulo}</Rotulo>
+            <Text style={[estilos.balaoTexto, { color: cores.texto }]}>{texto}</Text>
+          </View>
+        </View>
       </View>
       {seta === "baixo" && <CaretDown size={12} color={cores.acento} weight="bold" />}
     </View>
@@ -207,7 +213,11 @@ function MockLogo() {
 
   return (
     <View style={estilos.mockLogo}>
-      <Anel tamanho={84} corFundo={cores.fundo} />
+      <Devzinho tamanho={150} item="varinha" expressao="feliz" />
+      <Text style={estilos.mockLogoTexto}>
+        <Text style={{ color: cores.textoForte }}>DEV</Text>
+        <Text style={{ color: cores.acento }}>QUEST</Text>
+      </Text>
     </View>
   );
 }
@@ -223,17 +233,12 @@ function MockHoje({ destaque }: { destaque: Destaque }) {
     <View style={estilos.mockTela}>
       <View style={[estilos.mockCabecalho, apagado("cabecalho")]}>
         <View style={estilos.mockFlex}>
-          <Text style={[estilos.mockRank, { color: cores.textoForte }]}>SERPENTE</Text>
+          <Text style={[estilos.mockRank, { color: CORES_NIVEL[2] }]}>NV 2 · APRENDIZ</Text>
           <View style={[estilos.mockTrilhoXp, { backgroundColor: cores.linha }]}>
             <View style={[estilos.mockTrilhoXpPreenchido, { backgroundColor: cores.acento }]} />
           </View>
         </View>
-        <View
-          style={[
-            estilos.mockAvatar,
-            { borderColor: cores.linha, backgroundColor: cores.superficie },
-          ]}
-        />
+        <Devzinho tamanho={34} aura={false} flutuar={false} item="nenhum" expressao="feliz" />
       </View>
 
       <View
@@ -249,12 +254,12 @@ function MockHoje({ destaque }: { destaque: Destaque }) {
           <Text style={[estilos.mockCards, { color: cores.textoForte }]}>cards</Text>
         </View>
         <View style={[estilos.mockBotaoCartao, { backgroundColor: cores.acento }]}>
-          <Text style={[estilos.mockBotaoCartaoTexto, { color: cores.acentoFundo }]}>Começar</Text>
+          <Text style={[estilos.mockBotaoCartaoTexto, { color: "#FFFFFF" }]}>Começar</Text>
         </View>
       </View>
 
       <View style={[estilos.mockSecao, apagado("sequencia")]}>
-        <Text style={[estilos.mockSequenciaNumero, { color: cores.acento }]}>12</Text>
+        <Text style={[estilos.mockSequenciaNumero, { color: cores.ouro }]}>12</Text>
         <View style={estilos.mockSemana}>
           {[1, 1, 1, 1, 0, 0, 0].map((feito, i) => (
             <View
@@ -262,7 +267,7 @@ function MockHoje({ destaque }: { destaque: Destaque }) {
               style={[
                 estilos.mockCelula,
                 { backgroundColor: cores.linha },
-                feito ? { backgroundColor: cores.acento } : null,
+                feito ? { backgroundColor: cores.ouro } : null,
               ]}
             />
           ))}
@@ -378,7 +383,8 @@ const estilos = StyleSheet.create({
 
   moldura: {
     width: LARGURA_MOCK,
-    borderWidth: tamanhos.linha,
+    borderWidth: 1.5,
+    borderRadius: raio.lg,
     padding: espaco.sm,
     overflow: "hidden",
   },
@@ -386,21 +392,25 @@ const estilos = StyleSheet.create({
   balaoBloco: { width: "100%", alignItems: "center", gap: 2 },
   balao: {
     width: "100%",
-    borderWidth: tamanhos.linha,
+    borderWidth: 1.5,
+    borderRadius: raio.lg,
     padding: espaco.md,
     gap: espaco.xs,
   },
+  balaoLinha: { flexDirection: "row", alignItems: "flex-start", gap: espaco.sm },
+  balaoColuna: { flex: 1, gap: espaco.xs },
   balaoTexto: { ...tipo.corpoMenor, lineHeight: 20 },
 
   rodape: { gap: espaco.lg },
   pontos: { flexDirection: "row", gap: espaco.sm, justifyContent: "center" },
-  ponto: { width: 22, height: tamanhos.trilho },
+  ponto: { width: 22, height: 6, borderRadius: 3 },
 
   mockLogo: {
-    height: 180,
+    height: 230,
     alignItems: "center",
     justifyContent: "center",
   },
+  mockLogoTexto: { fontFamily: fontes.forte, fontSize: 30, letterSpacing: 1, marginTop: 4 },
 
   /* ── réplica da tela Hoje, em miniatura ─────────────────────── */
   mockTela: { gap: espaco.sm },
@@ -446,7 +456,7 @@ const estilos = StyleSheet.create({
   mockSecao: { padding: espaco.xs, gap: espaco.xs },
   mockSequenciaNumero: { ...tipo.metrica, fontSize: 22 },
   mockSemana: { flexDirection: "row", gap: 3 },
-  mockCelula: { flex: 1, height: 10 },
+  mockCelula: { flex: 1, height: 10, borderRadius: 3 },
 
   mockLinhaTrilha: { flexDirection: "row", alignItems: "center", gap: espaco.sm },
   mockSigla: { ...tipo.rotuloCelula, width: 20 },

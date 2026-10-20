@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
-import { ArrowDown, ArrowUp } from 'phosphor-react-native';
+import { ArrowDown, ArrowUp, Crown } from 'phosphor-react-native';
 
-import { espaco, margemTela, tamanhos, tipo, topoConteudo } from '@/tema';
+import { espaco, margemTela, raio, tamanhos, tipo, topoConteudo } from '@/tema';
 import { useCores } from '@/dados/TemaContexto';
 import { useConta } from '@/dados/ContaContexto';
 import { buscarLiga, criarLiga, lerLigaGlobal, lerRanking, type Liga } from '@/dados/nuvem';
@@ -12,6 +12,7 @@ import { hoje, somarDias } from '@/nucleo/datas';
 import { Botao } from '@/componentes/Botao';
 import { Regua, Rotulo, Vazio } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
+import { DevzinhoFala } from '@/componentes/BalaoFala';
 
 /**
  * A LIGA — ranking semanal entre amigos.
@@ -93,6 +94,13 @@ export default function TelaLiga() {
     return (
       <TelaAba>
         <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
+          <DevzinhoFala
+            texto="Cada card certo vale XP aqui. Bora subir no ranking?"
+            expressao="determinado"
+            item="varinha"
+            tamanho={84}
+            estilo={estilos.fala}
+          />
           <Rotulo cor={cores.acento}>liga</Rotulo>
           <Text style={[estilos.titulo, { color: cores.textoForte }]}>Top da semana, geral</Text>
           <Text style={[estilos.nota, { color: cores.legenda }]}>
@@ -120,15 +128,7 @@ export default function TelaLiga() {
                     key={pessoa.uid}
                     style={[estilos.linha, { borderTopColor: cores.linha }, euMesmo && { backgroundColor: cores.acentoFundo }]}
                   >
-                    <Text
-                      style={[
-                        estilos.posicao,
-                        { color: cores.legenda },
-                        euMesmo && { color: cores.acento }
-                      ]}
-                    >
-                      {posicao + 1}
-                    </Text>
+                    <Posicao posicao={posicao} euMesmo={euMesmo} />
                     <Text
                       numberOfLines={1}
                       style={[
@@ -182,6 +182,13 @@ export default function TelaLiga() {
     return (
       <TelaAba>
         <ScrollView contentContainerStyle={estilos.conteudo} keyboardShouldPersistTaps="handled">
+          <DevzinhoFala
+            texto="Estudar junto é mais divertido! Cria uma liga e chama a galera."
+            expressao="feliz"
+            item="varinha"
+            tamanho={84}
+            estilo={estilos.fala}
+          />
           <Rotulo cor={cores.acento}>liga</Rotulo>
           <Text style={[estilos.titulo, { color: cores.textoForte }]}>Estude com seus amigos</Text>
           <Text style={[estilos.nota, { color: cores.legenda }]}>
@@ -296,15 +303,7 @@ export default function TelaLiga() {
                     euMesmo && { backgroundColor: cores.acentoFundo }
                   ]}
                 >
-                  <Text
-                    style={[
-                      estilos.posicao,
-                      { color: cores.legenda },
-                      euMesmo && { color: cores.acento }
-                    ]}
-                  >
-                    {posicao + 1}
-                  </Text>
+                  <Posicao posicao={posicao} euMesmo={euMesmo} />
                   <Text
                     numberOfLines={1}
                     style={[
@@ -385,6 +384,29 @@ function faltaParaSegunda(): string {
   return `${Math.floor(horasTotais / 24)}d ${horasTotais % 24}h`;
 }
 
+/** 1º, 2º e 3º ganham medalha; o resto é número. */
+function Posicao({ posicao, euMesmo }: { posicao: number; euMesmo: boolean }) {
+  const cores = useCores();
+  const medalhas = ['#FFC107', '#C9D3E3', '#E08A4F'];
+  const medalha = medalhas[posicao];
+
+  if (medalha) {
+    return (
+      <View style={[estilos.medalha, { backgroundColor: medalha }]}>
+        {posicao === 0 ? (
+          <Crown size={14} weight="fill" color="#5A3D00" />
+        ) : (
+          <Text style={[estilos.medalhaTexto, { color: '#1B2540' }]}>{posicao + 1}</Text>
+        )}
+      </View>
+    );
+  }
+
+  return (
+    <Text style={[estilos.posicao, { color: euMesmo ? cores.acento : cores.legenda }]}>{posicao + 1}</Text>
+  );
+}
+
 const estilos = StyleSheet.create({
   conteudo: {
     paddingHorizontal: margemTela,
@@ -401,14 +423,17 @@ const estilos = StyleSheet.create({
 
   alternador: {
     flexDirection: 'row',
-    borderWidth: tamanhos.linha,
+    borderWidth: 1.5,
+    borderRadius: raio.md,
+    overflow: 'hidden',
     marginTop: espaco.xl
   },
   abaModo: { flex: 1, minHeight: 40, alignItems: 'center', justifyContent: 'center' },
 
   codigo: {
     marginTop: espaco.xl,
-    borderWidth: tamanhos.linha,
+    borderWidth: 1.5,
+    borderRadius: raio.md,
     paddingVertical: espaco.md,
     paddingHorizontal: espaco.md,
     gap: espaco.sm
@@ -419,7 +444,8 @@ const estilos = StyleSheet.create({
   rotuloCampo: { ...tipo.rotuloCampo },
   entrada: {
     minHeight: tamanhos.campo,
-    borderWidth: tamanhos.linha,
+    borderWidth: 1.5,
+    borderRadius: raio.md,
     paddingHorizontal: 15,
     ...tipo.campo
   },
@@ -434,10 +460,20 @@ const estilos = StyleSheet.create({
     paddingVertical: 13,
     paddingHorizontal: espaco.sm,
     marginHorizontal: -espaco.sm,
-    borderTopWidth: tamanhos.linha
+    borderTopWidth: tamanhos.linha,
+    borderRadius: raio.sm
   },
 
-  posicao: { ...tipo.metricaMonoMedia, width: 22 },
+  posicao: { ...tipo.metricaMonoMedia, width: 26, textAlign: 'center' },
+  medalha: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  medalhaTexto: { fontFamily: tipo.botao.fontFamily, fontSize: 13 },
+  fala: { marginBottom: espaco.lg, marginLeft: -6 },
   nome: { ...tipo.tituloItemMenor, flex: 1 },
   xp: { ...tipo.metricaMonoMedia },
   marca: { width: 14, alignItems: 'center', justifyContent: 'center' },

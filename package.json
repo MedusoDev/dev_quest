@@ -6,6 +6,7 @@
     "@expo-google-fonts/fira-code": "^0.4.1",
     "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
     "@expo-google-fonts/jetbrains-mono": "^0.4.1",
+    "@expo-google-fonts/nunito": "^0.4.2",
     "@expo-google-fonts/sora": "^0.4.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~54.0.0",
