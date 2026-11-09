@@ -233,7 +233,7 @@ export const CONQUISTAS: Conquista[] = [
   {
     id: 'primeira-diaria',
     nome: 'O primeiro giro',
-    descricao: 'Conclua sua primeira diária.',
+    descricao: 'Cumpra sua primeira missão do dia.',
     verificar: (p) => p.diarias >= 1
   },
   {

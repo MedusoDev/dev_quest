@@ -69,15 +69,20 @@ export let cores: Paleta = {
   barraStatus: 'light' as const
 } as const;
 
+/**
+ * A COR DE CADA LINGUAGEM — a identidade da trilha dela (sigla, barra, caminho).
+ * Inspiradas nas cores oficiais, ajustadas para ler bem nos dois temas.
+ */
+export function coresDasLinguagens(paleta: Pick<Paleta, 'barraStatus'>) {
+  const escuro = paleta.barraStatus === 'light';
+  return escuro
+    ? { csharp: '#A779FF', java: '#F89820', javascript: '#F7DF1E', python: '#3DDC97', php: '#8C9EFF' }
+    : { csharp: '#7B3FE4', java: '#D9730D', javascript: '#A68B00', python: '#14A06E', php: '#5B6BC9' };
+}
+
 export function aplicarPaletaTema(paleta: Paleta) {
   Object.assign(cores, paleta);
-  Object.assign(coresLinguagem, {
-    csharp: paleta.acento,
-    javascript: paleta.legenda,
-    python: paleta.legenda,
-    java: paleta.legenda,
-    php: paleta.legenda
-  });
+  Object.assign(coresLinguagem, coresDasLinguagens(paleta));
   Object.assign(coresCodigo, {
     palavraChave: paleta.acento,
     texto: paleta.acentoTexto,
@@ -111,11 +116,11 @@ export let coresLinguagem: {
   java: string;
   php: string;
 } = {
-  csharp: cores.acento,
-  javascript: cores.legenda,
-  python: cores.legenda,
-  java: cores.legenda,
-  php: cores.legenda
+  csharp: '#A779FF',
+  javascript: '#F7DF1E',
+  python: '#3DDC97',
+  java: '#F89820',
+  php: '#8C9EFF'
 };
 
 /** A sigla mono que identifica a linguagem numa linha de lista. */

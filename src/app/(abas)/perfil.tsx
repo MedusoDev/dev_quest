@@ -110,7 +110,7 @@ export default function Perfil() {
             </View>
             <Trilho fracao={rank.progresso} cor={corNivel} altura={10} estilo={estilos.barraNivel} />
             <Text style={[tipo.metricaMono, { color: cores.texto, marginTop: 6 }]}>
-              {rank.proximo ? `faltam ${rank.faltam} XP p/ ${rank.proximo.nome}` : "nível máximo!"}
+              {rank.proximo ? `${Math.round(rank.progresso * 100)}% do caminho até ${rank.proximo.nome}` : "nível máximo!"}
             </Text>
           </View>
         </View>

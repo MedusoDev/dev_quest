@@ -212,7 +212,7 @@ function Conteudo({ perfis, eventos }: { perfis: PerfilPublico[]; eventos: Event
       {/* ── evolução por uso ─────────────────────────────────── */}
       <Rotulo estilo={estilos.rotuloSecao}>melhora conforme o uso</Rotulo>
       <Text style={[estilos.notaSecao, { color: cores.legenda }]}>
-        Taxa de acerto média de quem já fez cada quantidade de diárias. Faixas mais altas com
+        Taxa de acerto média de quem já fez cada quantidade de missões do dia. Faixas mais altas com
         acerto maior é sinal de que o app está ensinando de verdade.
       </Text>
       <View>

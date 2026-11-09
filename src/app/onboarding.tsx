@@ -240,7 +240,7 @@ export default function Onboarding() {
         {foco.length > 1 && (
           <Text style={[estilos.avisoFoco, { color: cores.legenda }]}>
             Focar em mais de uma linguagem mistura conceitos diferentes na
-            mesma diária — alguns parecidos, outros não. Dá para focar numa só
+            mesma missão do dia — alguns parecidos, outros não. Dá para focar numa só
             depois, no perfil.
           </Text>
         )}

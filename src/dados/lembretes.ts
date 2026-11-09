@@ -28,7 +28,7 @@ const CHAVE_ID = 'devquest:notificacoes:id:v2';
 const CHAVE_DIA_AGENDADO = 'devquest:notificacoes:dia-agendado:v2';
 
 const INTERVALO_HORAS = 2;
-const TITULO = 'Sua diária está esperando';
+const TITULO = 'Sua missão do dia está esperando';
 const CORPO = 'Ainda não fechou o ciclo de hoje.';
 
 /** Lê se a pessoa ligou as notificações — `false` por padrão, para quem nunca tocou no interruptor. */
