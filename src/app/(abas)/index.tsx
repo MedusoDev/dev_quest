@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowRight, Flame, Lightning, Timer } from 'phosphor-react-native';
+import { ArrowRight, CheckCircle, Flame, Lightning, Sword, Timer, TreasureChest } from 'phosphor-react-native';
 
 import {
   animacao,
+  coresDasLinguagens,
   espaco,
   margemTela,
   raio,
@@ -16,7 +17,7 @@ import {
 import { useCores } from '@/dados/TemaContexto';
 import { useProgresso } from '@/dados/ProgressoContexto';
 import { useConta } from '@/dados/ContaContexto';
-import { linguagens, obterLinguagem, obterLicao, type Licao } from '@/nucleo/conteudo';
+import { licoesDaLinguagem, linguagens, obterLinguagem, obterLicao, type Licao } from '@/nucleo/conteudo';
 import {
   AMOSTRA_MINIMA_NIVEL,
   contarVencidos,
@@ -26,11 +27,10 @@ import {
 } from '@/nucleo/diaria';
 import { metaPara, RANKS, rankPara, recordeSequencia, reguaDaSemana } from '@/nucleo/gamificacao';
 import { NIVEIS_CONHECIMENTO } from '@/nucleo/perfil';
-import { Anel } from '@/componentes/Anel';
 import { Cursor, Rotulo, Trilho } from '@/componentes/basicos';
 import { TelaAba } from '@/componentes/abas';
 import { useMovimentoReduzido, useVarredura } from '@/componentes/movimento';
-import { Devzinho, CORES_NIVEL, nivelDoRank, type ExpressaoDevzinho } from '@/componentes/Devzinho';
+import { Devzinho, DevzinhoAvatar, CORES_NIVEL, nivelDoRank, type ExpressaoDevzinho } from '@/componentes/Devzinho';
 import { DevzinhoFala } from '@/componentes/BalaoFala';
 import { Gradiente } from '@/componentes/Gradiente';
 import { escurecer, tingir } from '@/componentes/Botao';
@@ -52,13 +52,7 @@ import { escurecer, tingir } from '@/componentes/Botao';
  */
 export default function Hoje() {
   const cores = useCores();
-  const coresLinguagem = {
-    csharp: cores.acento,
-    javascript: cores.legenda,
-    python: cores.legenda,
-    java: cores.legenda,
-    php: cores.legenda
-  };
+  const coresLinguagem = coresDasLinguagens(cores);
   const router = useRouter();
   const reduzido = useMovimentoReduzido();
 
@@ -106,32 +100,14 @@ export default function Hoje() {
   }
   const recorde = recordeSequencia(progresso.historico);
 
-  // Sem contagem parcial no banco, "restam" é tudo ou nada: a diária de hoje
+  // Sem contagem parcial no banco, "restam" é tudo ou nada: a missão de hoje
   // ainda não foi feita, ou já foi. Preferi isso a inventar um número que o
   // app não sabe — o cartão mentiria assim que alguém saísse no meio.
-  // Uma linha por **trilha**, não por linguagem: a sigla à esquerda já diz a
-  // linguagem, e repetir "C#" no título deixaria a linha dizendo a mesma coisa
-  // duas vezes. O que a pessoa quer ler ali é onde ela parou — "Fundamentos".
-  const trilhas = linguagens.flatMap((linguagem) =>
-    linguagem.trilhas
-      .filter((trilha) => !trilha.emBreve)
-      .map((trilha) => {
-        const licoes = trilha.licoes.map(obterLicao).filter((l): l is Licao => l !== null);
-
-        return {
-          chave: `${linguagem.id}-${trilha.id}`,
-          sigla: siglaLinguagem[linguagem.id],
-          cor: coresLinguagem[linguagem.id],
-          titulo: trilha.titulo,
-          total: licoes.length,
-          feitas: licoes.filter((l) => licoesConcluidas.has(l.id)).length
-        };
-      })
-  );
-
   const rank = rankPara(progresso.xp);
   const indiceRank = RANKS.findIndex((r) => r.nome === rank.atual.nome);
   const nivel = nivelDoRank(indiceRank);
+  const corNivel = CORES_NIVEL[nivel];
+  const percentualNivel = Math.round(rank.progresso * 100);
   const fala = falaDoDevzinho({
     nome: perfil?.nome ?? 'dev',
     sequencia: progresso.sequencia,
@@ -147,51 +123,128 @@ export default function Hoje() {
       ? `${vencidos} voltando do ciclo`
       : 'tudo em dia';
 
+  // Só as linguagens que a pessoa escolheu como foco — a lista inteira de
+  // trilhas de todas as linguagens era ruído. Sem foco, mostra todas.
+  const idsFoco = perfil?.foco.length ? perfil.foco : linguagens.map((l) => l.id);
+  const jornadas = idsFoco
+    .map((id) => {
+      const linguagem = obterLinguagem(id);
+      if (!linguagem) return null;
+      const licoes = licoesDaLinguagem(id);
+      const feitas = licoes.filter((l) => licoesConcluidas.has(l.id)).length;
+      return {
+        id,
+        nome: linguagem.nome,
+        sigla: siglaLinguagem[id],
+        cor: coresLinguagem[id],
+        total: licoes.length,
+        feitas,
+        proxima: licoes.find((l) => !licoesConcluidas.has(l.id)) ?? null,
+        unidades: linguagem.trilhas
+          .filter((trilha) => !trilha.emBreve)
+          .map((trilha) => {
+            const daTrilha = trilha.licoes.map(obterLicao).filter((l): l is Licao => l !== null);
+            return {
+              id: trilha.id,
+              titulo: trilha.titulo,
+              total: daTrilha.length,
+              feitas: daTrilha.filter((l) => licoesConcluidas.has(l.id)).length
+            };
+          })
+      };
+    })
+    .filter((j): j is NonNullable<typeof j> => j !== null);
+  const larguraJornada = jornadas.length > 1 ? 300 : undefined;
+
   return (
     <TelaAba>
       <ScrollView contentContainerStyle={estilos.conteudo} showsVerticalScrollIndicator={false}>
-        {/* ── HUD: sequência, XP e nível ─────────────────────────── */}
-        <View style={estilos.hud}>
-          <Pressable
-            accessibilityLabel={`Sequência: ${progresso.sequencia} dias. Toque para ver o perfil.`}
-            accessibilityRole="button"
-            onPress={() => router.push('/perfil')}
-            style={[estilos.pilula, { backgroundColor: cores.superficie, borderColor: cores.linha }]}
-          >
+        {/* ── HUD: sequência, XP e nível, juntos numa barra só ──── */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Sequência de ${progresso.sequencia} dias, ${progresso.xp} XP, nível ${nivel} ${rank.atual.nome}. Toque para ver o perfil.`}
+          onPress={() => router.push('/perfil')}
+          style={({ pressed }) => [
+            estilos.hud,
+            { backgroundColor: cores.superficie, borderColor: cores.linha },
+            pressed && estilos.pressionado
+          ]}
+        >
+          <View style={estilos.hudItem}>
             <Chama acesa={progresso.sequencia > 0} reduzido={reduzido} />
-            <Text style={[estilos.pilulaNumero, { color: progresso.sequencia > 0 ? cores.ouro : cores.desativado }]}>
+            <Text style={[estilos.hudNumero, { color: progresso.sequencia > 0 ? cores.ouro : cores.desativado }]}>
               {progresso.sequencia}
             </Text>
-          </Pressable>
-
-          <View style={[estilos.pilula, { backgroundColor: cores.superficie, borderColor: cores.linha }]}>
-            <Lightning size={20} weight="fill" color={cores.acentoSecundario} />
-            <Text style={[estilos.pilulaNumero, { color: cores.acentoSecundario }]}>{progresso.xp}</Text>
           </View>
-
-          <View style={estilos.flex} />
-
-          <Pressable
-            accessibilityLabel={`Nível ${nivel}: ${rank.atual.nome}. Toque para ver o perfil.`}
-            accessibilityRole="button"
-            onPress={() => router.push('/perfil')}
-            style={[estilos.pilula, { backgroundColor: cores.superficie, borderColor: CORES_NIVEL[nivel] }]}
-          >
-            <Text style={[estilos.pilulaNivel, { color: CORES_NIVEL[nivel] }]}>{`NV ${nivel}`}</Text>
-            <Text style={[estilos.pilulaRank, { color: cores.textoForte }]}>{rank.atual.nome}</Text>
-          </Pressable>
-        </View>
+          <View style={[estilos.hudDivisor, { backgroundColor: cores.linha }]} />
+          <View style={estilos.hudItem}>
+            <Lightning size={20} weight="fill" color={cores.acentoSecundario} />
+            <Text style={[estilos.hudNumero, { color: cores.acentoSecundario }]}>{progresso.xp}</Text>
+          </View>
+          <View style={[estilos.hudDivisor, { backgroundColor: cores.linha }]} />
+          <View style={[estilos.hudItem, estilos.hudNivel]}>
+            <DevzinhoAvatar tamanho={28} nivel={nivel} />
+            <View>
+              <Text style={[estilos.hudNivelRotulo, { color: corNivel }]}>{`NV ${nivel}`}</Text>
+              <Text numberOfLines={1} style={[estilos.hudNivelNome, { color: cores.textoForte }]}>
+                {rank.atual.nome}
+              </Text>
+            </View>
+          </View>
+        </Pressable>
 
         {/* ── o Devzinho fala ──────────────────────────────────── */}
         <DevzinhoFala
           texto={fala.texto}
           expressao={fala.expressao}
           nivel={nivel}
-          tamanho={100}
+          tamanho={112}
           estilo={estilos.fala}
         />
 
-        {/* ── o cartão da diária ────────────────────────────────── */}
+        {/* ── sequência: a primeira coisa da tela ───────────────── */}
+        <View style={[estilos.cartaoSequencia, { backgroundColor: cores.superficie, borderColor: cores.linha }]}>
+          <View style={estilos.secaoTopo}>
+            <Rotulo>sequência</Rotulo>
+            <Text style={[estilos.notaSecao, { color: cores.legenda }]}>{`recorde ${recorde}`}</Text>
+          </View>
+
+          <View style={estilos.linhaSequencia}>
+            <Text style={[estilos.sequencia, { color: progresso.sequencia > 0 ? cores.ouro : cores.desativado }]}>
+              {progresso.sequencia}
+            </Text>
+            <Text style={[estilos.notaSequencia, { color: cores.legenda }]}>
+              {progresso.sequencia === 1 ? 'dia seguido\n' : 'dias seguidos\n'}
+              {fezDiariaHoje ? 'missão de hoje feita' : 'não quebre hoje'}
+            </Text>
+          </View>
+
+          <View style={estilos.semana}>
+            {semana.map(({ dia, rotulo, feito, ehHoje }) => (
+              <View key={dia} style={estilos.diaSemana}>
+                <View
+                  style={[
+                    estilos.quadradoDia,
+                    { backgroundColor: cores.fundo, borderColor: cores.linha },
+                    feito && { backgroundColor: cores.ouro, borderColor: cores.ouro },
+                    !feito && ehHoje && { borderColor: cores.acento, borderWidth: 2, borderStyle: 'dashed' }
+                  ]}
+                >
+                  {feito ? (
+                    <Flame size={16} weight="fill" color={escurecer(cores.ouro, 0.55)} />
+                  ) : ehHoje ? (
+                    <Flame size={16} weight="bold" color={cores.acento} />
+                  ) : null}
+                </View>
+                <Text style={[estilos.legenda, { color: ehHoje ? cores.acento : cores.desativado }]}>
+                  {ehHoje ? 'HOJE' : rotulo}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* ── a missão do dia ───────────────────────────────────── */}
         <View
           style={[estilos.cartao, { borderColor: cores.acento, backgroundColor: cores.acentoFundo }]}
           onLayout={(e) => setAlturaCartao(e.nativeEvent.layout.height)}
@@ -203,18 +256,13 @@ export default function Hoje() {
           />
 
           <View style={estilos.cartaoTopo}>
-            <Rotulo cor={cores.acento}>
-              {focoMultiplo ? 'diária mista' : 'diária'}
-            </Rotulo>
-            <View style={estilos.chips}>
-              <View style={[estilos.chip, { backgroundColor: cores.fundo }]}>
-                <Timer size={13} weight="bold" color={cores.acentoTexto} />
-                <Text style={[estilos.duracao, { color: cores.acentoTexto }]}>{`${meta.minutos} min`}</Text>
-              </View>
-              <View style={[estilos.chip, { backgroundColor: cores.ouroFundo }]}>
-                <Lightning size={13} weight="fill" color={cores.ouro} />
-                <Text style={[estilos.duracao, { color: cores.ouro }]}>{fezDiariaHoje ? 'feita' : `+${meta.cards * 10} XP`}</Text>
-              </View>
+            <View style={estilos.missaoTitulo}>
+              <Sword size={15} weight="fill" color={cores.acento} />
+              <Rotulo cor={cores.acento}>{focoMultiplo ? 'missão do dia · mista' : 'missão do dia'}</Rotulo>
+            </View>
+            <View style={[estilos.chip, { backgroundColor: cores.fundo }]}>
+              <Timer size={13} weight="bold" color={cores.acentoTexto} />
+              <Text style={[estilos.duracao, { color: cores.acentoTexto }]}>{`${meta.minutos} min`}</Text>
             </View>
           </View>
 
@@ -225,16 +273,12 @@ export default function Hoje() {
               <Text style={[estilos.notaDiaria, { color: cores.acentoTexto }]}>{nota}</Text>
             </View>
             <View style={estilos.flex} />
-            <Anel
-              tamanho={56}
-              progresso={fezDiariaHoje ? 1 : 0}
-              corFundo={cores.acentoFundo}
-            />
+            <Recompensa xp={meta.cards * 10} feita={fezDiariaHoje} reduzido={reduzido} />
           </View>
 
           <View style={estilos.botaoDiariaMoldura}>
             <BotaoDiaria
-              rotulo={fezDiariaHoje ? 'Rever a sessão' : 'Começar'}
+              rotulo={fezDiariaHoje ? 'Rever a sessão' : 'Começar missão'}
               cor={fezDiariaHoje ? cores.ok : cores.acento}
               aoTocar={() => router.push('/sessao')}
               pulsar={!fezDiariaHoje && !reduzido}
@@ -276,10 +320,9 @@ export default function Hoje() {
           </View>
         )}
 
-        {/* ── diárias por linguagem ─────────────────────────────── */}
-        {/* Só aparece com mais de um foco escolhido: com zero ou um, o cartão
-            acima já é exatamente essa única opção. Uma vez feita qualquer
-            diária do dia, as outras contam XP mas não a sequência de novo —
+        {/* ── missão de uma linguagem só ────────────────────────── */}
+        {/* Só aparece com mais de um foco escolhido. Uma vez feita qualquer
+            missão do dia, as outras contam XP mas não a sequência de novo —
             ver `contaComoDiaria` em `app/sessao.tsx`. */}
         {focoMultiplo && (
           <View style={estilos.secao}>
@@ -303,12 +346,10 @@ export default function Hoje() {
                       pressed && estilos.pressionado
                     ]}
                   >
-                    <Text style={[estilos.siglaFoco, { color: coresLinguagem[id] }]}>
-                      {siglaLinguagem[id]}
-                    </Text>
-                    <Text style={[estilos.tituloFoco, { color: cores.textoForte }]}>
-                      {linguagem.nome}
-                    </Text>
+                    <View style={[estilos.siglaCheia, { backgroundColor: coresLinguagem[id] }]}>
+                      <Text style={[estilos.siglaCheiaTexto, { color: cores.fundo }]}>{siglaLinguagem[id]}</Text>
+                    </View>
+                    <Text style={[estilos.tituloFoco, { color: cores.textoForte }]}>{linguagem.nome}</Text>
                     <View style={estilos.flex} />
                     <ArrowRight size={18} color={coresLinguagem[id]} weight="bold" />
                   </Pressable>
@@ -318,51 +359,10 @@ export default function Hoje() {
           </View>
         )}
 
-        {/* ── sequência ─────────────────────────────────────────── */}
-        <View style={estilos.secao}>
-          <View style={estilos.secaoTopo}>
-            <Rotulo>sequência</Rotulo>
-            <Text style={[estilos.notaSecao, { color: cores.legenda }]}>{`recorde ${recorde}`}</Text>
-          </View>
-
-          <View style={estilos.linhaSequencia}>
-            <Text style={[estilos.sequencia, { color: progresso.sequencia > 0 ? cores.ouro : cores.desativado }]}>
-              {progresso.sequencia}
-            </Text>
-            <Text style={[estilos.notaSequencia, { color: cores.legenda }]}>
-              {'dias seguidos\n'}
-              {fezDiariaHoje ? 'feita hoje' : 'não quebre hoje'}
-            </Text>
-          </View>
-
-          <View style={estilos.semana}>
-            {semana.map(({ dia, rotulo, feito, ehHoje }) => (
-              <View key={dia} style={estilos.diaSemana}>
-                <View
-                  style={[
-                    estilos.bolaDia,
-                    { backgroundColor: cores.superficie, borderColor: cores.linha },
-                    feito && { backgroundColor: cores.ouroFundo, borderColor: cores.ouro },
-                    !feito && ehHoje && { borderColor: cores.acento, borderStyle: 'dashed' }
-                  ]}
-                >
-                  <Flame
-                    size={18}
-                    weight={feito ? 'fill' : 'bold'}
-                    color={feito ? cores.ouro : ehHoje ? cores.acento : cores.desativado2}
-                  />
-                </View>
-                <Text style={[estilos.legenda, { color: ehHoje ? cores.acento : cores.desativado }]}>
-                  {ehHoje ? 'HOJE' : rotulo}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* ── evolução: quanto falta para o próximo nível ───────── */}
+        {/* ── evolução: quanto falta para o próximo nível, em % ─── */}
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={`Nível ${nivel}, ${percentualNivel}% do caminho para o próximo.`}
           onPress={() => router.push('/perfil')}
           style={({ pressed }) => [
             estilos.evolucao,
@@ -370,90 +370,146 @@ export default function Hoje() {
             pressed && estilos.pressionado
           ]}
         >
-          <Devzinho tamanho={54} nivel={nivel} item="notebook" flutuar={false} />
+          <DevzinhoAvatar tamanho={52} nivel={nivel} expressao="feliz" />
           <View style={estilos.flex}>
-            <Text style={[estilos.evolucaoTitulo, { color: cores.textoForte }]}>
-              {rank.proximo ? `Rumo a ${rank.proximo.nome}` : 'Você é uma Lenda!'}
-            </Text>
+            <View style={estilos.evolucaoTopo}>
+              <Text style={[estilos.evolucaoTitulo, { color: cores.textoForte }]}>
+                {rank.proximo ? `Rumo a ${rank.proximo.nome}` : 'Você é uma Lenda!'}
+              </Text>
+              <Text style={[estilos.evolucaoPercentual, { color: corNivel }]}>
+                {`${rank.proximo ? percentualNivel : 100}%`}
+              </Text>
+            </View>
             <Trilho
-              fracao={rank.progresso}
-              cor={CORES_NIVEL[nivel]}
+              fracao={rank.proximo ? rank.progresso : 1}
+              altura={12}
+              cor={corNivel}
               duracao={animacao.rank}
               estilo={estilos.barraEvolucao}
             />
             <Text style={[estilos.notaLinha, { color: cores.legenda }]}>
-              {rank.proximo ? `faltam ${rank.faltam} XP · nível ${nivel + 1}` : `${progresso.xp} XP no total`}
+              {rank.proximo ? `nível ${nivel} → ${nivel + 1}` : 'nível máximo'}
             </Text>
           </View>
-          <ArrowRight size={16} color={cores.legenda} weight="bold" />
         </Pressable>
 
-        {/* ── trilhas ───────────────────────────────────────────── */}
+        {/* ── suas trilhas: só as linguagens do foco ────────────── */}
         <View style={estilos.secao}>
-          <Rotulo estilo={estilos.rotuloTrilhas}>trilhas</Rotulo>
-
-          <View style={estilos.listaTrilhas}>
-            {trilhas.map((trilha) => (
-              <Pressable
-                key={trilha.chave}
-                accessibilityRole="button"
-                onPress={() => router.push('/trilhas')}
-                style={({ pressed }) => [
-                  estilos.cartaoTrilha,
-                  { backgroundColor: cores.superficie },
-                  pressed && estilos.pressionado
-                ]}
-              >
-                <View style={[estilos.siglaBadge, { borderColor: trilha.cor }]}>
-                  <Text style={[estilos.sigla, { color: trilha.cor }]}>{trilha.sigla}</Text>
-                </View>
-
-                <View style={estilos.flex}>
-                  <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
-                    {trilha.titulo}
-                  </Text>
-                  <Trilho
-                    fracao={trilha.total ? trilha.feitas / trilha.total : 0}
-                    cor={trilha.cor}
-                    duracao={animacao.rank}
-                    estilo={estilos.barraTrilha}
-                  />
-                </View>
-
-                <Text style={[estilos.contagem, { color: cores.legenda }]}>
-                  {`${trilha.feitas}/${trilha.total}`}
-                </Text>
-              </Pressable>
-            ))}
-
-            {fracos.length > 0 && (
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => router.push('/fracos')}
-                style={({ pressed }) => [
-                  estilos.cartaoTrilha,
-                  { backgroundColor: cores.superficie },
-                  pressed && estilos.pressionado
-                ]}
-              >
-                <View style={[estilos.siglaBadge, { borderColor: cores.erro }]}>
-                  <Text style={[estilos.sigla, { color: cores.erro }]}>!</Text>
-                </View>
-
-                <View style={estilos.flex}>
-                  <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
-                    {`${fracos.length} ponto${fracos.length > 1 ? 's' : ''} fraco${fracos.length > 1 ? 's' : ''}`}
-                  </Text>
-                  <Text style={[estilos.notaLinha, { color: cores.legenda }]} numberOfLines={1}>
-                    {fracos.map((f) => f.card.licaoTitulo).join(' · ')}
-                  </Text>
-                </View>
-
-                <ArrowRight size={14} color={cores.legenda} weight="bold" />
-              </Pressable>
-            )}
-          </View>
+          <Rotulo estilo={estilos.rotuloTrilhas}>suas trilhas</Rotulo>
         </View>
+        <ScrollView
+          horizontal={jornadas.length > 1}
+          scrollEnabled={jornadas.length > 1}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={larguraJornada ? larguraJornada + espaco.sm : undefined}
+          decelerationRate="fast"
+          contentContainerStyle={[estilos.jornadas, jornadas.length > 1 ? estilos.jornadasLinha : null]}
+        >
+          {jornadas.map((j) => {
+            const fracao = j.total ? j.feitas / j.total : 0;
+            return (
+              <Pressable
+                key={j.id}
+                accessibilityRole="button"
+                accessibilityLabel={`Trilha de ${j.nome}, ${Math.round(fracao * 100)}% concluída. Continuar.`}
+                onPress={() => router.push({ pathname: '/trilhas', params: { linguagem: j.id } })}
+                style={({ pressed }) => [
+                  estilos.jornada,
+                  { width: larguraJornada, backgroundColor: cores.superficie, borderColor: j.cor },
+                  pressed && estilos.pressionado
+                ]}
+              >
+                <Gradiente de={cores.superficie} para={tingir(j.cor, cores, 0.78)} />
+                <View style={estilos.jornadaTopo}>
+                  <View style={[estilos.siglaCheia, estilos.siglaGrande, { backgroundColor: j.cor }]}>
+                    <Text style={[estilos.siglaCheiaTexto, { color: cores.fundo }]}>{j.sigla}</Text>
+                  </View>
+                  <View style={estilos.flex}>
+                    <Text style={[estilos.jornadaNome, { color: cores.textoForte }]}>{j.nome}</Text>
+                    <Text style={[estilos.notaLinha, { color: cores.legenda }]}>
+                      {`${j.feitas} de ${j.total} lições`}
+                    </Text>
+                  </View>
+                  <Text style={[estilos.jornadaPercentual, { color: j.cor }]}>{`${Math.round(fracao * 100)}%`}</Text>
+                </View>
+
+                <Trilho fracao={fracao} altura={10} cor={j.cor} duracao={animacao.rank} estilo={estilos.barraJornada} />
+
+                <View style={estilos.unidades}>
+                  {j.unidades.map((u) => {
+                    const completa = u.total > 0 && u.feitas === u.total;
+                    return (
+                      <View
+                        key={u.id}
+                        style={[
+                          estilos.unidade,
+                          { borderColor: completa ? cores.ouro : cores.linha, backgroundColor: completa ? cores.ouroFundo : cores.fundo }
+                        ]}
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={[estilos.unidadeTexto, { color: completa ? cores.ouro : cores.textoFraco }]}
+                        >
+                          {u.titulo}
+                        </Text>
+                        <Text style={[estilos.unidadeConta, { color: completa ? cores.ouro : cores.legenda }]}>
+                          {`${u.feitas}/${u.total}`}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+
+                <View style={[estilos.jornadaRodape, { borderTopColor: cores.linha }]}>
+                  <View style={estilos.flex}>
+                    <Text style={[estilos.proximaRotulo, { color: cores.legenda }]}>
+                      {j.proxima ? 'PRÓXIMA LIÇÃO' : 'TRILHA COMPLETA'}
+                    </Text>
+                    <Text numberOfLines={1} style={[estilos.proximaTitulo, { color: cores.textoForte }]}>
+                      {j.proxima ? j.proxima.titulo : 'Você fechou tudo aqui!'}
+                    </Text>
+                  </View>
+                  <View style={[estilos.continuar, { backgroundColor: j.cor }]}>
+                    <Text style={[estilos.continuarTexto, { color: cores.fundo }]}>
+                      {j.feitas === 0 ? 'Começar' : 'Continuar'}
+                    </Text>
+                    <ArrowRight size={14} weight="bold" color={cores.fundo} />
+                  </View>
+                </View>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+
+        {/* ── pontos fracos ─────────────────────────────────────── */}
+        {fracos.length > 0 && (
+          <View style={estilos.secao}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push('/fracos')}
+              style={({ pressed }) => [
+                estilos.cartaoTrilha,
+                { backgroundColor: cores.superficie },
+                pressed && estilos.pressionado
+              ]}
+            >
+              <View style={[estilos.siglaBadge, { borderColor: cores.erro }]}>
+                <Text style={[estilos.sigla, { color: cores.erro }]}>!</Text>
+              </View>
+
+              <View style={estilos.flex}>
+                <Text style={[estilos.tituloLinha, { color: cores.textoForte }]}>
+                  {`${fracos.length} ponto${fracos.length > 1 ? 's' : ''} fraco${fracos.length > 1 ? 's' : ''}`}
+                </Text>
+                <Text style={[estilos.notaLinha, { color: cores.legenda }]} numberOfLines={1}>
+                  {fracos.map((f) => f.card.licaoTitulo).join(' · ')}
+                </Text>
+              </View>
+
+              <ArrowRight size={14} color={cores.legenda} weight="bold" />
+            </Pressable>
+          </View>
+        )}
       </ScrollView>
     </TelaAba>
   );
@@ -479,7 +535,7 @@ function falaDoDevzinho({
 
   if (fezDiariaHoje) {
     return {
-      texto: `Mandou bem, ${primeiroNome}! Diária feita. ${sequencia > 1 ? `São ${sequencia} dias seguidos!` : 'Volta amanhã pra acender o fogo!'}`,
+      texto: `Mandou bem, ${primeiroNome}! Missão do dia cumprida. ${sequencia > 1 ? `São ${sequencia} dias seguidos!` : 'Volta amanhã pra acender o fogo!'}`,
       expressao: 'animado'
     };
   }
@@ -495,7 +551,51 @@ function falaDoDevzinho({
       expressao: 'determinado'
     };
   }
-  return { texto: `${saudacao}, ${primeiroNome}! Vamos codar? Começa a diária e acende o fogo.`, expressao: 'feliz' };
+  return { texto: `${saudacao}, ${primeiroNome}! Vamos codar? Bora cumprir a missão do dia e acender o fogo!`, expressao: 'feliz' };
+}
+
+/**
+ * A recompensa da missão: um baú dourado que balança de leve chamando o toque,
+ * com o XP embaixo. Feita, vira um check.
+ */
+function Recompensa({ xp, feita, reduzido }: { xp: number; feita: boolean; reduzido: boolean }) {
+  const cores = useCores();
+  const valor = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (feita || reduzido) return;
+    const laco = Animated.loop(
+      Animated.sequence([
+        Animated.delay(1800),
+        ...[-8, 8, -6, 6, -3, 0].map((v) =>
+          Animated.timing(valor, { toValue: v, duration: 70, useNativeDriver: true })
+        )
+      ])
+    );
+    laco.start();
+    return () => laco.stop();
+  }, [feita, reduzido, valor]);
+
+  return (
+    <View style={estilos.recompensa}>
+      <Animated.View
+        style={[
+          estilos.recompensaIcone,
+          { backgroundColor: feita ? cores.ok : cores.ouroFundo, borderColor: feita ? cores.ok : cores.ouro },
+          { transform: [{ rotate: valor.interpolate({ inputRange: [-10, 10], outputRange: ['-10deg', '10deg'] }) }] }
+        ]}
+      >
+        {feita ? (
+          <CheckCircle size={30} weight="fill" color="#FFFFFF" />
+        ) : (
+          <TreasureChest size={30} weight="fill" color={cores.ouro} />
+        )}
+      </Animated.View>
+      <Text style={[estilos.recompensaTexto, { color: feita ? cores.ok : cores.ouro }]}>
+        {feita ? 'feita!' : `+${xp} XP`}
+      </Text>
+    </View>
+  );
 }
 
 /** A chama do HUD: tremula de leve quando a sequência está acesa. */
@@ -594,26 +694,23 @@ const estilos = StyleSheet.create({
   hud: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: espaco.sm,
-    paddingHorizontal: margemTela
-  },
-  pilula: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    height: 38,
-    paddingHorizontal: 12,
-    borderRadius: raio.pill,
+    marginHorizontal: margemTela,
+    height: 52,
+    paddingHorizontal: espaco.md,
+    borderRadius: raio.lg,
     borderWidth: 1.5
   },
-  pilulaNumero: { ...tipo.tituloItem, fontSize: 17 },
-  pilulaNivel: { ...tipo.rotuloCampo, letterSpacing: 1 },
-  pilulaRank: { ...tipo.tituloItemMenor, fontSize: 14 },
+  hudItem: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: espaco.sm },
+  hudNivel: { flex: 1, gap: 8 },
+  hudDivisor: { width: 1.5, height: 24 },
+  hudNumero: { ...tipo.tituloItem, fontSize: 18 },
+  hudNivelRotulo: { ...tipo.rotuloCampo, letterSpacing: 1, fontSize: 10, lineHeight: 12 },
+  hudNivelNome: { ...tipo.tituloItemMenor, fontSize: 14, lineHeight: 17 },
   fala: { marginTop: espaco.md, marginHorizontal: margemTela - 6 },
 
   // ── cartão da diária ─────────────────────────────────────────
   cartao: {
-    marginTop: espaco.sm,
+    marginTop: espaco.md,
     marginHorizontal: margemTela,
     borderWidth: tamanhos.linha,
     overflow: 'hidden',
@@ -634,6 +731,17 @@ const estilos = StyleSheet.create({
     paddingTop: 20
   },
   duracao: { ...tipo.metricaMono },
+  missaoTitulo: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  recompensa: { alignItems: 'center', gap: 4, paddingBottom: 2 },
+  recompensaIcone: {
+    width: 56,
+    height: 56,
+    borderRadius: raio.md,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  recompensaTexto: { ...tipo.metricaMono, fontFamily: tipo.botao.fontFamily, fontSize: 13 },
   chips: { flexDirection: 'row', gap: 6 },
   chip: {
     flexDirection: 'row',
@@ -694,12 +802,19 @@ const estilos = StyleSheet.create({
   sequencia: { ...tipo.metricaGrande },
   notaSequencia: { ...tipo.notaMonoCurta, paddingBottom: 5 },
 
-  semana: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
-  diaSemana: { alignItems: 'center', gap: 6 },
-  bolaDia: {
-    width: 38,
-    height: 38,
-    borderRadius: raio.pill,
+  cartaoSequencia: {
+    marginTop: espaco.md,
+    marginHorizontal: margemTela,
+    padding: espaco.md,
+    borderRadius: raio.lg,
+    borderWidth: 1.5
+  },
+  semana: { flexDirection: 'row', gap: 6, marginTop: 12 },
+  diaSemana: { flex: 1, alignItems: 'center', gap: 6 },
+  quadradoDia: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 8,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center'
@@ -717,8 +832,66 @@ const estilos = StyleSheet.create({
     borderRadius: raio.lg,
     borderWidth: 1.5
   },
+  evolucaoTopo: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
   evolucaoTitulo: { ...tipo.tituloLinha },
-  barraEvolucao: { marginTop: 8 },
+  evolucaoPercentual: { ...tipo.tituloItem, fontSize: 18 },
+  barraEvolucao: { marginTop: 6, marginBottom: 4 },
+
+  siglaCheia: {
+    minWidth: 34,
+    height: 30,
+    paddingHorizontal: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  siglaGrande: { minWidth: 44, height: 44, borderRadius: 12 },
+  siglaCheiaTexto: { fontFamily: tipo.botao.fontFamily, fontSize: 14 },
+
+  jornadas: { paddingHorizontal: margemTela, gap: espaco.sm },
+  jornadasLinha: { flexDirection: 'row' },
+  jornada: {
+    borderRadius: raio.lg,
+    borderWidth: 1.5,
+    padding: espaco.md,
+    overflow: 'hidden'
+  },
+  jornadaTopo: { flexDirection: 'row', alignItems: 'center', gap: espaco.sm },
+  jornadaNome: { ...tipo.tituloItem, fontSize: 18 },
+  jornadaPercentual: { ...tipo.tituloItem, fontSize: 22 },
+  barraJornada: { marginTop: espaco.md },
+  unidades: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: espaco.md },
+  unidade: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: raio.pill,
+    borderWidth: 1.5,
+    maxWidth: '100%'
+  },
+  unidadeTexto: { ...tipo.tituloItemMenor, fontSize: 12, lineHeight: 15, flexShrink: 1 },
+  unidadeConta: { ...tipo.metricaMono, fontSize: 11 },
+  jornadaRodape: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espaco.sm,
+    marginTop: espaco.md,
+    paddingTop: espaco.md,
+    borderTopWidth: 1
+  },
+  proximaRotulo: { ...tipo.rotuloCelula, letterSpacing: 1 },
+  proximaTitulo: { ...tipo.tituloItemMenor, fontSize: 15, marginTop: 2 },
+  continuar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    height: 36,
+    borderRadius: raio.pill
+  },
+  continuarTexto: { fontFamily: tipo.botao.fontFamily, fontSize: 14 },
 
   diariasFoco: { marginTop: 11, gap: espaco.sm },
   cartaoFoco: {

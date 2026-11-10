@@ -23,7 +23,21 @@ import { Devzinho } from '@/componentes/Devzinho';
 | `reacao` | `{ tipo: 'pulo' \| 'tremor', chave }`: muda a `chave` para disparar de novo | `null` |
 | `bloqueado` | silhueta apagada (nível ainda não alcançado) | `false` |
 
-Ele pisca sozinho. Com "reduzir movimento" ligado no celular, fica parado.
+Ele é montado em camadas que se mexem sozinhas: respira, a capa balança, a
+cabeça inclina, os olhos piscam e olham em volta, a varinha acena (com um
+floreio de vez em quando) e pixels da marca sobem em volta. Com o notebook, o
+cursor pisca na tela. Com "reduzir movimento" ligado no celular, fica parado.
+
+## Avatar (só a cabeça)
+
+Para tamanhos pequenos (32–64 dp), use o avatar, que fica num quadrado com a
+cor do nível:
+
+```tsx
+import { DevzinhoAvatar } from '@/componentes/Devzinho';
+
+<DevzinhoAvatar tamanho={48} nivel={2} expressao="feliz" />
+```
 
 Para converter o rank da pessoa em nível: `nivelDoRank(indiceNoRANKS)`.
 
@@ -55,6 +69,12 @@ evolução), Trilhas (ao lado da lição atual e na folha da lição), conceito 
 feedback de resposta (pula no acerto, treme no erro), resumo da sessão (comemora
 e mostra quando sobe de nível), Relâmpago, Liga, Perfil (herói + "Evolução do
 Devzinho") e estados vazios.
+
+## Cores das linguagens
+
+Cada linguagem tem cor própria (`coresDasLinguagens(cores)` em `tema/index.ts`)
+e um desenho de caminho próprio na tela de Trilhas (`PADROES_CAMINHO` em
+`CaminhoTrilha.tsx`).
 
 ## Cores da marca
 

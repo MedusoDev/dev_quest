@@ -108,10 +108,10 @@ export function crescimentoAcumulado(perfis: PerfilPublico[], dias = 30): PontoD
 export type FaixaDeUso = { rotulo: string; quantidade: number; taxaDeAcertoMedia: number | null };
 
 const FAIXAS_DE_DIARIAS = [
-  { rotulo: '1–5 diárias', minimo: 1, maximo: 5 },
-  { rotulo: '6–15 diárias', minimo: 6, maximo: 15 },
-  { rotulo: '16–30 diárias', minimo: 16, maximo: 30 },
-  { rotulo: '31+ diárias', minimo: 31, maximo: Infinity }
+  { rotulo: '1–5 missões', minimo: 1, maximo: 5 },
+  { rotulo: '6–15 missões', minimo: 6, maximo: 15 },
+  { rotulo: '16–30 missões', minimo: 16, maximo: 30 },
+  { rotulo: '31+ missões', minimo: 31, maximo: Infinity }
 ];
 
 /**

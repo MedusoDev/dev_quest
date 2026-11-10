@@ -58,13 +58,13 @@ const PASSOS: Passo[] = [
   {
     destaque: "cartao",
     titulo: "sua prática de hoje",
-    texto: "Todo dia existe uma lista curta de exercícios te esperando — chamamos isso de diária. Este cartão mostra quantos faltam. Toque em Começar e é só seguir em frente.",
+    texto: "Todo dia existe uma lista curta de exercícios te esperando — chamamos isso de missão do dia. Este cartão mostra quantos faltam. Toque em Começar e é só seguir em frente.",
     balaoEmbaixo: true,
   },
   {
     destaque: "sequencia",
     titulo: "sua sequência de dias",
-    texto: "Cada dia em que você termina a diária, um quadrado desta fileira acende sozinho — é a contagem de dias seguidos estudando. Não precisa tocar em nada: basta terminar os exercícios do dia.",
+    texto: "Cada dia em que você cumpre a missão do dia, um quadrado desta fileira acende sozinho — é a contagem de dias seguidos estudando. Não precisa tocar em nada: basta terminar os exercícios do dia.",
     balaoEmbaixo: false,
   },
   {
@@ -248,7 +248,7 @@ function MockHoje({ destaque }: { destaque: Destaque }) {
           apagado("cartao"),
         ]}
       >
-        <Text style={[estilos.mockRotuloCartao, { color: cores.acento }]}>sessão diária</Text>
+        <Text style={[estilos.mockRotuloCartao, { color: cores.acento }]}>missão do dia</Text>
         <View style={estilos.mockCartaoCorpo}>
           <Text style={[estilos.mockNumero, { color: cores.textoForte }]}>8</Text>
           <Text style={[estilos.mockCards, { color: cores.textoForte }]}>cards</Text>

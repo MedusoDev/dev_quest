@@ -37,7 +37,6 @@ import {
     fontes,
     margemTela,
     raio,
-    rodapeFixo,
     tamanhos,
     tipo,
 } from "@/tema";
@@ -48,9 +47,13 @@ import { fichasTema, temas } from "@/tema/temas";
  *
  * Antes esta tela era só "Sobre você". No redesign do handoff
  * `redesign-de-layout-do-projeto` ela vira configurações de verdade: tema,
- * notificação, ritmo da diária (que morava em Perfil), sobre você (o form que
+ * notificação, ritmo da missão (que morava em Perfil), sobre você (o form que
  * já existia, compactado) e conta e dados (que morava espalhado em Perfil —
  * sair e excluir conta agora vivem aqui).
+ *
+ * Ordem (pedido do QA): a CONTA vem primeiro, no topo, com "Sair" visível;
+ * "Salvar alterações" fica preso no rodapé; "Excluir conta" vai para uma
+ * zona de perigo discreta no fim — não pode ser o botão mais chamativo.
  *
  * Duas features novas de verdade, não só visuais:
  *   - **Tema trocável**: os três cartões chamam `useTema()` de verdade —
@@ -304,6 +307,49 @@ export default function Configuracoes() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        {/* ── sua conta: no topo ───────────────────────────────── */}
+        <View style={[estilos.conta, { backgroundColor: cores.superficie, borderColor: cores.linha }]}>
+          <View style={estilos.contaLinha}>
+            <Avatar
+              nome={perfil?.nome || "Você"}
+              foto={perfil?.foto}
+              bordaId={perfil?.borda}
+              tamanho={44}
+              paleta={cores}
+            />
+            <View style={estilos.flex}>
+              <Text numberOfLines={1} style={[estilos.contaNome, { color: cores.textoForte }]}>
+                {perfil?.nomeCompleto || perfil?.nome || "Você"}
+              </Text>
+              <Text numberOfLines={1} style={[tipo.metricaMono, { color: cores.legenda }]}>
+                {usuario?.isAnonymous ? "sessão de convidado" : (usuario?.email ?? "")}
+              </Text>
+            </View>
+            <View style={[estilos.plano, { backgroundColor: cores.acentoFundo, borderColor: cores.acentoLinha }]}>
+              <Text style={[estilos.planoTexto, { color: cores.acentoTexto }]}>plano free</Text>
+            </View>
+          </View>
+
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push("/termos" as never)}
+            style={[estilos.linhaConta, { borderTopColor: cores.linha }]}
+          >
+            <Text style={[estilos.flex, { fontFamily: fontes.semi, fontSize: 14, lineHeight: 17, color: cores.textoForte }]}>
+              Termos e privacidade
+            </Text>
+            <Text style={[tipo.metricaMono, { color: cores.legenda }]}>›</Text>
+          </Pressable>
+
+          <Botao
+            estilo={estilos.botaoConta}
+            rotulo="Sair da conta"
+            variante="secundario"
+            aoTocar={confirmarSaida}
+            paleta={cores}
+          />
+        </View>
+
         {/* ── tema ─────────────────────────────────────────────── */}
         <Text style={[tipo.rotuloSecao, estilos.rotuloTopo, { color: cores.acento }]}>tema</Text>
         <View style={estilos.cartoesTema}>
@@ -364,7 +410,7 @@ export default function Configuracoes() {
         >
           <View style={estilos.flex}>
             <Text style={{ fontFamily: fontes.semi, fontSize: 14, lineHeight: 17, color: cores.textoForte }}>
-              Lembrete da diária
+              Lembrete da missão do dia
             </Text>
             <Text
               style={{
@@ -375,7 +421,7 @@ export default function Configuracoes() {
                 marginTop: 4,
               }}
             >
-              {"a cada 2h enquanto a diária não fecha · para assim que fechar"}
+              {"a cada 2h enquanto a missão do dia não fecha · para assim que fechar"}
             </Text>
           </View>
           <Interruptor
@@ -386,9 +432,9 @@ export default function Configuracoes() {
           />
         </View>
 
-        {/* ── ritmo da diária ──────────────────────────────────── */}
+        {/* ── ritmo da missão ──────────────────────────────────── */}
         <Text style={[tipo.rotuloSecao, estilos.rotulo, { color: cores.legenda }]}>
-          ritmo da diária
+          ritmo da missão
         </Text>
         <View style={estilos.cartoesRitmo}>
           {METAS.map((opcao) => {
@@ -573,13 +619,13 @@ export default function Configuracoes() {
         </View>
         {foco.length > 1 && (
           <Text style={[tipo.notaMonoMenor, estilos.avisoFoco, { color: cores.legenda }]}>
-            Mais de uma linguagem mistura conceitos diferentes na mesma diária. Desmarque até
+            Mais de uma linguagem mistura conceitos diferentes na mesma missão do dia. Desmarque até
             sobrar uma para focar só nela.
           </Text>
         )}
         {foco.length === 0 && (
           <Text style={[tipo.notaMonoMenor, estilos.avisoFoco, { color: cores.legenda }]}>
-            Sem foco escolhido, a diária mistura todas as linguagens.
+            Sem foco escolhido, a missão do dia mistura todas as linguagens.
           </Text>
         )}
 
@@ -632,60 +678,36 @@ export default function Configuracoes() {
           </View>
         )}
 
+        {/* ── zona de perigo: excluir conta, discreto, lá no fim ── */}
+        <View style={[estilos.perigo, { borderTopColor: cores.linha }]}>
+          <Text style={[tipo.rotuloSecao, { color: cores.legenda }]}>zona de perigo</Text>
+          <Text style={[estilos.perigoTexto, { color: cores.legenda }]}>
+            Apaga sua conta e todo o seu progresso. Não dá para desfazer.
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ disabled: excluindo }}
+            disabled={excluindo}
+            onPress={confirmarExclusao}
+            hitSlop={8}
+            style={({ pressed }) => [estilos.perigoBotao, pressed && { opacity: 0.6 }]}
+          >
+            <Text style={[estilos.perigoBotaoTexto, { color: cores.erro }]}>
+              {excluindo ? "Excluindo…" : "Excluir minha conta"}
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+
+      {/* Salvar fica sempre à vista, preso no rodapé — não precisa rolar até o fim. */}
+      <View style={[estilos.rodape, { backgroundColor: cores.fundo, borderTopColor: cores.linha }]}>
         <Botao
-          estilo={estilos.botaoSalvar}
-          rotulo={ocupado ? "Salvando…" : "Salvar"}
+          rotulo={ocupado ? "Salvando…" : "Salvar alterações"}
           desabilitado={ocupado}
           aoTocar={salvar}
           paleta={cores}
         />
-
-        {/* ── conta e dados ────────────────────────────────────── */}
-        <Text style={[tipo.rotuloSecao, estilos.rotulo, { color: cores.legenda }]}>
-          conta e dados
-        </Text>
-        <View style={[estilos.linhaConta, { borderTopColor: cores.linha }]}>
-          <Text
-            style={{ fontFamily: fontes.semi, fontSize: 14, lineHeight: 17, color: cores.textoForte }}
-          >
-            {usuario?.isAnonymous ? "sessão de convidado" : (usuario?.email ?? "")}
-          </Text>
-          <Text style={[tipo.metricaMono, { color: cores.legenda }]}>plano free</Text>
-        </View>
-
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push("/termos" as never)}
-          style={[estilos.linhaConta, { borderTopColor: cores.linha }]}
-        >
-          <Text
-            style={[
-              { fontFamily: fontes.semi, fontSize: 14, lineHeight: 17 },
-              estilos.flex,
-              { color: cores.textoForte },
-            ]}
-          >
-            Termos e privacidade
-          </Text>
-          <Text style={[tipo.metricaMono, { color: cores.legenda }]}>›</Text>
-        </Pressable>
-
-        <Botao
-          estilo={estilos.botaoConta}
-          rotulo="Sair da conta"
-          variante="discreto"
-          aoTocar={confirmarSaida}
-          paleta={cores}
-        />
-        <Botao
-          estilo={estilos.botaoConta}
-          rotulo={excluindo ? "Excluindo…" : "Excluir conta"}
-          variante="erro"
-          desabilitado={excluindo}
-          aoTocar={confirmarExclusao}
-          paleta={cores}
-        />
-      </ScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -743,7 +765,7 @@ const estilos = StyleSheet.create({
   conteudo: {
     paddingHorizontal: margemTela,
     paddingTop: espaco.md,
-    paddingBottom: rodapeFixo,
+    paddingBottom: espaco.xl,
   },
 
   rotuloTopo: { textTransform: "uppercase", marginBottom: 7 },
@@ -821,8 +843,20 @@ const estilos = StyleSheet.create({
 
   aviso: { marginTop: espaco.xl, borderLeftWidth: tamanhos.trilho, paddingVertical: 12, paddingHorizontal: espaco.md, borderRadius: raio.sm },
 
-  botaoSalvar: { marginTop: espaco.xl },
-  botaoConta: { marginTop: espaco.sm },
+  botaoConta: { marginTop: espaco.md },
+
+  conta: { borderWidth: 1.5, borderRadius: raio.lg, padding: espaco.md, marginBottom: espaco.lg },
+  contaLinha: { flexDirection: "row", alignItems: "center", gap: espaco.md, marginBottom: espaco.sm },
+  contaNome: { ...tipo.tituloItem, fontSize: 17 },
+  plano: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: raio.pill, borderWidth: 1 },
+  planoTexto: { ...tipo.metricaMono, fontSize: 11 },
+
+  perigo: { marginTop: espaco.xl, paddingTop: espaco.lg, borderTopWidth: tamanhos.linha, gap: 6 },
+  perigoTexto: { ...tipo.notaMono, lineHeight: 18 },
+  perigoBotao: { alignSelf: "flex-start", paddingVertical: espaco.sm, marginTop: 2 },
+  perigoBotaoTexto: { fontFamily: fontes.semi, fontSize: 14, textDecorationLine: "underline" },
+
+  rodape: { paddingHorizontal: margemTela, paddingTop: 10, paddingBottom: 18, borderTopWidth: tamanhos.linha },
 
   linhaConta: {
     flexDirection: "row",

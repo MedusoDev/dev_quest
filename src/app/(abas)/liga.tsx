@@ -115,7 +115,7 @@ export default function TelaLiga() {
 
           {!carregando && ordenadoGlobal.length === 0 && (
             <View style={estilos.vazio}>
-              <Vazio titulo="Ninguém pontuou ainda" texto="Faça sua diária para entrar no placar." />
+              <Vazio titulo="Ninguém pontuou ainda" texto="Cumpra a missão do dia para entrar no placar." />
             </View>
           )}
 
@@ -282,7 +282,7 @@ export default function TelaLiga() {
           <View style={estilos.vazio}>
             <Vazio
               titulo="Ninguém pontuou ainda"
-              texto="Faça sua diária para abrir o placar da semana — e mande o código para os seus amigos."
+              texto="Cumpra a missão do dia para abrir o placar da semana — e mande o código para os seus amigos."
             />
           </View>
         )}
